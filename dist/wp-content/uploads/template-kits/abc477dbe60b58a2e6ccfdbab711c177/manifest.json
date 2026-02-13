@@ -1,0 +1,1027 @@
+{
+    "manifest_version": "1.0.21",
+    "title": "Populi - Template kit for Politician",
+    "page_builder": "elementor",
+    "kit_version": "1.0.0",
+    "templates": [
+        {
+            "name": "Global Kit Styles",
+            "screenshot": "screenshots\/global-kit-styles.jpg",
+            "source": "templates\/global.json",
+            "preview_url": "http:\/\/point.moxcreative.com",
+            "type": "section",
+            "category": "page",
+            "metadata": {
+                "template_type": "global-styles",
+                "include_in_zip": "1",
+                "elementor_pro_required": "1",
+                "additional_template_information": [
+                    "These are the global theme styles configured through the Elementor Theme Styles area."
+                ]
+            },
+            "elementor_pro_required": true
+        },
+        {
+            "name": "Homepage",
+            "screenshot": "screenshots\/homepage.jpg",
+            "source": "templates\/homepage.json",
+            "preview_url": "http:\/\/point.moxcreative.com\/populi\/template-kit\/homepage\/",
+            "type": "section",
+            "category": "page",
+            "metadata": {
+                "template_type": "single-home",
+                "include_in_zip": "1",
+                "elementor_pro_required": "1"
+            },
+            "elementor_pro_required": true
+        },
+        {
+            "name": "Gallery",
+            "screenshot": "screenshots\/gallery.jpg",
+            "source": "templates\/gallery.json",
+            "preview_url": "http:\/\/point.moxcreative.com\/populi\/template-kit\/gallery\/",
+            "type": "page",
+            "category": "page",
+            "metadata": {
+                "template_type": "single-page",
+                "include_in_zip": "1",
+                "elementor_pro_required": "1"
+            },
+            "elementor_pro_required": true
+        },
+        {
+            "name": "Events",
+            "screenshot": "screenshots\/events.jpg",
+            "source": "templates\/events.json",
+            "preview_url": "http:\/\/point.moxcreative.com\/populi\/template-kit\/events\/",
+            "type": "page",
+            "category": "page",
+            "metadata": {
+                "template_type": "single-page",
+                "include_in_zip": "1",
+                "elementor_pro_required": "1"
+            },
+            "elementor_pro_required": true
+        },
+        {
+            "name": "Team",
+            "screenshot": "screenshots\/team.jpg",
+            "source": "templates\/team.json",
+            "preview_url": "http:\/\/point.moxcreative.com\/populi\/template-kit\/team\/",
+            "type": "page",
+            "category": "page",
+            "metadata": {
+                "template_type": "single-page",
+                "include_in_zip": "1",
+                "elementor_pro_required": "1"
+            },
+            "elementor_pro_required": true
+        },
+        {
+            "name": "About Us",
+            "screenshot": "screenshots\/about-us.jpg",
+            "source": "templates\/about-us.json",
+            "preview_url": "http:\/\/point.moxcreative.com\/populi\/template-kit\/about-us\/",
+            "type": "page",
+            "category": "page",
+            "metadata": {
+                "template_type": "single-page",
+                "include_in_zip": "1",
+                "elementor_pro_required": "1"
+            },
+            "elementor_pro_required": true
+        },
+        {
+            "name": "Program",
+            "screenshot": "screenshots\/program.jpg",
+            "source": "templates\/program.json",
+            "preview_url": "http:\/\/point.moxcreative.com\/populi\/template-kit\/program\/",
+            "type": "page",
+            "category": "page",
+            "metadata": {
+                "template_type": "single-page",
+                "include_in_zip": "1",
+                "elementor_pro_required": "1"
+            },
+            "elementor_pro_required": true
+        },
+        {
+            "name": "Donation",
+            "screenshot": "screenshots\/donation.jpg",
+            "source": "templates\/donation.json",
+            "preview_url": "http:\/\/point.moxcreative.com\/populi\/template-kit\/donation\/",
+            "type": "page",
+            "category": "page",
+            "metadata": {
+                "template_type": "single-page",
+                "include_in_zip": "1",
+                "elementor_pro_required": "1"
+            },
+            "elementor_pro_required": true
+        },
+        {
+            "name": "FAQ",
+            "screenshot": "screenshots\/faq.jpg",
+            "source": "templates\/faq.json",
+            "preview_url": "http:\/\/point.moxcreative.com\/populi\/template-kit\/faq\/",
+            "type": "page",
+            "category": "page",
+            "metadata": {
+                "template_type": "single-page",
+                "include_in_zip": "1",
+                "elementor_pro_required": "1"
+            },
+            "elementor_pro_required": true
+        },
+        {
+            "name": "Contact Us",
+            "screenshot": "screenshots\/contact-us.jpg",
+            "source": "templates\/contact-us.json",
+            "preview_url": "http:\/\/point.moxcreative.com\/populi\/template-kit\/contact-us\/",
+            "type": "page",
+            "category": "page",
+            "metadata": {
+                "template_type": "single-page",
+                "include_in_zip": "1",
+                "elementor_pro_required": "1"
+            },
+            "elementor_pro_required": true
+        },
+        {
+            "name": "Populi - Error 404",
+            "screenshot": "screenshots\/populi-error-404.jpg",
+            "source": "templates\/populi-error-404.json",
+            "preview_url": "http:\/\/point.moxcreative.com\/populi\/?elementor_library=populi-error-404",
+            "type": "error-404",
+            "category": "page",
+            "metadata": {
+                "template_type": "single-404",
+                "include_in_zip": "1",
+                "elementor_pro_required": "1",
+                "elementor_library_type": "error-404",
+                "elementor_pro_conditions": [
+                    "include\/singular\/not_found404"
+                ],
+                "additional_template_information": [
+                    "This is a \"Error 404\" template for Elementor Pro.",
+                    "This template will display on: 404 Page."
+                ]
+            },
+            "elementor_pro_required": true
+        },
+        {
+            "name": "Populi - Single Post",
+            "screenshot": "screenshots\/populi-single-post.jpg",
+            "source": "templates\/populi-single-post.json",
+            "preview_url": "http:\/\/point.moxcreative.com\/populi\/?elementor_library=populi-single-post",
+            "type": "single-post",
+            "category": "page",
+            "metadata": {
+                "template_type": "single-post",
+                "include_in_zip": "1",
+                "elementor_pro_required": "1",
+                "elementor_library_type": "single-post",
+                "elementor_pro_conditions": [
+                    "include\/singular\/post"
+                ],
+                "additional_template_information": [
+                    "This is a \"Single Post\" template for Elementor Pro.",
+                    "This template will display on: Posts."
+                ]
+            },
+            "elementor_pro_required": true
+        },
+        {
+            "name": "Populi - Archive Blog",
+            "screenshot": "screenshots\/populi-archive-blog.jpg",
+            "source": "templates\/populi-archive-blog.json",
+            "preview_url": "http:\/\/point.moxcreative.com\/populi\/?elementor_library=populi-archive-blog",
+            "type": "archive",
+            "category": "page",
+            "metadata": {
+                "template_type": "archive-blog",
+                "include_in_zip": "1",
+                "elementor_pro_required": "1",
+                "elementor_library_type": "archive",
+                "elementor_pro_conditions": [
+                    "include\/archive"
+                ],
+                "additional_template_information": [
+                    "This is a \"Archive\" template for Elementor Pro.",
+                    "This template will display on: All Archives."
+                ]
+            },
+            "elementor_pro_required": true
+        },
+        {
+            "name": "Populi - Footer",
+            "screenshot": "screenshots\/populi-footer.jpg",
+            "source": "templates\/populi-footer.json",
+            "preview_url": "http:\/\/point.moxcreative.com\/populi\/?elementor_library=populi-footer",
+            "type": "footer",
+            "category": "section",
+            "metadata": {
+                "template_type": "section-footer",
+                "include_in_zip": "1",
+                "elementor_pro_required": "1",
+                "elementor_library_type": "footer",
+                "elementor_pro_conditions": [
+                    "include\/general"
+                ],
+                "additional_template_information": [
+                    "This is a \"Footer\" template for Elementor Pro.",
+                    "This template will display on: Entire Site."
+                ]
+            },
+            "elementor_pro_required": true
+        },
+        {
+            "name": "Populi - Header",
+            "screenshot": "screenshots\/populi-header.jpg",
+            "source": "templates\/populi-header.json",
+            "preview_url": "http:\/\/point.moxcreative.com\/populi\/?elementor_library=populi-header",
+            "type": "header",
+            "category": "section",
+            "metadata": {
+                "template_type": "section-header",
+                "include_in_zip": "1",
+                "elementor_pro_required": "1",
+                "elementor_library_type": "header",
+                "elementor_pro_conditions": [
+                    "include\/general"
+                ],
+                "additional_template_information": [
+                    "This is a \"Header\" template for Elementor Pro.",
+                    "This template will display on: Entire Site."
+                ]
+            },
+            "elementor_pro_required": true
+        }
+    ],
+    "required_plugins": [
+        {
+            "name": "Elementor Pro",
+            "version": "3.6.0",
+            "file": "elementor-pro\/elementor-pro.php",
+            "author": "Elementor.com"
+        },
+        {
+            "name": "ElementsKit Lite",
+            "version": "2.5.7",
+            "file": "elementskit-lite\/elementskit-lite.php",
+            "author": "Wpmet"
+        },
+        {
+            "name": "Material Design Icons for Page Builders",
+            "version": "1.4.2",
+            "file": "material-design-icons-for-elementor\/material-design-icons-for-elementor.php",
+            "author": "Photon WP"
+        },
+        {
+            "name": "Skyboot custom icons for Elementor - Elementor Icons",
+            "version": "1.0.4",
+            "file": "skyboot-custom-icons-for-elementor\/skyboot-custom-icons-for-elementor.php",
+            "author": "Skybootstrap"
+        }
+    ],
+    "images": [
+        {
+            "filename": "usa-flag-background-.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/usa-flag-background--800x533.jpg",
+            "templates": [
+                {
+                    "source": "templates\/homepage.json",
+                    "name": "Homepage"
+                },
+                {
+                    "source": "templates\/team.json",
+                    "name": "Team"
+                },
+                {
+                    "source": "templates\/about-us.json",
+                    "name": "About Us"
+                },
+                {
+                    "source": "templates\/donation.json",
+                    "name": "Donation"
+                },
+                {
+                    "source": "templates\/populi-single-post.json",
+                    "name": "Populi - Single Post"
+                },
+                {
+                    "source": "templates\/populi-footer.json",
+                    "name": "Populi - Footer"
+                }
+            ],
+            "filesize": 84606,
+            "dimensions": [
+                1080,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "no",
+            "image_urls": "https:\/\/elements.envato.com\/image-PB7RCLR"
+        },
+        {
+            "filename": "img_1.png",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/img_1.png",
+            "templates": [
+                {
+                    "source": "templates\/homepage.json",
+                    "name": "Homepage"
+                }
+            ],
+            "filesize": 86671,
+            "dimensions": [
+                650,
+                648
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-Q56ZGNP"
+        },
+        {
+            "filename": "modern-companies-encourage-cultural-diversity-in-their-human-resources.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/modern-companies-encourage-cultural-diversity-in-their-human-resources-800x533.jpg",
+            "templates": [
+                {
+                    "source": "templates\/homepage.json",
+                    "name": "Homepage"
+                },
+                {
+                    "source": "templates\/gallery.json",
+                    "name": "Gallery"
+                },
+                {
+                    "source": "templates\/program.json",
+                    "name": "Program"
+                }
+            ],
+            "filesize": 118268,
+            "dimensions": [
+                1080,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-RAHHMZS"
+        },
+        {
+            "filename": "political-speech.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/political-speech-800x533.jpg",
+            "templates": [
+                {
+                    "source": "templates\/homepage.json",
+                    "name": "Homepage"
+                },
+                {
+                    "source": "templates\/gallery.json",
+                    "name": "Gallery"
+                },
+                {
+                    "source": "templates\/events.json",
+                    "name": "Events"
+                },
+                {
+                    "source": "templates\/program.json",
+                    "name": "Program"
+                },
+                {
+                    "source": "templates\/faq.json",
+                    "name": "FAQ"
+                }
+            ],
+            "filesize": 63951,
+            "dimensions": [
+                1080,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-PKDPTDB"
+        },
+        {
+            "filename": "political-leaders-at-conference.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/political-leaders-at-conference-800x533.jpg",
+            "templates": [
+                {
+                    "source": "templates\/homepage.json",
+                    "name": "Homepage"
+                },
+                {
+                    "source": "templates\/gallery.json",
+                    "name": "Gallery"
+                },
+                {
+                    "source": "templates\/events.json",
+                    "name": "Events"
+                },
+                {
+                    "source": "templates\/team.json",
+                    "name": "Team"
+                },
+                {
+                    "source": "templates\/about-us.json",
+                    "name": "About Us"
+                }
+            ],
+            "filesize": 98314,
+            "dimensions": [
+                1080,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-W6E8HT9"
+        },
+        {
+            "filename": "young-successful-muslim-businesswoman-in-hijab-standing-by-tribune.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/young-successful-muslim-businesswoman-in-hijab-standing-by-tribune-800x534.jpg",
+            "templates": [
+                {
+                    "source": "templates\/homepage.json",
+                    "name": "Homepage"
+                },
+                {
+                    "source": "templates\/gallery.json",
+                    "name": "Gallery"
+                },
+                {
+                    "source": "templates\/team.json",
+                    "name": "Team"
+                },
+                {
+                    "source": "templates\/donation.json",
+                    "name": "Donation"
+                }
+            ],
+            "filesize": 73182,
+            "dimensions": [
+                1080,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-KG8FXMY"
+        },
+        {
+            "filename": "payment.png",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/payment.png",
+            "templates": [
+                {
+                    "source": "templates\/homepage.json",
+                    "name": "Homepage"
+                },
+                {
+                    "source": "templates\/donation.json",
+                    "name": "Donation"
+                }
+            ],
+            "filesize": 5747,
+            "dimensions": [
+                421,
+                40
+            ],
+            "image_source": "self_created",
+            "person_or_place": "no",
+            "image_urls": ""
+        },
+        {
+            "filename": "group-of-delegates-applauding.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/group-of-delegates-applauding-800x533.jpg",
+            "templates": [
+                {
+                    "source": "templates\/homepage.json",
+                    "name": "Homepage"
+                },
+                {
+                    "source": "templates\/gallery.json",
+                    "name": "Gallery"
+                },
+                {
+                    "source": "templates\/team.json",
+                    "name": "Team"
+                }
+            ],
+            "filesize": 87331,
+            "dimensions": [
+                1080,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-P8X5FEU"
+        },
+        {
+            "filename": "photographers-taking-photographs-at-a-political-gathering-.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/photographers-taking-photographs-at-a-political-gathering--800x533.jpg",
+            "templates": [
+                {
+                    "source": "templates\/homepage.json",
+                    "name": "Homepage"
+                },
+                {
+                    "source": "templates\/gallery.json",
+                    "name": "Gallery"
+                },
+                {
+                    "source": "templates\/events.json",
+                    "name": "Events"
+                },
+                {
+                    "source": "templates\/donation.json",
+                    "name": "Donation"
+                }
+            ],
+            "filesize": 110602,
+            "dimensions": [
+                1080,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-YTRZCU5"
+        },
+        {
+            "filename": "political-interview.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/political-interview-800x533.jpg",
+            "templates": [
+                {
+                    "source": "templates\/homepage.json",
+                    "name": "Homepage"
+                },
+                {
+                    "source": "templates\/events.json",
+                    "name": "Events"
+                },
+                {
+                    "source": "templates\/program.json",
+                    "name": "Program"
+                },
+                {
+                    "source": "templates\/contact-us.json",
+                    "name": "Contact Us"
+                }
+            ],
+            "filesize": 82424,
+            "dimensions": [
+                1080,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-5YCJB4D"
+        },
+        {
+            "filename": "political-conference.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/political-conference-800x533.jpg",
+            "templates": [
+                {
+                    "source": "templates\/homepage.json",
+                    "name": "Homepage"
+                },
+                {
+                    "source": "templates\/gallery.json",
+                    "name": "Gallery"
+                },
+                {
+                    "source": "templates\/events.json",
+                    "name": "Events"
+                }
+            ],
+            "filesize": 73167,
+            "dimensions": [
+                1080,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-KPDTPNG"
+        },
+        {
+            "filename": "congressman.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/congressman-800x533.jpg",
+            "templates": [
+                {
+                    "source": "templates\/homepage.json",
+                    "name": "Homepage"
+                },
+                {
+                    "source": "templates\/gallery.json",
+                    "name": "Gallery"
+                },
+                {
+                    "source": "templates\/events.json",
+                    "name": "Events"
+                },
+                {
+                    "source": "templates\/about-us.json",
+                    "name": "About Us"
+                }
+            ],
+            "filesize": 48468,
+            "dimensions": [
+                1080,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-A8D2G7D"
+        },
+        {
+            "filename": "political-event.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/political-event-800x544.jpg",
+            "templates": [
+                {
+                    "source": "templates\/gallery.json",
+                    "name": "Gallery"
+                },
+                {
+                    "source": "templates\/about-us.json",
+                    "name": "About Us"
+                }
+            ],
+            "filesize": 87856,
+            "dimensions": [
+                1080,
+                734
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-RHT9K33"
+        },
+        {
+            "filename": "political-report.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/political-report-800x533.jpg",
+            "templates": [
+                {
+                    "source": "templates\/gallery.json",
+                    "name": "Gallery"
+                }
+            ],
+            "filesize": 74072,
+            "dimensions": [
+                1080,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-YE3FL2F"
+        },
+        {
+            "filename": "people-with-placards-and-posters-on-global-strike-for-climate-change-.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/people-with-placards-and-posters-on-global-strike-for-climate-change--800x533.jpg",
+            "templates": [
+                {
+                    "source": "templates\/gallery.json",
+                    "name": "Gallery"
+                },
+                {
+                    "source": "templates\/program.json",
+                    "name": "Program"
+                }
+            ],
+            "filesize": 116449,
+            "dimensions": [
+                1080,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-A7H6TV9"
+        },
+        {
+            "filename": "social-justice-political-protest-blm-black-lives-matter.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/social-justice-political-protest-blm-black-lives-matter-800x533.jpg",
+            "templates": [
+                {
+                    "source": "templates\/gallery.json",
+                    "name": "Gallery"
+                },
+                {
+                    "source": "templates\/donation.json",
+                    "name": "Donation"
+                }
+            ],
+            "filesize": 107582,
+            "dimensions": [
+                1080,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-4HQAGVE"
+        },
+        {
+            "filename": "speech-of-political-leader.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/speech-of-political-leader-800x533.jpg",
+            "templates": [
+                {
+                    "source": "templates\/team.json",
+                    "name": "Team"
+                }
+            ],
+            "filesize": 92244,
+            "dimensions": [
+                1080,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-ZGAFTTK"
+        },
+        {
+            "filename": "successful-mature-man-against-american-flag-e1651222290538.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/successful-mature-man-against-american-flag-800x1200.jpg",
+            "templates": [
+                {
+                    "source": "templates\/team.json",
+                    "name": "Team"
+                }
+            ],
+            "filesize": 43005,
+            "dimensions": [
+                480,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-SEZTDSU"
+        },
+        {
+            "filename": "senior-congressman-in-suit-e1651222270269.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/senior-congressman-in-suit-800x1200.jpg",
+            "templates": [
+                {
+                    "source": "templates\/team.json",
+                    "name": "Team"
+                }
+            ],
+            "filesize": 51071,
+            "dimensions": [
+                480,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-D9KB75X"
+        },
+        {
+            "filename": "portrait-of-confident-arabian-politician-e1651222330262.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/portrait-of-confident-arabian-politician-800x1200.jpg",
+            "templates": [
+                {
+                    "source": "templates\/team.json",
+                    "name": "Team"
+                }
+            ],
+            "filesize": 58870,
+            "dimensions": [
+                480,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-BAAXXU8"
+        },
+        {
+            "filename": "successful-african-american-man-against-american-flag-e1651222280657.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/successful-african-american-man-against-american-flag-800x1200.jpg",
+            "templates": [
+                {
+                    "source": "templates\/team.json",
+                    "name": "Team"
+                }
+            ],
+            "filesize": 39830,
+            "dimensions": [
+                480,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-Y2QLDJK"
+        },
+        {
+            "filename": "portrait-of-blond-haired-politician-e1651222310974.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/portrait-of-blond-haired-politician-800x1200.jpg",
+            "templates": [
+                {
+                    "source": "templates\/team.json",
+                    "name": "Team"
+                }
+            ],
+            "filesize": 59380,
+            "dimensions": [
+                480,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-BKTJACV"
+        },
+        {
+            "filename": "portrait-of-pensive-muslim-politician-e1651222319418.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/portrait-of-pensive-muslim-politician-800x1200.jpg",
+            "templates": [
+                {
+                    "source": "templates\/team.json",
+                    "name": "Team"
+                }
+            ],
+            "filesize": 52089,
+            "dimensions": [
+                480,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-XW4HECP"
+        },
+        {
+            "filename": "member-of-political-party.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/member-of-political-party-800x533.jpg",
+            "templates": [
+                {
+                    "source": "templates\/about-us.json",
+                    "name": "About Us"
+                },
+                {
+                    "source": "templates\/donation.json",
+                    "name": "Donation"
+                }
+            ],
+            "filesize": 74384,
+            "dimensions": [
+                1080,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-PYFE5GJ"
+        },
+        {
+            "filename": "mature-politician-against-american-flag.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/mature-politician-against-american-flag-800x533.jpg",
+            "templates": [
+                {
+                    "source": "templates\/about-us.json",
+                    "name": "About Us"
+                }
+            ],
+            "filesize": 71921,
+            "dimensions": [
+                1080,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-Q56ZGNP"
+        },
+        {
+            "filename": "Signature.png",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/Signature.png",
+            "templates": [
+                {
+                    "source": "templates\/about-us.json",
+                    "name": "About Us"
+                }
+            ],
+            "filesize": 11687,
+            "dimensions": [
+                480,
+                135
+            ],
+            "image_source": "self_created",
+            "person_or_place": "no",
+            "image_urls": ""
+        },
+        {
+            "filename": "schoolgirl-standing-in-the-schoolyard-at-elementary-school.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/schoolgirl-standing-in-the-schoolyard-at-elementary-school-800x533.jpg",
+            "templates": [
+                {
+                    "source": "templates\/program.json",
+                    "name": "Program"
+                }
+            ],
+            "filesize": 87757,
+            "dimensions": [
+                1080,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-M2S9VMX"
+        },
+        {
+            "filename": "healthcare-scientist-working-with-dangerous-sample.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/healthcare-scientist-working-with-dangerous-sample-800x533.jpg",
+            "templates": [
+                {
+                    "source": "templates\/program.json",
+                    "name": "Program"
+                }
+            ],
+            "filesize": 84680,
+            "dimensions": [
+                1080,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-LSD9Q34"
+        },
+        {
+            "filename": "wooden-judge-gavel-on-us-dollar-banknotes-closeup-justice-corruption-concept.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/wooden-judge-gavel-on-us-dollar-banknotes-closeup-justice-corruption-concept-800x533.jpg",
+            "templates": [
+                {
+                    "source": "templates\/program.json",
+                    "name": "Program"
+                }
+            ],
+            "filesize": 108214,
+            "dimensions": [
+                1080,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "no",
+            "image_urls": "https:\/\/elements.envato.com\/image-GQS947F"
+        },
+        {
+            "filename": "tram-of-public-transportation-in-blurred-motion.jpg",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/tram-of-public-transportation-in-blurred-motion-800x533.jpg",
+            "templates": [
+                {
+                    "source": "templates\/program.json",
+                    "name": "Program"
+                }
+            ],
+            "filesize": 88580,
+            "dimensions": [
+                1080,
+                720
+            ],
+            "image_source": "envato_elements",
+            "person_or_place": "yes",
+            "image_urls": "https:\/\/elements.envato.com\/image-DCQFUZK"
+        },
+        {
+            "filename": "bg_memphis_4.png",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/bg_memphis_4-800x450.png",
+            "templates": [
+                {
+                    "source": "templates\/donation.json",
+                    "name": "Donation"
+                }
+            ],
+            "filesize": 38562,
+            "dimensions": [
+                1280,
+                720
+            ],
+            "image_source": "self_created",
+            "person_or_place": "no",
+            "image_urls": ""
+        },
+        {
+            "filename": "logo_populi_w.png",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/logo_populi_w.png",
+            "templates": [
+                {
+                    "source": "templates\/populi-footer.json",
+                    "name": "Populi - Footer"
+                }
+            ],
+            "filesize": 3249,
+            "dimensions": [
+                247,
+                95
+            ],
+            "image_source": "self_created",
+            "person_or_place": "no",
+            "image_urls": ""
+        },
+        {
+            "filename": "logo_populi.png",
+            "thumbnail_url": "http:\/\/point.moxcreative.com\/populi\/wp-content\/uploads\/sites\/7\/2022\/04\/logo_populi.png",
+            "templates": [
+                {
+                    "source": "templates\/populi-header.json",
+                    "name": "Populi - Header"
+                }
+            ],
+            "filesize": 3611,
+            "dimensions": [
+                247,
+                95
+            ],
+            "image_source": "self_created",
+            "person_or_place": "no",
+            "image_urls": ""
+        }
+    ]
+}
