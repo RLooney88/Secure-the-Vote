@@ -1,38 +1,40 @@
-// Simple Carousel/Slider for Elementor Slides
+// Hero Slider for Secure The Vote MD
 document.addEventListener('DOMContentLoaded', function() {
-  const slidesWrapper = document.querySelector('.elementor-slides-wrapper');
-  if (!slidesWrapper) return;
+  const sliderWrapper = document.querySelector('.slider-wrapper');
+  if (!sliderWrapper) return;
   
-  const slides = document.querySelectorAll('.swiper-slide');
-  const prevButton = document.querySelector('.elementor-swiper-button-prev');
-  const nextButton = document.querySelector('.elementor-swiper-button-next');
-  const pagination = document.querySelector('.swiper-pagination');
+  const slides = document.querySelectorAll('.slide');
+  const prevButton = document.querySelector('.slider-prev');
+  const nextButton = document.querySelector('.slider-next');
+  const dotsContainer = document.querySelector('.slider-dots');
   
   if (slides.length === 0) return;
   
   let currentSlide = 0;
   let autoplayInterval;
   
-  // Create pagination bullets
-  if (pagination) {
+  // Create pagination dots
+  if (dotsContainer) {
     slides.forEach((_, index) => {
-      const bullet = document.createElement('span');
-      bullet.className = 'swiper-pagination-bullet';
-      if (index === 0) bullet.classList.add('swiper-pagination-bullet-active');
-      bullet.addEventListener('click', () => goToSlide(index));
-      pagination.appendChild(bullet);
+      const dot = document.createElement('button');
+      dot.className = 'slider-dot';
+      if (index === 0) dot.classList.add('active');
+      dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
+      dot.addEventListener('click', () => goToSlide(index));
+      dotsContainer.appendChild(dot);
     });
   }
   
   function updateSlides() {
-    const offset = -currentSlide * 100;
-    document.querySelector('.elementor-slides').style.transform = `translateX(${offset}%)`;
+    slides.forEach((slide, index) => {
+      slide.classList.toggle('active', index === currentSlide);
+    });
     
-    // Update pagination
-    if (pagination) {
-      const bullets = pagination.querySelectorAll('.swiper-pagination-bullet');
-      bullets.forEach((bullet, index) => {
-        bullet.classList.toggle('swiper-pagination-bullet-active', index === currentSlide);
+    // Update dots
+    if (dotsContainer) {
+      const dots = dotsContainer.querySelectorAll('.slider-dot');
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
       });
     }
   }
@@ -82,8 +84,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   // Pause on hover
-  slidesWrapper.addEventListener('mouseenter', stopAutoplay);
-  slidesWrapper.addEventListener('mouseleave', startAutoplay);
+  sliderWrapper.addEventListener('mouseenter', stopAutoplay);
+  sliderWrapper.addEventListener('mouseleave', startAutoplay);
   
   // Keyboard navigation
   document.addEventListener('keydown', (e) => {
@@ -100,21 +102,22 @@ document.addEventListener('DOMContentLoaded', function() {
   let touchStartX = 0;
   let touchEndX = 0;
   
-  slidesWrapper.addEventListener('touchstart', (e) => {
+  sliderWrapper.addEventListener('touchstart', (e) => {
     touchStartX = e.changedTouches[0].screenX;
   });
   
-  slidesWrapper.addEventListener('touchend', (e) => {
+  sliderWrapper.addEventListener('touchend', (e) => {
     touchEndX = e.changedTouches[0].screenX;
     handleSwipe();
   });
   
   function handleSwipe() {
-    if (touchEndX < touchStartX - 50) {
+    const swipeThreshold = 50;
+    if (touchEndX < touchStartX - swipeThreshold) {
       nextSlide();
       resetAutoplay();
     }
-    if (touchEndX > touchStartX + 50) {
+    if (touchEndX > touchStartX + swipeThreshold) {
       prevSlide();
       resetAutoplay();
     }
@@ -122,4 +125,26 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Start autoplay
   startAutoplay();
+});
+
+// Mobile Menu Toggle
+document.addEventListener('DOMContentLoaded', function() {
+  const mobileToggle = document.getElementById('mobile-menu-toggle');
+  const mainNav = document.getElementById('main-nav');
+  
+  if (mobileToggle && mainNav) {
+    mobileToggle.addEventListener('click', () => {
+      mainNav.classList.toggle('active');
+      mobileToggle.classList.toggle('active');
+    });
+    
+    // Close menu when clicking on a link
+    const navLinks = mainNav.querySelectorAll('a');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        mainNav.classList.remove('active');
+        mobileToggle.classList.remove('active');
+      });
+    });
+  }
 });

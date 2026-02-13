@@ -1,0 +1,10 @@
+# FTP script to download logo and slider images
+# Save as ftp-download.txt and run: ftp -s:ftp-download.txt
+
+open securethevotemd.com
+aster@securethevotemd.com
+@ster2026
+cd public_html/wp-content/uploads/2024/04
+binary
+get LOGOsecurethevote_yellowMD.png
+bye
