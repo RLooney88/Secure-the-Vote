@@ -1,13 +1,13 @@
 // JWT Authentication utilities for admin endpoints
-import jwt from 'jsonwebtoken';
+const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) {
-  throw new Error('JWT_SECRET environment variable is required');
+  console.error('JWT_SECRET environment variable is not set!');
 }
 
 // Generate JWT token
-export function generateToken(admin) {
+function generateToken(admin) {
   return jwt.sign(
     { id: admin.id, email: admin.email },
     JWT_SECRET,
@@ -16,7 +16,7 @@ export function generateToken(admin) {
 }
 
 // Verify JWT token
-export function verifyToken(token) {
+function verifyToken(token) {
   try {
     return jwt.verify(token, JWT_SECRET);
   } catch (error) {
@@ -25,7 +25,7 @@ export function verifyToken(token) {
 }
 
 // Extract token from Authorization header
-export function extractToken(authHeader) {
+function extractToken(authHeader) {
   if (!authHeader) return null;
   
   const parts = authHeader.split(' ');
@@ -35,7 +35,7 @@ export function extractToken(authHeader) {
 }
 
 // Check if request is authenticated
-export function requireAuth(req) {
+function requireAuth(req) {
   const token = extractToken(req.headers.authorization);
   const decoded = verifyToken(token);
   
@@ -45,3 +45,10 @@ export function requireAuth(req) {
   
   return decoded;
 }
+
+module.exports = {
+  generateToken,
+  verifyToken,
+  extractToken,
+  requireAuth
+};

@@ -1,7 +1,6 @@
 {
   "name": "secure-the-vote-md",
   "version": "1.0.0",
-  "type": "module",
   "description": "SecureTheVoteMD Static Site - Eleventy",
   "scripts": {
     "start": "eleventy --serve",

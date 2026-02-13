@@ -1,9 +1,7 @@
 // Vercel Serverless Function - Admin Login
-import pg from 'pg';
-import { generateToken } from './_auth.js';
-import bcrypt from 'bcryptjs';
-
-const { Pool } = pg;
+const { Pool } = require('pg');
+const { generateToken } = require('./_auth.js');
+const bcrypt = require('bcryptjs');
 
 // Create connection pool using DATABASE_URL from environment
 const pool = new Pool({
@@ -11,7 +9,7 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -62,4 +60,4 @@ export default async function handler(req, res) {
       details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
-}
+};
