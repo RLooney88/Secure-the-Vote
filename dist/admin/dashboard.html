@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Secure the Vote MD</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        .header {
+            background: #9B1E37;
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 20px;
+        }
+        
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .tab:hover {
+            color: #9B1E37;
+        }
+        
+        .tab.active {
+            color: #9B1E37;
+            border-bottom-color: #9B1E37;
+            font-weight: 600;
+        }
+        
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #9B1E37;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            background: #9B1E37;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .btn:hover {
+            background: #7a1829;
+        }
+        
+        .btn-secondary {
+            background: #F6BF58;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background: #e5ae47;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .message {
+            margin-bottom: 16px;
+            padding: 12px;
+            border-radius: 8px;
+            max-width: 80%;
+        }
+        
+        .message.user {
+            background: #9B1E37;
+            color: white;
+            margin-left: auto;
+        }
+        
+        .message.assistant {
+            background: white;
+            border: 1px solid #ddd;
+        }
+        
+        .chat-input-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input {
+            flex: 1;
+        }
+        
+        .status {
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .status.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+        
+        .status.error {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+        
+        .status.info {
+            background: #e3f2fd;
+            color: #1565c0;
+            border: 1px solid #90caf9;
+        }
+        
+        .file-upload {
+            border: 2px dashed #ddd;
+            border-radius: 4px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .file-upload:hover {
+            border-color: #9B1E37;
+            background: #f9f9f9;
+        }
+        
+        .file-upload.dragging {
+            border-color: #9B1E37;
+            background: #f0f0f0;
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        .preview-image {
+            max-width: 200px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🗳️ Secure the Vote MD - Admin Dashboard</h1>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('petitions')">📝 Petitions</button>
+            <button class="tab" onclick="switchTab('blog')">📰 Blog Posts</button>
+            <button class="tab" onclick="switchTab('chat')">💬 Chat with Aster</button>
+        </div>
+
+        <!-- Petitions Tab -->
+        <div id="petitions" class="tab-content active">
+            <h2>Create New Petition</h2>
+            <div class="status" id="petition-status"></div>
+            <form id="petitionForm">
+                <div class="form-group">
+                    <label for="petition-title">Petition Title</label>
+                    <input type="text" id="petition-title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="petition-target-email">Target Email (decision maker)</label>
+                    <input type="email" id="petition-target-email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="petition-cc-email">CC Email (optional)</label>
+                    <input type="email" id="petition-cc-email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="petition-subject">Email Subject</label>
+                    <input type="text" id="petition-subject" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="petition-greeting">Greeting</label>
+                    <input type="text" id="petition-greeting" value="Dear Maryland Resident," required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="petition-message">Petition Message</label>
+                    <textarea id="petition-message" rows="10" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="petition-goal">Signature Goal (optional)</label>
+                    <input type="number" id="petition-goal" min="0">
+                </div>
+                
+                <div class="btn-group">
+                    <button type="submit" class="btn">Create Petition</button>
+                    <button type="button" class="btn btn-secondary" onclick="previewPetition()">Preview First</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Blog Tab -->
+        <div id="blog" class="tab-content">
+            <h2>Create New Blog Post</h2>
+            <div class="status" id="blog-status"></div>
+            <form id="blogForm">
+                <div class="form-group">
+                    <label for="blog-title">Post Title</label>
+                    <input type="text" id="blog-title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="blog-category">Category</label>
+                    <select id="blog-category">
+                        <option value="press-release">Press Release / News</option>
+                        <option value="citizen-action">Citizen Action</option>
+                        <option value="lawsuit-documents">Lawsuit Documents</option>
+                        <option value="score-card">Score Card</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Featured Image</label>
+                    <div class="file-upload" id="imageUpload">
+                        <p>📷 Click or drag image here</p>
+                        <input type="file" id="fileInput" accept="image/*">
+                    </div>
+                    <img id="imagePreview" class="preview-image" style="display: none;">
+                </div>
+                
+                <div class="form-group">
+                    <label for="blog-content">Post Content (HTML supported)</label>
+                    <textarea id="blog-content" rows="15" required></textarea>
+                </div>
+                
+                <div class="btn-group">
+                    <button type="submit" class="btn">Create Post</button>
+                    <button type="button" class="btn btn-secondary" onclick="previewBlog()">Preview First</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Chat Tab -->
+        <div id="chat" class="tab-content">
+            <h2>Chat with Aster</h2>
+            <p style="color: #666; margin-bottom: 20px;">Ask Aster to make changes to the website, create content, or answer questions.</p>
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message assistant">
+                        <strong>Aster:</strong> Hi! I'm ready to help with the website. You can ask me to:
+                        <ul style="margin-top: 10px;">
+                            <li>Change text or images on any page</li>
+                            <li>Create new pages or sections</li>
+                            <li>Update the navigation menu</li>
+                            <li>Modify colors or styling</li>
+                        </ul>
+                        All changes will be previewed before going live.
+                    </div>
+                </div>
+                <div class="chat-input-group">
+                    <input type="text" id="chatInput" class="chat-input" placeholder="Type your request here..." onkeypress="if(event.key==='Enter') sendMessage()">
+                    <button class="btn" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
