@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard - SecureTheVote</title>
   <link rel="stylesheet" href="/css/admin.css">
+  <!-- Quill Editor -->
+  <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
 </head>
 <body>
   <div id="app">
@@ -46,6 +48,9 @@
       <!-- Navigation Tabs -->
       <nav class="dashboard-tabs">
         <button class="tab-btn active" data-tab="signatures">Signatures</button>
+        <button class="tab-btn" data-tab="posts">Posts</button>
+        <button class="tab-btn" data-tab="banner">Banner</button>
+        <button class="tab-btn" data-tab="petitions">Petitions</button>
         <button class="tab-btn" data-tab="admins">Admin Users</button>
       </nav>
 
@@ -91,6 +96,257 @@
               <button id="prev-page" class="btn btn-small">Previous</button>
               <span id="page-info">Page 1 of 1</span>
               <button id="next-page" class="btn btn-small">Next</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Posts Tab -->
+        <div id="tab-posts" class="tab-content" style="display: none;">
+          <div class="posts-section">
+            <!-- Post List / Editor Toggle -->
+            <div class="section-header">
+              <h2 id="posts-section-title">Blog Posts</h2>
+              <button id="new-post-btn" class="btn btn-primary">New Post</button>
+            </div>
+
+            <!-- Posts List View -->
+            <div id="posts-list-view">
+              <div class="card">
+                <div class="table-controls">
+                  <select id="post-status-filter">
+                    <option value="">All Status</option>
+                    <option value="draft">Draft</option>
+                    <option value="published">Published</option>
+                  </select>
+                  <select id="post-category-filter">
+                    <option value="">All Categories</option>
+                    <option value="citizen-action">Citizen Action</option>
+                    <option value="news">News</option>
+                    <option value="press-release">Press Release</option>
+                  </select>
+                  <input type="text" id="post-search" placeholder="Search posts...">
+                </div>
+                <table class="admins-table">
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+                      <th>Category</th>
+                      <th>Status</th>
+                      <th>Date</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="posts-list-body">
+                    <!-- Populated by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Post Editor View -->
+            <div id="post-editor-view" style="display: none;">
+              <div class="card">
+                <form id="post-form">
+                  <input type="hidden" id="post-id">
+                  
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="post-title">Title *</label>
+                      <input type="text" id="post-title" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="post-slug">Slug *</label>
+                      <input type="text" id="post-slug" required>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="post-category">Category</label>
+                      <select id="post-category">
+                        <option value="uncategorized">Uncategorized</option>
+                        <option value="citizen-action">Citizen Action</option>
+                        <option value="news">News</option>
+                        <option value="press-release">Press Release</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="post-type">Post Type</label>
+                      <select id="post-type">
+                        <option value="article">Article</option>
+                        <option value="press-release">Press Release</option>
+                        <option value="external-link">External Link</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group" id="external-url-group" style="display: none;">
+                    <label for="post-external-url">External URL</label>
+                    <input type="url" id="post-external-url" placeholder="https://...">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="post-excerpt">Excerpt</label>
+                    <textarea id="post-excerpt" rows="3"></textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Content</label>
+                    <div id="post-content-editor"></div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="post-featured-image">Featured Image URL</label>
+                    <input type="url" id="post-featured-image" placeholder="/images/blog/...">
+                  </div>
+
+                  <div class="seo-section">
+                    <h3>SEO Settings <button type="button" id="generate-seo-btn" class="btn btn-small btn-secondary">Auto-Generate SEO</button></h3>
+                    <div class="form-group">
+                      <label for="post-seo-title">SEO Title</label>
+                      <input type="text" id="post-seo-title" maxlength="60">
+                      <small class="char-count">0/60</small>
+                    </div>
+                    <div class="form-group">
+                      <label for="post-seo-description">Meta Description</label>
+                      <textarea id="post-seo-description" rows="2" maxlength="160"></textarea>
+                      <small class="char-count">0/160</small>
+                    </div>
+                    <div class="form-group">
+                      <label for="post-og-image">OG Image URL</label>
+                      <input type="url" id="post-og-image">
+                    </div>
+                  </div>
+
+                  <div id="post-form-message" style="display: none;"></div>
+
+                  <div class="form-actions">
+                    <button type="button" id="cancel-post-btn" class="btn btn-outline">Cancel</button>
+                    <button type="button" id="preview-post-btn" class="btn btn-secondary">Preview</button>
+                    <button type="submit" id="save-post-btn" class="btn btn-primary">Save Draft</button>
+                    <button type="button" id="publish-post-btn" class="btn btn-primary">Publish</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Banner Tab -->
+        <div id="tab-banner" class="tab-content" style="display: none;">
+          <div class="banner-section">
+            <div class="section-header">
+              <h2>Homepage Banner</h2>
+              <div class="banner-toggle">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="banner-enabled-toggle">
+                  <span>Banner Enabled</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Banner Slides</h3>
+              <button id="add-slide-btn" class="btn btn-primary" style="margin-bottom: 20px;">Add Slide</button>
+              
+              <div id="slides-list">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Petitions Tab -->
+        <div id="tab-petitions" class="tab-content" style="display: none;">
+          <div class="petitions-section">
+            <div class="section-header">
+              <h2>Petitions</h2>
+              <button id="new-petition-btn" class="btn btn-primary">New Petition</button>
+            </div>
+
+            <!-- Petitions List -->
+            <div id="petitions-list-view">
+              <div class="card">
+                <table class="admins-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Title</th>
+                      <th>Signatures</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="petitions-list-body">
+                    <!-- Populated by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Petition Editor -->
+            <div id="petition-editor-view" style="display: none;">
+              <div class="card">
+                <form id="petition-form">
+                  <input type="hidden" id="petition-id">
+                  
+                  <div class="form-group">
+                    <label for="petition-name">Internal Name (ID) *</label>
+                    <input type="text" id="petition-name" required placeholder="voter-integrity-2026">
+                    <small>Lowercase, no spaces. Used in URLs and database.</small>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="petition-title">Display Title *</label>
+                    <input type="text" id="petition-title" required placeholder="Voter Integrity Petition 2026">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="petition-description">Description</label>
+                    <textarea id="petition-description" rows="4"></textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="checkbox-label">
+                      <input type="checkbox" id="petition-active">
+                      <span>Active (visible on site)</span>
+                    </label>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Form Fields</label>
+                    <div class="petition-fields">
+                      <label class="checkbox-label">
+                        <input type="checkbox" class="field-checkbox" value="full_name" checked disabled>
+                        <span>Full Name (required)</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" class="field-checkbox" value="email" checked disabled>
+                        <span>Email (required)</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" class="field-checkbox" value="zip_code" checked>
+                        <span>Zip Code</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" class="field-checkbox" value="phone">
+                        <span>Phone Number</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" class="field-checkbox" value="address">
+                        <span>Address</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div id="petition-form-message" style="display: none;"></div>
+
+                  <div class="form-actions">
+                    <button type="button" id="cancel-petition-btn" class="btn btn-outline">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Petition</button>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </div>
@@ -164,6 +420,7 @@
     </div>
   </div>
 
+  <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
   <script src="/js/admin.js"></script>
 </body>
 </html>
