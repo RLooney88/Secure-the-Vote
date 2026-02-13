@@ -256,10 +256,11 @@
     hideError();
 
     try {
-      const { email, password } = event.target;
+      const emailVal = document.getElementById('email').value.trim();
+      const passVal = document.getElementById('password').value;
       const data = await api('admin/login', {
         method: 'POST',
-        body: JSON.stringify({ email: email.value, password: password.value })
+        body: JSON.stringify({ email: emailVal, password: passVal })
       });
 
       state.token = data.token;
