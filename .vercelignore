@@ -1,0 +1,6 @@
+node_modules
+src
+wordpress-crawl
+images
+*.md
+!public/**

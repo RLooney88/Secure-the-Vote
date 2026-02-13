@@ -4,7 +4,7 @@
   "description": "SecureTheVoteMD Static Site - Eleventy",
   "scripts": {
     "start": "eleventy --serve",
-    "build": "eleventy",
+    "build": "echo 'Static site already built - no build step needed'",
     "clean": "rm -rf public"
   },
   "keywords": [
