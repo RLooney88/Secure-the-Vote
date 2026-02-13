@@ -435,14 +435,18 @@
   function init() {
     if (state.token) {
       // Try to load dashboard with existing token
+      elements.loginView.style.display = 'none';
+      elements.dashboardView.style.display = 'block';
+      
       loadSignatures().catch(() => {
         state.token = null;
         localStorage.removeItem('admin_token');
         elements.loginView.style.display = 'flex';
+        elements.dashboardView.style.display = 'none';
       });
-      elements.dashboardView.style.display = 'block';
     } else {
       elements.loginView.style.display = 'flex';
+      elements.dashboardView.style.display = 'none';
     }
 
     // Event listeners
