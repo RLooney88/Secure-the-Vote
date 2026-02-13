@@ -2,12 +2,20 @@
 const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = process.env.JWT_SECRET;
+
 if (!JWT_SECRET) {
-  console.error('JWT_SECRET environment variable is not set!');
+  console.error('CRITICAL: JWT_SECRET environment variable is not set!');
+  console.error('Admin authentication will fail until this is configured.');
 }
 
 // Generate JWT token
 function generateToken(admin) {
+  if (!JWT_SECRET) {
+    const error = new Error('JWT_SECRET not configured');
+    error.code = 'JWT_SECRET_MISSING';
+    throw error;
+  }
+  
   return jwt.sign(
     { id: admin.id, email: admin.email },
     JWT_SECRET,
