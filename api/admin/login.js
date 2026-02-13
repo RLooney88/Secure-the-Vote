@@ -110,9 +110,12 @@ module.exports = async function handler(req, res) {
     });
 
   } catch (error) {
-    console.error('Login error:', error.code || 'unknown', error.message);
-    console.error('Error stack:', error.stack);
+    console.error('=== Login Error Details ===');
+    console.error('Error code:', error.code);
+    console.error('Error message:', error.message);
     console.error('Error name:', error.name);
+    console.error('Error stack:', error.stack);
+    console.error('===========================');
     
     // Provide specific error codes for common issues
     let errorCode = 'UNKNOWN_ERROR';
@@ -126,16 +129,18 @@ module.exports = async function handler(req, res) {
     else if (error.code === '42501') errorCode = 'DB_PERMISSION_DENIED';
     else if (error.code === '42P01') errorCode = 'DB_TABLE_NOT_FOUND';
     else if (error.code === '42703') errorCode = 'DB_COLUMN_NOT_FOUND';
+    else if (error.code === '3D000') errorCode = 'DB_DATABASE_NOT_FOUND';
     // JWT errors
-    else if (error.message && error.message.includes('jwt')) errorCode = 'JWT_ERROR';
+    else if (error.message && error.message.toLowerCase().includes('jwt')) errorCode = 'JWT_ERROR';
     else if (error.name === 'JsonWebTokenError') errorCode = 'JWT_INVALID_TOKEN';
     else if (error.name === 'TokenExpiredError') errorCode = 'JWT_TOKEN_EXPIRED';
+    else if (error.message && error.message.toLowerCase().includes('secret')) errorCode = 'JWT_SECRET_MISSING';
     // bcrypt errors
-    else if (error.message && error.message.includes('bcrypt')) errorCode = 'BCRYPT_ERROR';
-    else if (error.name === 'Error' && error.message.includes('data')) errorCode = 'BCRYPT_DATA_ERROR';
+    else if (error.message && error.message.toLowerCase().includes('bcrypt')) errorCode = 'BCRYPT_ERROR';
+    else if (error.name === 'Error' && error.message.toLowerCase().includes('data')) errorCode = 'BCRYPT_DATA_ERROR';
     // Environment errors
-    else if (error.message && error.message.includes('environment')) errorCode = 'ENVIRONMENT_ERROR';
-    else if (error.message && error.message.includes('not set')) errorCode = 'MISSING_CONFIG';
+    else if (error.message && error.message.toLowerCase().includes('environment')) errorCode = 'ENVIRONMENT_ERROR';
+    else if (error.message && error.message.toLowerCase().includes('not set')) errorCode = 'MISSING_CONFIG';
     
     return res.status(500).json({ 
       error: 'Authentication failed',
