@@ -23,8 +23,8 @@ module.exports = async function handler(req, res) {
     const result = await pool.query(query, params);
 
     let countQuery = 'SELECT COUNT(*) FROM petition_signatures';
-    const countResult = await pool.query(countQuery, petitionName ? [petitionName] : []);
     if (petitionName) countQuery += ' WHERE petition_name = $1';
+    const countResult = await pool.query(countQuery, petitionName ? [petitionName] : []);
     const total = parseInt(countResult.rows[0].count);
 
     return res.status(200).json({
