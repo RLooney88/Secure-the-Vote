@@ -15,7 +15,7 @@
   /* Brand Colors (extracted from securethevotemd.com) */
   --maroon: #9B1E37;           /* Donate button, headings, petition bg */
   --pink: #CC3366;             /* Links, hover states */
-  --gold: #F6B221;             /* Top bar, accents, logo yellow */
+  --gold: #F6BF58;             /* Top bar, accents, logo yellow - CORRECTED */
   --gray-button: #69727D;      /* Default button gray */
   
   /* Text Colors */
@@ -302,7 +302,7 @@ a:hover {
 
 /* ========== Announcement Bar (Marquee) ========== */
 .announcement-bar {
-  background: var(--gold);
+  background: var(--maroon);
   padding: 12px 0;
   font-weight: 600;
   text-align: center;
@@ -310,14 +310,14 @@ a:hover {
 }
 
 .announcement-bar a {
-  color: var(--maroon);
+  color: var(--text-white);
   text-decoration: none;
   display: inline-block;
   animation: scroll-left 20s linear infinite;
 }
 
 .announcement-bar a:hover {
-  color: var(--text-dark);
+  color: var(--gold);
 }
 
 @keyframes scroll-left {
@@ -973,14 +973,14 @@ textarea {
 
 /* ========== ANNOUNCEMENT BAR ========== */
 .announcement-bar {
-  background: var(--gold);
+  background: var(--maroon);
   padding: 10px 0;
   overflow: hidden;
 }
 
 .announcement-bar a {
   display: block;
-  color: var(--text-dark);
+  color: var(--text-white);
   text-decoration: none;
   font-weight: 600;
   text-align: center;
@@ -989,7 +989,8 @@ textarea {
 }
 
 .announcement-bar a:hover {
-  text-decoration: underline;
+  color: var(--gold);
+  text-decoration: none;
 }
 
 @keyframes scroll-left {
