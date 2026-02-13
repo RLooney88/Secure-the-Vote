@@ -6,7 +6,7 @@ yarn.lock
 # Build output
 public/
 _site/
-dist/
+# dist/ -- Now tracked for static site deployment
 
 # Environment variables
 .env
