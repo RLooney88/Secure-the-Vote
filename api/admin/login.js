@@ -16,7 +16,7 @@ if (missingEnvVars.length > 0) {
 let pool;
 try {
   pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: (process.env.DATABASE_URL || '').trim(),
     ssl: { rejectUnauthorized: false },
     connectionTimeoutMillis: 5000, // 5 second connection timeout
     idleTimeoutMillis: 10000, // 10 second idle timeout
@@ -149,10 +149,7 @@ module.exports = async function handler(req, res) {
     
     return res.status(500).json({ 
       error: 'Authentication failed',
-      code: errorCode,
-      debug: error.message,
-      debugName: error.name,
-      debugCode: error.code
+      code: errorCode
     });
   } finally {
     // Close the pool to prevent connection leaks in serverless
