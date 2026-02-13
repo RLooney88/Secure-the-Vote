@@ -13,19 +13,24 @@ if (missingEnvVars.length > 0) {
 
 // Create connection pool using DATABASE_URL from environment
 // Optimized for Vercel serverless: minimal pool settings
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
-  connectionTimeoutMillis: 5000, // 5 second connection timeout
-  idleTimeoutMillis: 10000, // 10 second idle timeout
-  max: 1, // Only 1 connection at a time (serverless-friendly)
-  allowExitOnIdle: true // Allow process to exit when idle
-});
-
-// Handle pool errors gracefully
-pool.on('error', (err) => {
-  console.error('Unexpected error on idle client', err);
-});
+let pool;
+try {
+  pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false },
+    connectionTimeoutMillis: 5000, // 5 second connection timeout
+    idleTimeoutMillis: 10000, // 10 second idle timeout
+    max: 1, // Only 1 connection at a time (serverless-friendly)
+    allowExitOnIdle: true // Allow process to exit when idle
+  });
+  
+  // Test the connection
+  pool.on('error', (err) => {
+    console.error('Pool error:', err.message);
+  });
+} catch (poolError) {
+  console.error('Pool creation failed:', poolError.message);
+}
 
 module.exports = async function handler(req, res) {
   // Only allow POST requests
@@ -149,10 +154,12 @@ module.exports = async function handler(req, res) {
     });
   } finally {
     // Close the pool to prevent connection leaks in serverless
-    try {
-      await pool.end();
-    } catch (e) {
-      // Ignore errors when closing
+    if (pool) {
+      try {
+        await pool.end();
+      } catch (e) {
+        console.error('Error closing pool:', e.message);
+      }
     }
   }
 };
