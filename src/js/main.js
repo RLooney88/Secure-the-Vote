@@ -1,5 +1,30 @@
 // Mobile Menu Toggle
 document.addEventListener('DOMContentLoaded', function() {
+  
+  // Initialize Swiper Slider
+  if (typeof Swiper !== 'undefined') {
+    const swiper = new Swiper('.elementor-swiper', {
+      loop: true,
+      autoplay: {
+        delay: 5000,
+        disableOnInteraction: false,
+      },
+      effect: 'fade',
+      fadeEffect: {
+        crossFade: true
+      },
+      speed: 1200,
+      navigation: {
+        nextEl: '.elementor-swiper-button-next',
+        prevEl: '.elementor-swiper-button-prev',
+      },
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+    });
+  }
+  
   const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
   const mainNav = document.getElementById('main-nav');
   

@@ -1,0 +1,131 @@
+/* Homepage Layout Fixes */
+
+/* Announcement Bar */
+.announcement-bar {
+  background: #9B1E37;
+  padding: 12px 0;
+  text-align: center;
+}
+
+.announcement-bar a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.announcement-bar a:hover {
+  color: #F6BF58;
+}
+
+/* Slider Height Fix */
+.elementor-element-fe0177c .swiper-slide {
+  height: 650px !important;
+}
+
+/* Ensure proper spacing between sections */
+.elementor-section {
+  margin-bottom: 0;
+}
+
+/* Petition Section - prevent overlap */
+.elementor-element-5be49054 {
+  margin-top: 0 !important;
+  padding-top: 50px !important;
+  padding-bottom: 50px !important;
+}
+
+/* Container max-width consistency */
+.elementor-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Slider content positioning */
+.swiper-slide-inner {
+  padding: 0 250px !important;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.swiper-slide-contents {
+  max-width: 800px;
+}
+
+/* Slider text sizing */
+.elementor-slide-heading {
+  font-size: 50px !important;
+  line-height: 60px !important;
+  margin-bottom: 20px !important;
+}
+
+.elementor-slide-description {
+  font-size: 25px !important;
+  line-height: 35px !important;
+  margin-bottom: 30px !important;
+}
+
+/* Slider button */
+.elementor-slide-button {
+  background-color: #F6BF58 !important;
+  color: #333 !important;
+  padding: 12px 30px !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  border: 2px solid #F6BF58 !important;
+  transition: all 0.3s ease !important;
+}
+
+.elementor-slide-button:hover {
+  background-color: #fff !important;
+  color: #9B1E37 !important;
+  border-color: #fff !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .swiper-slide-inner {
+    padding: 0 100px !important;
+  }
+  
+  .elementor-slide-heading {
+    font-size: 40px !important;
+    line-height: 48px !important;
+  }
+  
+  .elementor-slide-description {
+    font-size: 20px !important;
+    line-height: 28px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .elementor-element-fe0177c .swiper-slide {
+    height: 500px !important;
+  }
+  
+  .swiper-slide-inner {
+    padding: 0 40px !important;
+  }
+  
+  .elementor-slide-heading {
+    font-size: 32px !important;
+    line-height: 40px !important;
+  }
+  
+  .elementor-slide-description {
+    font-size: 18px !important;
+    line-height: 26px !important;
+  }
+  
+  .announcement-bar a {
+    font-size: 12px;
+  }
+}
