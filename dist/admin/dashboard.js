@@ -328,5 +328,67 @@ Return a preview URL so I can review before publishing.`;
     }
 }
 
+
+// Banner Form Handling
+document.getElementById('bannerForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const bannerData = {
+        text: document.getElementById('banner-text').value,
+        link: document.getElementById('banner-link').value,
+        enabled: document.getElementById('banner-enabled').checked
+    };
+    
+    showStatus('banner-status', 'info', 'Updating banner...');
+    
+    const message = `Update the homepage announcement banner with:
+
+Text: ${bannerData.text}
+Link: ${bannerData.link}
+Enabled: ${bannerData.enabled}
+
+Please update the banner in the homepage HTML (the marquee element) and deploy the change.`;
+    
+    const response = await sendToAster(message, { type: 'banner', data: bannerData });
+    
+    if (response.success) {
+        showStatus('banner-status', 'success', 'Banner updated! Changes will be live shortly.');
+        // Update preview
+        document.getElementById('current-banner-preview').textContent = bannerData.text;
+    } else {
+        showStatus('banner-status', 'error', 'Error updating banner. Please try again or use the chat interface.');
+    }
+});
+
+async function previewBanner() {
+    const bannerData = {
+        text: document.getElementById('banner-text').value,
+        link: document.getElementById('banner-link').value
+    };
+    
+    if (!bannerData.text) {
+        alert('Please enter banner text before previewing.');
+        return;
+    }
+    
+    showStatus('banner-status', 'info', 'Generating preview...');
+    
+    const message = `Please create a preview of this banner update (dev branch):
+
+Text: ${bannerData.text}
+Link: ${bannerData.link}
+
+Return a preview URL so I can review before publishing.`;
+    
+    const response = await sendToAster(message, { type: 'preview-banner', data: bannerData });
+    
+    if (response.preview_url) {
+        showStatus('banner-status', 'success', 'Preview ready!');
+        window.open(response.preview_url, '_blank');
+    } else {
+        showStatus('banner-status', 'info', 'Preview request sent. Check the chat tab for the preview link.');
+    }
+}
+
 // Initialize
 console.log('Admin Dashboard loaded. Ready to communicate with Aster.');

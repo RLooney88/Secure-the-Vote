@@ -376,7 +376,49 @@
                     <button class="btn" onclick="sendMessage()">Send</button>
                 </div>
             </div>
+                <!-- Banner Tab -->
+        <div id="banner" class="tab-content">
+            <h2>Manage Announcement Banner</h2>
+            <p style="color: #666; margin-bottom: 20px;">This is the scrolling banner that appears at the top of the homepage. Update the message and link as your priorities change.</p>
+            
+            <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
+                <strong>Current Banner:</strong>
+                <div style="margin-top: 10px; padding: 10px; background: #9B1E37; color: white; border-radius: 4px;">
+                    <a href="/register-for-lobby-day-jan-27/#register-now" style="color: white; text-decoration: none;" id="current-banner-preview">
+                        JOIN US FOR SECURE THE VOTE ACT 2026 LOBBY DAY - WED FEB 4 AT 9AM - CLICK HERE TO REGISTER!
+                    </a>
+                </div>
+            </div>
+            
+            <div class="status" id="banner-status"></div>
+            
+            <form id="bannerForm">
+                <div class="form-group">
+                    <label for="banner-text">Banner Text</label>
+                    <input type="text" id="banner-text" value="JOIN US FOR SECURE THE VOTE ACT 2026 LOBBY DAY - WED FEB 4 AT 9AM - CLICK HERE TO REGISTER!" required>
+                    <small style="color: #666; display: block; margin-top: 5px;">Keep it concise - this will scroll across the top of the page</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="banner-link">Link URL</label>
+                    <input type="text" id="banner-link" value="/register-for-lobby-day-jan-27/#register-now" required placeholder="/path-to-page or https://example.com">
+                    <small style="color: #666; display: block; margin-top: 5px;">Where should the banner link to? (Use relative paths like /contact-us/ or full URLs)</small>
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="banner-enabled" checked style="width: auto; display: inline-block; margin-right: 8px;">
+                        Show banner on homepage
+                    </label>
+                </div>
+                
+                <div class="btn-group">
+                    <button type="submit" class="btn">Update Banner</button>
+                    <button type="button" class="btn btn-secondary" onclick="previewBanner()">Preview First</button>
+                </div>
+            </form>
         </div>
+
     </div>
 
     <script src="dashboard.js"></script>
