@@ -93,14 +93,30 @@ module.exports = async function handler(req, res) {
   } catch (error) {
     console.error('Login error:', error.code || 'unknown', error.message);
     console.error('Error stack:', error.stack);
+    console.error('Error name:', error.name);
     
     // Provide specific error codes for common issues
     let errorCode = 'UNKNOWN_ERROR';
+    
+    // Database connection errors
     if (error.code === 'ECONNREFUSED') errorCode = 'DB_CONNECTION_REFUSED';
     else if (error.code === 'ENOTFOUND') errorCode = 'DB_HOST_NOT_FOUND';
     else if (error.code === '28P01') errorCode = 'DB_AUTH_FAILED';
     else if (error.code === '57P03') errorCode = 'DB_CANNOT_CONNECT';
+    else if (error.code === '53300' || error.code === '53302') errorCode = 'DB_TOO_MANY_CONNECTIONS';
+    else if (error.code === '42501') errorCode = 'DB_PERMISSION_DENIED';
+    else if (error.code === '42P01') errorCode = 'DB_TABLE_NOT_FOUND';
+    else if (error.code === '42703') errorCode = 'DB_COLUMN_NOT_FOUND';
+    // JWT errors
     else if (error.message && error.message.includes('jwt')) errorCode = 'JWT_ERROR';
+    else if (error.name === 'JsonWebTokenError') errorCode = 'JWT_INVALID_TOKEN';
+    else if (error.name === 'TokenExpiredError') errorCode = 'JWT_TOKEN_EXPIRED';
+    // bcrypt errors
+    else if (error.message && error.message.includes('bcrypt')) errorCode = 'BCRYPT_ERROR';
+    else if (error.name === 'Error' && error.message.includes('data')) errorCode = 'BCRYPT_DATA_ERROR';
+    // Environment errors
+    else if (error.message && error.message.includes('environment')) errorCode = 'ENVIRONMENT_ERROR';
+    else if (error.message && error.message.includes('not set')) errorCode = 'MISSING_CONFIG';
     
     return res.status(500).json({ 
       error: 'Authentication failed',
