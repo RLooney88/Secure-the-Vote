@@ -150,7 +150,9 @@ module.exports = async function handler(req, res) {
     return res.status(500).json({ 
       error: 'Authentication failed',
       code: errorCode,
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      debug: error.message,
+      debugName: error.name,
+      debugCode: error.code
     });
   } finally {
     // Close the pool to prevent connection leaks in serverless
