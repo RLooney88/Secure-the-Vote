@@ -1,0 +1,41 @@
+---
+layout: base.njk
+title: "Score Card"
+description: "Election security score cards and legislative tracking"
+permalink: "/news/score-card/"
+---
+
+<section class="section news-section">
+  <div class="container">
+    <div class="section-header">
+      <h1>Score Card</h1>
+      <p>Tracking legislative positions on election integrity</p>
+    </div>
+    
+    <div class="news-filters">
+      <a href="/news/" class="filter-btn">All News</a>
+      <a href="/news/citizen-action/" class="filter-btn">Citizen Action</a>
+      <a href="/news/lawsuit-documents/" class="filter-btn">Lawsuit Documents</a>
+      <a href="/news/score-card/" class="filter-btn active">Score Card</a>
+    </div>
+    
+    <div class="posts-grid">
+      {% set filteredPosts = posts | selectattr("category", "equalto", "score-card") | list %}
+      {% if filteredPosts | length == 0 %}
+        <p class="no-posts">No score cards available at this time.</p>
+      {% else %}
+        {% for post in filteredPosts | reverse %}
+        <article class="post-card">
+          <div class="post-card-meta">
+            <span class="post-category">{{ post.categoryLabel }}</span>
+            <time datetime="{{ post.date }}">{{ post.date | readableDate }}</time>
+          </div>
+          <h2><a href="{{ post.link }}">{{ post.title }}</a></h2>
+          <p class="post-excerpt">{{ post.excerpt }}</p>
+          <a href="{{ post.link }}" class="read-more">Read More &rarr;</a>
+        </article>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,126 @@
+{# Schema.org Structured Data (JSON-LD) #}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "{{ seo.siteUrl }}/#organization",
+      "name": "{{ seo.organization.name }}",
+      "url": "{{ seo.organization.url }}",
+      "logo": {
+        "@type": "ImageObject",
+        "@id": "{{ seo.siteUrl }}/#logo",
+        "url": "{{ seo.organization.logo }}",
+        "contentUrl": "{{ seo.organization.logo }}",
+        "caption": "{{ seo.organization.name }}"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "{{ seo.organization.contactPoint.contactType }}",
+        "email": "{{ seo.organization.contactPoint.email }}"
+      },
+      "sameAs": {{ seo.organization.sameAs | dump | safe }}
+    },
+    {
+      "@type": "WebSite",
+      "@id": "{{ seo.siteUrl }}/#website",
+      "url": "{{ seo.siteUrl }}",
+      "name": "{{ seo.siteName }}",
+      "description": "{{ seo.siteDescription }}",
+      "publisher": {
+        "@id": "{{ seo.siteUrl }}/#organization"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "{{ seo.siteUrl }}/search?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      },
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "{{ seo.siteUrl }}{{ page.url }}#webpage",
+      "url": "{{ seo.siteUrl }}{{ page.url }}",
+      "name": "{{ title or seo.defaultTitle }}",
+      "description": "{{ description or seo.siteDescription }}",
+      "isPartOf": {
+        "@id": "{{ seo.siteUrl }}/#website"
+      },
+      "about": {
+        "@id": "{{ seo.siteUrl }}/#organization"
+      },
+      "inLanguage": "en-US"
+      {% if date or page.date %},
+      "datePublished": "{{ date or page.date | htmlDateString }}",
+      "dateModified": "{{ modified or page.date | htmlDateString }}"
+      {% endif %}
+      {% if image %},
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "@id": "{{ seo.siteUrl }}{{ image }}",
+        "url": "{{ seo.siteUrl }}{{ image }}",
+        "contentUrl": "{{ seo.siteUrl }}{{ image }}"
+      }
+      {% endif %}
+    }
+    {% if ogType == 'article' %}
+    ,{
+      "@type": "Article",
+      "@id": "{{ seo.siteUrl }}{{ page.url }}#article",
+      "headline": "{{ title }}",
+      "description": "{{ description or seo.siteDescription }}",
+      "isPartOf": {
+        "@id": "{{ seo.siteUrl }}{{ page.url }}#webpage"
+      },
+      "author": {
+        "@type": "Organization",
+        "@id": "{{ seo.siteUrl }}/#organization"
+      },
+      "publisher": {
+        "@id": "{{ seo.siteUrl }}/#organization"
+      },
+      "datePublished": "{{ date or page.date | htmlDateString }}",
+      "dateModified": "{{ modified or page.date | htmlDateString }}",
+      "mainEntityOfPage": {
+        "@id": "{{ seo.siteUrl }}{{ page.url }}#webpage"
+      },
+      "inLanguage": "en-US"
+      {% if image %},
+      "image": {
+        "@type": "ImageObject",
+        "@id": "{{ seo.siteUrl }}{{ image }}",
+        "url": "{{ seo.siteUrl }}{{ image }}",
+        "contentUrl": "{{ seo.siteUrl }}{{ image }}"
+      }
+      {% endif %}
+    }
+    {% endif %}
+    {% if breadcrumbs %}
+    ,{
+      "@type": "BreadcrumbList",
+      "@id": "{{ seo.siteUrl }}{{ page.url }}#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "{{ seo.siteUrl }}"
+        }
+        {% for crumb in breadcrumbs %}
+        ,{
+          "@type": "ListItem",
+          "position": {{ loop.index + 1 }},
+          "name": "{{ crumb.name }}",
+          "item": "{{ seo.siteUrl }}{{ crumb.url }}"
+        }
+        {% endfor %}
+      ]
+    }
+    {% endif %}
+  ]
+}
+</script>

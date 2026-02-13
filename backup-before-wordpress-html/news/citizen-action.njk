@@ -1,0 +1,41 @@
+---
+layout: base.njk
+title: "Citizen Action"
+description: "Take action to secure Maryland's elections - petitions, calls to action, and ways to get involved"
+permalink: "/news/citizen-action/"
+---
+
+<section class="section news-section">
+  <div class="container">
+    <div class="section-header">
+      <h1>Citizen Action</h1>
+      <p>Take action to secure Maryland's elections</p>
+    </div>
+    
+    <div class="news-filters">
+      <a href="/news/" class="filter-btn">All News</a>
+      <a href="/news/citizen-action/" class="filter-btn active">Citizen Action</a>
+      <a href="/news/lawsuit-documents/" class="filter-btn">Lawsuit Documents</a>
+      <a href="/news/score-card/" class="filter-btn">Score Card</a>
+    </div>
+    
+    <div class="posts-grid">
+      {% set filteredPosts = posts | selectattr("category", "equalto", "citizen-action") | list %}
+      {% if filteredPosts | length == 0 %}
+        <p class="no-posts">No citizen action items at this time. Check back soon!</p>
+      {% else %}
+        {% for post in filteredPosts | reverse %}
+        <article class="post-card">
+          <div class="post-card-meta">
+            <span class="post-category">{{ post.categoryLabel }}</span>
+            <time datetime="{{ post.date }}">{{ post.date | readableDate }}</time>
+          </div>
+          <h2><a href="{{ post.link }}">{{ post.title }}</a></h2>
+          <p class="post-excerpt">{{ post.excerpt }}</p>
+          <a href="{{ post.link }}" class="read-more">Read More &rarr;</a>
+        </article>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,263 @@
+/* ========================================
+   Header Styles
+   ======================================== */
+
+/* Top Bar */
+.top-bar {
+  background-color: #F6BF58;
+  padding: 8px 0;
+  font-size: 14px;
+}
+
+.top-bar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.top-bar-email {
+  color: #333;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.top-bar-email:hover {
+  color: #9B1E37;
+}
+
+.social-icons {
+  display: flex;
+  gap: 12px;
+}
+
+.social-icons a {
+  color: #333;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.social-icons a:hover {
+  color: #9B1E37;
+}
+
+/* Main Header */
+.site-header {
+  background: #fff;
+  padding: 15px 0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.site-logo img {
+  height: 60px;
+  width: auto;
+}
+
+/* Navigation */
+.main-navigation {
+  flex: 1;
+}
+
+.main-navigation .menu {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 25px;
+  justify-content: center;
+}
+
+.main-navigation .menu > li {
+  position: relative;
+}
+
+.main-navigation .menu > li > a {
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 15px;
+  padding: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.3s ease;
+}
+
+.main-navigation .menu > li > a:hover {
+  color: #9B1E37;
+}
+
+.main-navigation .menu > li > a i {
+  font-size: 10px;
+}
+
+/* Dropdown Menus */
+.menu-item-has-children {
+  position: relative;
+}
+
+.sub-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  list-style: none;
+  margin: 0;
+  padding: 10px 0;
+  min-width: 220px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+.menu-item-has-children:hover .sub-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.sub-menu li {
+  margin: 0;
+}
+
+.sub-menu a {
+  display: block;
+  padding: 10px 20px;
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.sub-menu a:hover {
+  background: #f5f5f5;
+  color: #9B1E37;
+  padding-left: 25px;
+}
+
+/* Donate Button */
+.donate-button {
+  background: #9B1E37;
+  color: #fff !important;
+  padding: 12px 30px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  border-radius: 0;
+  transition: all 0.3s ease;
+  display: inline-block;
+  text-transform: uppercase;
+}
+
+.donate-button:hover {
+  background: #7a1829;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(155, 30, 55, 0.3);
+}
+
+/* Mobile Menu Toggle */
+.mobile-menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.mobile-menu-toggle span {
+  width: 25px;
+  height: 3px;
+  background: #333;
+  transition: all 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .header-wrapper {
+    gap: 20px;
+  }
+
+  .main-navigation .menu {
+    gap: 15px;
+  }
+
+  .main-navigation .menu > li > a {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .top-bar .container {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .social-icons {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .mobile-menu-toggle {
+    display: flex;
+  }
+
+  .main-navigation .menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    padding: 20px;
+  }
+
+  .main-navigation .menu.active {
+    display: flex;
+  }
+
+  .main-navigation .menu > li {
+    width: 100%;
+  }
+
+  .sub-menu {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    box-shadow: none;
+    margin-left: 15px;
+    display: none;
+  }
+
+  .menu-item-has-children.active .sub-menu {
+    display: block;
+  }
+
+  .header-donate {
+    margin-left: auto;
+  }
+
+  .donate-button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}

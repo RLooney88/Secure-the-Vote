@@ -1,0 +1,24 @@
+---
+permalink: /feed.xml
+eleventyExcludeFromCollections: true
+---
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>{{ site.name }} - News &amp; Updates</title>
+    <link>{{ site.url }}</link>
+    <description>{{ site.description }}</description>
+    <language>en-us</language>
+    <atom:link href="{{ site.url }}/feed.xml" rel="self" type="application/rss+xml"/>
+{%- for post in posts.slice(0, 20) %}
+    <item>
+      <title>{{ post.title | escape }}</title>
+      <link>{{ site.url }}{{ post.link }}</link>
+      <description><![CDATA[{{ post.excerpt }}]]></description>
+      <pubDate>{{ post.date }}</pubDate>
+      <guid isPermaLink="true">{{ site.url }}{{ post.link }}</guid>
+      <category>{{ post.categoryLabel }}</category>
+    </item>
+{%- endfor %}
+  </channel>
+</rss>

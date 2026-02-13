@@ -1,0 +1,52 @@
+{
+  "siteName": "Secure The Vote MD",
+  "siteDescription": "Strengthening our Constitutional Republic through secure voting. Join Maryland citizens in advocating for election integrity, voter ID, signature verification, and transparent election processes.",
+  "siteUrl": "https://securethevotemd.com",
+  "defaultTitle": "Secure The Vote MD - Maryland Election Integrity",
+  "titleTemplate": "%s - Secure The Vote MD",
+  "author": "Secure The Vote MD",
+  "email": "info@securethevotemd.com",
+  "social": {
+    "twitter": "@SecureVoteMD",
+    "facebook": "SecureTheVoteMD"
+  },
+  "defaultImage": "/images/og-default.jpg",
+  "imageWidth": 1200,
+  "imageHeight": 630,
+  "locale": "en_US",
+  "type": "website",
+  "keywords": [
+    "Maryland election integrity",
+    "voter ID Maryland",
+    "election security",
+    "secure voting",
+    "Maryland elections",
+    "voter registration",
+    "election reform",
+    "constitutional republic",
+    "election transparency",
+    "Maryland civic action"
+  ],
+  "organization": {
+    "name": "Secure The Vote MD",
+    "url": "https://securethevotemd.com",
+    "logo": "https://securethevotemd.com/images/logo.png",
+    "sameAs": [
+      "https://twitter.com/SecureVoteMD",
+      "https://facebook.com/SecureTheVoteMD"
+    ],
+    "contactPoint": {
+      "contactType": "Customer Service",
+      "email": "info@securethevotemd.com"
+    }
+  },
+  "robots": {
+    "index": true,
+    "follow": true,
+    "nocache": false,
+    "nosnippet": false,
+    "maxSnippet": -1,
+    "maxImagePreview": "large",
+    "maxVideoPreview": -1
+  }
+}

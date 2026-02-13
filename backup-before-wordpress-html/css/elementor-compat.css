@@ -1,0 +1,317 @@
+/* ========================================
+   Elementor Compatibility CSS
+   Exact class matching from WordPress
+   ======================================== */
+
+/* ========== Elementor Core Structure ========== */
+.elementor {
+  position: relative;
+}
+
+/* Sections */
+.section {
+  position: relative;
+  width: 100%;
+  padding: 60px 0;
+}
+
+.section.elementor-section-boxed .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.section.elementor-section-height-default {
+  min-height: auto;
+}
+
+/* Background Overlay */
+.background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  opacity: 0.5;
+  background: rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+/* Containers */
+.container {
+  position: relative;
+  z-index: 1;
+}
+
+.column-gap-default {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Columns */
+.column {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.elementor-top-column {
+  margin-bottom: 20px;
+}
+
+/* Widget Wraps */
+.widget-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.element-populated {
+  padding: 20px;
+}
+
+/* Elements */
+.element {
+  position: relative;
+}
+
+/* Widgets */
+.widget {
+  margin-bottom: 20px;
+}
+
+.widget-heading .heading-title {
+  font-weight: 700;
+  line-height: 1.2;
+  color: #1e3a8a;
+  margin: 0;
+}
+
+.widget-heading .heading-title.size-default {
+  font-size: 2.5rem;
+}
+
+.elementor-widget-container {
+  position: relative;
+}
+
+/* Dividers */
+.widget-divider {
+  text-align: center;
+}
+
+.divider {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.divider-separator {
+  display: block;
+  width: 100px;
+  height: 3px;
+  background: #f59e0b;
+  border-radius: 2px;
+}
+
+.elementor-widget-divider--view-line .divider-separator {
+  width: 100%;
+  max-width: 100px;
+}
+
+/* HTML Widget */
+.widget-html iframe {
+  width: 100%;
+  min-height: 600px;
+  border: none;
+  border-radius: 3px;
+}
+
+/* Image Widget */
+.widget-image img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Animations */
+.fade-in {
+  animation: fadeIn 1s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========== Flexbox Containers (e-con) ========== */
+.e-con {
+  display: flex;
+  position: relative;
+}
+
+.e-flex {
+  display: flex;
+}
+
+.e-con-boxed {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.e-con-full {
+  width: 100%;
+}
+
+.e-parent {
+  padding: 40px 0;
+}
+
+.e-child {
+  flex: 1;
+  padding: 20px;
+}
+
+.e-con-inner {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  width: 100%;
+  align-items: stretch;
+}
+
+/* ========== Section Backgrounds ========== */
+.section[data-settings*="background_background"] {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.section[data-settings*="classic"] {
+  position: relative;
+}
+
+/* ========== Typography ========== */
+h1.heading-title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin-bottom: 20px;
+}
+
+h2.heading-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin-bottom: 15px;
+}
+
+h3.heading-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin-bottom: 10px;
+}
+
+.heading-title br {
+  display: block;
+  content: "";
+  margin-top: 10px;
+}
+
+/* ========== Forms ========== */
+iframe[data-form-name] {
+  width: 100%;
+  min-height: 600px;
+  border: none;
+  border-radius: 3px;
+}
+
+iframe[data-height="698"] {
+  min-height: 698px;
+}
+
+iframe[data-height="1154"] {
+  min-height: 1154px;
+}
+
+iframe[data-height="631"] {
+  min-height: 631px;
+}
+
+iframe[data-height="582"] {
+  min-height: 582px;
+}
+
+/* ========== Responsive Grid ========== */
+@media (min-width: 768px) {
+  .e-con-inner {
+    flex-direction: row;
+  }
+  
+  .column-gap-default {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .e-con-inner {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .column-gap-default {
+    grid-template-columns: 1fr;
+  }
+  
+  h1.heading-title {
+    font-size: 2rem;
+  }
+  
+  h2.heading-title {
+    font-size: 1.5rem;
+  }
+  
+  .section {
+    padding: 40px 0;
+  }
+  
+  .e-parent {
+    padding: 20px 0;
+  }
+}
+
+/* ========== Specific Element IDs ========== */
+#register-now {
+  scroll-margin-top: 100px;
+}
+
+/* ========== Images ========== */
+.attachment-full {
+  max-width: 100%;
+  height: auto;
+}
+
+.size-full {
+  width: 100%;
+  height: auto;
+}
+
+/* ========== Utilities ========== */
+.wp-image-3449,
+.wp-image-3450,
+.wp-image-3451 {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}

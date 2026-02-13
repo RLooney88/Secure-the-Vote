@@ -1,0 +1,283 @@
+<div class="petition-form-container">
+  <div class="petition-counter">
+    <h3><span id="signature-count">...</span> Signatures</h3>
+    <p>Join the movement to secure Maryland elections!</p>
+  </div>
+  
+  <form id="petition-form" class="petition-form">
+    <h2 class="form-title">Sign the Petition</h2>
+    
+    <div class="form-group">
+      <label for="name">Full Name *</label>
+      <input type="text" id="name" name="name" required placeholder="John Doe">
+    </div>
+    
+    <div class="form-group">
+      <label for="email">Email Address *</label>
+      <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label for="zip">ZIP Code *</label>
+        <input type="text" id="zip" name="zip" pattern="[0-9]{5}" required placeholder="21201">
+      </div>
+      
+      <div class="form-group">
+        <label for="city">City</label>
+        <input type="text" id="city" name="city" placeholder="Baltimore">
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="state">State</label>
+      <select id="state" name="state">
+        <option value="MD" selected>Maryland</option>
+        <option value="VA">Virginia</option>
+        <option value="DC">Washington DC</option>
+        <option value="PA">Pennsylvania</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label for="comments">Comments (Optional)</label>
+      <textarea id="comments" name="comments" rows="4" placeholder="Share why this matters to you..."></textarea>
+    </div>
+    
+    <div id="form-message" class="form-message"></div>
+    
+    <button type="submit" class="btn btn-yellow" id="submit-btn">
+      Sign the Petition
+    </button>
+  </form>
+</div>
+
+<style>
+.petition-form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+.petition-counter {
+  background: var(--primary-maroon);
+  color: white;
+  padding: 40px;
+  text-align: center;
+  margin-bottom: 40px;
+  border-radius: 0;
+}
+
+.petition-counter h3 {
+  color: white;
+  font-size: 48px;
+  margin: 0 0 10px 0;
+  font-weight: 700;
+}
+
+.petition-counter p {
+  font-size: 18px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.petition-form {
+  background: white;
+  padding: 40px;
+  border: 1px solid #E0E0E0;
+}
+
+.petition-form .form-title {
+  color: var(--primary-maroon);
+  font-size: 28px;
+  margin-bottom: 30px;
+  text-align: center;
+  font-family: 'Questrial', sans-serif;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text-dark);
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #CCCCCC;
+  border-radius: 0;
+  font-size: 16px;
+  font-family: inherit;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background: white;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-maroon);
+  box-shadow: 0 0 0 2px rgba(155, 30, 55, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-message {
+  padding: 15px;
+  margin-bottom: 20px;
+  display: none;
+  border-radius: 0;
+  font-weight: 500;
+}
+
+.form-message.success {
+  background: #D4EDDA;
+  color: #155724;
+  border: 1px solid #C3E6CB;
+  display: block;
+}
+
+.form-message.error {
+  background: #F8D7DA;
+  color: #721C24;
+  border: 1px solid #F5C6CB;
+  display: block;
+}
+
+#submit-btn {
+  width: 100%;
+  padding: 15px 30px;
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+#submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .petition-form-container {
+    padding: 10px;
+  }
+  
+  .petition-counter {
+    padding: 30px 20px;
+  }
+  
+  .petition-counter h3 {
+    font-size: 36px;
+  }
+  
+  .petition-form {
+    padding: 30px 20px;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<script>
+// Load signature count
+async function loadSignatureCount() {
+  try {
+    const response = await fetch('/api/petition-count');
+    const data = await response.json();
+    document.getElementById('signature-count').textContent = data.count.toLocaleString();
+  } catch (error) {
+    console.error('Error loading count:', error);
+    document.getElementById('signature-count').textContent = '0';
+  }
+}
+
+// Handle form submission
+document.getElementById('petition-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const submitBtn = document.getElementById('submit-btn');
+  const messageDiv = document.getElementById('form-message');
+  
+  // Disable button
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting...';
+  
+  // Get form data
+  const formData = {
+    name: document.getElementById('name').value,
+    email: document.getElementById('email').value,
+    zip: document.getElementById('zip').value,
+    city: document.getElementById('city').value,
+    state: document.getElementById('state').value,
+    comments: document.getElementById('comments').value
+  };
+  
+  try {
+    const response = await fetch('/api/petition-sign', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    });
+    
+    const data = await response.json();
+    
+    if (response.ok) {
+      messageDiv.className = 'form-message success';
+      messageDiv.textContent = data.message;
+      document.getElementById('petition-form').reset();
+      loadSignatureCount(); // Refresh count
+      
+      // Scroll to message
+      messageDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      
+      // Reset button after 3 seconds
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Sign the Petition';
+      }, 3000);
+    } else {
+      messageDiv.className = 'form-message error';
+      messageDiv.textContent = data.error || 'An error occurred. Please try again.';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Sign the Petition';
+    }
+  } catch (error) {
+    messageDiv.className = 'form-message error';
+    messageDiv.textContent = 'Network error. Please check your connection and try again.';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Sign the Petition';
+  }
+});
+
+// Load count on page load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', loadSignatureCount);
+} else {
+  loadSignatureCount();
+}
+</script>
