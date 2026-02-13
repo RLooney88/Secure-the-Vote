@@ -1,9 +1,9 @@
 /* Admin Dashboard Styles */
 :root {
-  --primary-color: #1a5f7a;
-  --primary-hover: #145a6e;
-  --secondary-color: #57837b;
-  --accent-color: #c38154;
+  --primary-color: #9B1E37;
+  --primary-hover: #7a1829;
+  --secondary-color: #F6BF58;
+  --accent-color: #9B1E37;
   --background: #f5f5f5;
   --surface: #ffffff;
   --text-primary: #2d3436;
@@ -48,15 +48,22 @@ body {
   margin-bottom: 40px;
 }
 
+.login-logo {
+  max-width: 200px;
+  height: auto;
+  margin-bottom: 24px;
+}
+
 .login-header h1 {
-  font-size: 2.5rem;
+  font-size: 2rem;
   color: var(--primary-color);
   margin-bottom: 8px;
+  font-weight: 700;
 }
 
 .login-header p {
   color: var(--text-secondary);
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 #login-form {
@@ -91,7 +98,7 @@ body {
 .form-group input:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(26, 95, 122, 0.1);
+  box-shadow: 0 0 0 3px rgba(155, 30, 55, 0.1);
 }
 
 .error-message {
@@ -129,11 +136,11 @@ body {
 
 .btn-secondary {
   background: var(--secondary-color);
-  color: white;
+  color: #2d3436;
 }
 
 .btn-secondary:hover {
-  background: #4a7068;
+  background: #e6af48;
 }
 
 .btn-outline {
