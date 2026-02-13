@@ -1,15 +1,14 @@
 // Vercel Serverless Function - Submit Petition Signature
-import pg from 'pg';
-import bcrypt from 'bcryptjs';
+const { Pool } = require('pg');
+const bcrypt = require('bcryptjs');
 
-const { Pool } = pg;
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
 });
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });

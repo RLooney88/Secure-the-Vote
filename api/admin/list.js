@@ -1,15 +1,14 @@
 // Vercel Serverless Function - List Admins
-import pg from 'pg';
+const { Pool } = require('pg');
 import { requireAuth } from './_auth.js';
 
-const { Pool } = pg;
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
 });
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // Only allow GET
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -43,3 +42,4 @@ export default async function handler(req, res) {
     res.status(500).json({ error: 'Failed to list admins' });
   }
 }
+
