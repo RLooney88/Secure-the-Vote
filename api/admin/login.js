@@ -55,6 +55,11 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('Login error:', error);
-    return res.status(500).json({ error: 'Authentication failed' });
+    console.error('Error stack:', error.stack);
+    console.error('Error message:', error.message);
+    return res.status(500).json({ 
+      error: 'Authentication failed',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 }
