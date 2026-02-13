@@ -1,0 +1,151 @@
+---
+layout: base.njk
+title: "News & Updates"
+description: "Latest news, press releases, and updates from Secure The Vote MD"
+permalink: "/news/"
+order: 3
+---
+
+<section class="section news-section">
+  <div class="container">
+    <div class="section-header">
+      <h1>News & Updates</h1>
+      <p>Latest press releases, announcements, and updates from Secure The Vote MD</p>
+    </div>
+    
+    <div class="news-filters">
+      <a href="/news/" class="filter-btn active">All News ({{ posts | length }})</a>
+      <a href="/news/citizen-action/" class="filter-btn">Citizen Action ({{ posts | selectattr("category", "equalto", "citizen-action") | list | length }})</a>
+      <a href="/news/lawsuit-documents/" class="filter-btn">Lawsuit Documents ({{ posts | selectattr("category", "equalto", "lawsuit-documents") | list | length }})</a>
+      <a href="/news/score-card/" class="filter-btn">Score Card ({{ posts | selectattr("category", "equalto", "score-card") | list | length }})</a>
+    </div>
+    
+    <div class="posts-grid">
+      {% for post in posts | reverse %}
+      <article class="post-card">
+        <div class="post-card-meta">
+          <span class="post-category">{{ post.categoryLabel }}</span>
+          <time datetime="{{ post.date }}">{{ post.date | readableDate }}</time>
+        </div>
+        <h2><a href="{{ post.link }}">{{ post.title }}</a></h2>
+        <p class="post-excerpt">{{ post.excerpt }}</p>
+        <a href="{{ post.link }}" class="read-more">Read More &rarr;</a>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+.news-section {
+  padding: 4rem 0;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #1a1a1a;
+}
+
+.section-header p {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.news-filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.filter-btn {
+  padding: 0.75rem 1.5rem;
+  background: #f5f5f5;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #333;
+  transition: all 0.3s;
+}
+
+.filter-btn:hover, .filter-btn.active {
+  background: #003366;
+  color: white;
+}
+
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+.post-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.post-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.post-card-meta {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.post-category {
+  background: #003366;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.post-card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.post-card h2 a {
+  color: #1a1a1a;
+  text-decoration: none;
+}
+
+.post-card h2 a:hover {
+  color: #003366;
+}
+
+.post-excerpt {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.read-more {
+  color: #003366;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.read-more:hover {
+  text-decoration: underline;
+}
+</style>

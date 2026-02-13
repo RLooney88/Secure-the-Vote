@@ -1,0 +1,614 @@
+/* ========================================
+   Secure The Vote MD - EXACT WordPress Match
+   Preserves Hello Elementor + Custom Styling
+   ======================================== */
+
+/* ========== Reset & Base (Hello Elementor Style) ========== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* EXACT colors from WordPress site */
+  --primary-maroon: #9B1E37;  /* rgb(155, 30, 55) - Donate button, h2 headings */
+  --accent-pink: #CC3366;     /* rgb(204, 51, 102) - Links */
+  --yellow-gold: #F6B221;     /* Logo yellow */
+  --gray-button: #69727D;     /* rgb(105, 114, 125) - Default buttons */
+  --text-dark: #333333;       /* rgb(51, 51, 51) - Body text */
+  --text-black: #000000;      /* Navigation links */
+  --bg-white: #FFFFFF;
+  --bg-light: #F4F4F4;        /* Light gray background */
+  --overlay-dark: rgba(0, 0, 0, 0.5);
+  
+  /* Elementor container settings */
+  --container-width: 1140px;
+  --container-padding: 10px;
+  
+  /* Spacing (Elementor defaults) */
+  --spacing-xs: 5px;
+  --spacing-sm: 10px;
+  --spacing-md: 20px;
+  --spacing-lg: 40px;
+  --spacing-xl: 60px;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  line-height: 1.6;
+  color: var(--text-dark);
+  background: var(--bg-white);
+  font-size: 16px;
+}
+
+.container,
+.elementor-container,
+.e-con-inner {
+  max-width: min(100%, var(--container-width));
+  margin: 0 auto;
+  padding: 0 var(--container-padding);
+}
+
+/* ========== Typography (Elementor Style) ========== */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Questrial', sans-serif;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-dark);
+}
+
+h1 { 
+  font-size: 60px;
+  font-weight: 700;
+}
+
+h2 { 
+  font-size: 40px;
+  color: var(--primary-maroon);
+}
+
+h3 { 
+  font-size: 32px;
+}
+
+h4 { 
+  font-size: 24px;
+}
+
+h5 { 
+  font-size: 20px;
+}
+
+h6 { 
+  font-size: 16px;
+}
+
+p {
+  margin-bottom: var(--spacing-md);
+  line-height: 1.7;
+}
+
+a {
+  color: var(--accent-pink);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--primary-maroon);
+}
+
+/* ========== Header (Elementor Header) ========== */
+.site-header {
+  background: var(--bg-white);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: var(--spacing-sm) 0;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.logo h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-dark);
+}
+
+.logo img {
+  max-height: 60px;
+  width: auto;
+}
+
+/* Navigation (Elementor Nav Menu Style) */
+.main-nav ul {
+  display: flex;
+  list-style: none;
+  gap: var(--spacing-md);
+  margin: 0;
+}
+
+.main-nav a {
+  color: var(--text-black);
+  font-weight: 500;
+  padding: var(--spacing-sm) var(--spacing-md);
+  transition: color 0.3s ease;
+  font-size: 16px;
+}
+
+.main-nav a:hover,
+.main-nav a.active {
+  color: var(--accent-pink);
+}
+
+.mobile-menu-toggle {
+  display: none;
+  background: var(--yellow-gold);
+  border: none;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 5px;
+  padding: 10px;
+  border-radius: 0;
+}
+
+.mobile-menu-toggle span {
+  width: 25px;
+  height: 3px;
+  background: var(--bg-white);
+  transition: all 0.3s ease;
+}
+
+/* ========== Elementor Sections ========== */
+.elementor-section,
+.e-con,
+.e-con-boxed {
+  padding: var(--spacing-lg) 0;
+  margin: 0;
+}
+
+.elementor-section.bg-light,
+.e-con.bg-light {
+  background: var(--bg-light);
+}
+
+.e-con-full {
+  width: 100%;
+  max-width: 100%;
+}
+
+.e-con-boxed {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding-left: var(--container-padding);
+  padding-right: var(--container-padding);
+}
+
+/* Section with background image */
+.elementor-section[data-settings*="background"],
+.section-bg-image {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.elementor-background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--overlay-dark);
+  z-index: 0;
+}
+
+.elementor-section > .container,
+.elementor-section > .e-con-inner {
+  position: relative;
+  z-index: 1;
+}
+
+/* ========== Hero Section (Elementor Hero Style) ========== */
+.hero-section {
+  background-size: cover;
+  background-position: center;
+  padding: var(--spacing-xl) 0;
+  position: relative;
+  text-align: center;
+  color: var(--bg-white);
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 0;
+}
+
+.hero-section .container {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-section h1 {
+  color: var(--bg-white);
+  font-size: 60px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: var(--spacing-md);
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hero-section p {
+  font-size: 18px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Divider (Elementor Divider Widget) */
+.elementor-divider,
+.section-divider {
+  width: 100px;
+  height: 3px;
+  background: var(--yellow-gold);
+  margin: var(--spacing-md) auto;
+  border: none;
+}
+
+.elementor-divider-separator {
+  display: block;
+  height: 3px;
+  background: var(--yellow-gold);
+}
+
+/* ========== Buttons (Elementor Button Widget) ========== */
+.btn,
+.elementor-button,
+.elementor-slide-button {
+  display: inline-block;
+  padding: 10px 30px;
+  background: var(--gray-button);
+  color: var(--bg-white);
+  border: none;
+  border-radius: 0;
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  text-decoration: none;
+  line-height: 1.5;
+}
+
+.btn:hover,
+.elementor-button:hover {
+  background: var(--primary-maroon);
+  color: var(--bg-white);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Donate button - primary maroon */
+.btn-primary,
+.elementor-button-primary {
+  background: var(--primary-maroon);
+}
+
+.btn-primary:hover {
+  background: #7A1729;
+}
+
+/* Yellow/Gold button */
+.btn-secondary,
+.btn-yellow {
+  background: var(--yellow-gold);
+  color: var(--text-dark);
+}
+
+.btn-secondary:hover {
+  background: #E0A520;
+  color: var(--text-dark);
+}
+
+/* Small button */
+.elementor-size-sm {
+  padding: 8px 20px;
+  font-size: 14px;
+}
+
+/* ========== Two Column Layout (Elementor Columns) ========== */
+.two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+  align-items: start;
+}
+
+.elementor-column {
+  flex: 1;
+  min-width: 0;
+}
+
+.elementor-widget-wrap {
+  padding: 0;
+}
+
+/* ========== Form Container (HighLevel Iframe) ========== */
+.form-container {
+  background: var(--bg-white);
+  padding: var(--spacing-lg);
+  border: 1px solid #E0E0E0;
+  border-radius: 0;
+}
+
+.form-container iframe {
+  width: 100%;
+  min-height: 600px;
+  border: none;
+}
+
+.form-container h2 {
+  color: var(--primary-maroon);
+  margin-bottom: var(--spacing-md);
+  font-size: 28px;
+}
+
+/* ========== Content Sections ========== */
+.content {
+  padding: var(--spacing-md);
+}
+
+.content h1,
+.content h2,
+.content h3 {
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
+}
+
+.content p {
+  margin-bottom: var(--spacing-md);
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+  margin: var(--spacing-md) 0;
+}
+
+/* ========== Card Components ========== */
+.card {
+  background: var(--bg-white);
+  padding: var(--spacing-lg);
+  border: 1px solid #E0E0E0;
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card h3 {
+  color: var(--primary-maroon);
+  margin-bottom: var(--spacing-md);
+}
+
+/* ========== Footer ========== */
+.site-footer {
+  background: var(--text-dark);
+  color: var(--bg-white);
+  padding: var(--spacing-xl) 0 var(--spacing-md);
+  margin-top: var(--spacing-xl);
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+.footer-section h3,
+.footer-section h4 {
+  color: var(--bg-white);
+  margin-bottom: var(--spacing-md);
+  font-size: 18px;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section a {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  line-height: 2;
+}
+
+.footer-section a:hover {
+  color: var(--yellow-gold);
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: var(--spacing-md);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 14px;
+}
+
+/* ========== Elementor Widgets ========== */
+.elementor-widget {
+  margin-bottom: var(--spacing-md);
+}
+
+.elementor-widget-container {
+  padding: 0;
+}
+
+.elementor-heading-title {
+  margin: 0;
+}
+
+.elementor-image img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Marquee/Scrolling text */
+marquee {
+  background: var(--yellow-gold);
+  padding: 10px;
+  font-weight: 600;
+}
+
+marquee a {
+  color: var(--primary-maroon);
+  text-decoration: none;
+}
+
+/* ========== Responsive Design ========== */
+@media (max-width: 1024px) {
+  h1 { font-size: 48px; }
+  h2 { font-size: 36px; }
+  
+  .hero-section h1 {
+    font-size: 48px;
+  }
+}
+
+@media (max-width: 768px) {
+  h1 { font-size: 36px; }
+  h2 { font-size: 28px; }
+  h3 { font-size: 24px; }
+  
+  .hero-section h1 {
+    font-size: 36px;
+  }
+  
+  .header-content {
+    flex-wrap: wrap;
+  }
+  
+  .mobile-menu-toggle {
+    display: flex;
+  }
+  
+  .main-nav {
+    width: 100%;
+    order: 3;
+  }
+  
+  .main-nav ul {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    gap: 0;
+    background: var(--bg-white);
+    padding: var(--spacing-sm) 0;
+  }
+  
+  .main-nav.active ul {
+    display: flex;
+  }
+  
+  .main-nav a {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid #E0E0E0;
+  }
+  
+  .two-column {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-container {
+    padding: var(--spacing-md);
+  }
+  
+  .elementor-section,
+  .e-con {
+    padding: var(--spacing-md) 0;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 { font-size: 28px; }
+  h2 { font-size: 24px; }
+  
+  .hero-section {
+    padding: var(--spacing-lg) 0;
+  }
+  
+  .hero-section h1 {
+    font-size: 28px;
+  }
+  
+  .btn,
+  .elementor-button {
+    padding: 8px 20px;
+    font-size: 14px;
+  }
+}
+
+/* ========== Utility Classes ========== */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.mt-1 { margin-top: var(--spacing-sm); }
+.mt-2 { margin-top: var(--spacing-md); }
+.mt-3 { margin-top: var(--spacing-lg); }
+
+.mb-1 { margin-bottom: var(--spacing-sm); }
+.mb-2 { margin-bottom: var(--spacing-md); }
+.mb-3 { margin-bottom: var(--spacing-lg); }
+
+.p-1 { padding: var(--spacing-sm); }
+.p-2 { padding: var(--spacing-md); }
+.p-3 { padding: var(--spacing-lg); }
+
+/* Hidden on mobile */
+.elementor-hidden-mobile {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .elementor-hidden-mobile {
+    display: none !important;
+  }
+}
+
+/* Hidden on desktop */
+.elementor-hidden-desktop {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .elementor-hidden-desktop {
+    display: block;
+  }
+}

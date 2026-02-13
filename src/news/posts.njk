@@ -1,0 +1,17 @@
+---
+pagination:
+  data: posts
+  size: 1
+  alias: post
+permalink: "/news/{{ post.slug }}/"
+layout: post.njk
+eleventyComputed:
+  title: "{{ post.title }}"
+  date: "{{ post.date }}"
+  category: "{{ post.category }}"
+  categoryLabel: "{{ post.categoryLabel }}"
+  excerpt: "{{ post.excerpt }}"
+  slug: "{{ post.slug }}"
+---
+
+{{ post.content | safe }}

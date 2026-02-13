@@ -1,0 +1,15 @@
+# Robots.txt for Secure The Vote MD
+# Allow all crawlers to index the site
+
+User-agent: *
+Allow: /
+
+# Crawl delay (optional, 1 second)
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://securethevotemd.com/sitemap.xml
+
+# Disallow specific paths (if needed)
+# Disallow: /api/
+# Disallow: /private/

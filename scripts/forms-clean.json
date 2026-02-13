@@ -1,0 +1,34 @@
+﻿[
+    {
+        "pageSlug":  "register-for-lobby-day-jan-27",
+        "embedCode":  "\u003ciframe\r\n    src=\"https://api.leadconnectorhq.com/widget/form/ZVGUvP6MG6xIiU4gg4Nq\"\r\n    style=\"width:100%;height:100%;border:none;border-radius:3px\"\r\n    id=\"inline-ZVGUvP6MG6xIiU4gg4Nq\"\r\n    data-layout=\"{\u0027id\u0027:\u0027INLINE\u0027}\"\r\n    data-trigger-type=\"alwaysShow\"\r\n    data-trigger-value=\"\"\r\n    data-activation-type=\"alwaysActivated\"\r\n    data-activation-value=\"\"\r\n    data-deactivation-type=\"neverDeactivate\"\r\n    data-deactivation-value=\"\"\r\n    data-form-name=\"Pop-Up Registration\"\r\n    data-height=\"698\"\r\n    data-layout-iframe-id=\"inline-ZVGUvP6MG6xIiU4gg4Nq\"\r\n    data-form-id=\"ZVGUvP6MG6xIiU4gg4Nq\"\r\n    title=\"Pop-Up Registration\"\r\n        \u003e",
+        "formId":  "inline-ZVGUvP6MG6xIiU4gg4Nq",
+        "page":  "REGISTER FOR LOBBY DAY – JAN 27",
+        "url":  "https://api.leadconnectorhq.com/widget/form/ZVGUvP6MG6xIiU4gg4Nq",
+        "formName":  "Pop-Up Registration"
+    },
+    {
+        "pageSlug":  "be-an-election-judge",
+        "embedCode":  "\u003ciframe\n    src=\"https://api.leadconnectorhq.com/widget/form/H3glDByFPNIFjvKVVbo4\"\n    style=\"width:100%;height:100%;border:none;border-radius:3px\"\n    id=\"inline-H3glDByFPNIFjvKVVbo4\" \n    data-layout=\"{\u0027id\u0027:\u0027INLINE\u0027}\"\n    data-trigger-type=\"alwaysShow\"\n    data-trigger-value=\"\"\n    data-activation-type=\"alwaysActivated\"\n    data-activation-value=\"\"\n    data-deactivation-type=\"neverDeactivate\"\n    data-deactivation-value=\"\"\n    data-form-name=\"Election Judge Request\"\n    data-height=\"1154\"\n    data-layout-iframe-id=\"inline-H3glDByFPNIFjvKVVbo4\"\n    data-form-id=\"H3glDByFPNIFjvKVVbo4\"\n    title=\"Election Judge Request\"\n        \u003e",
+        "formId":  "inline-H3glDByFPNIFjvKVVbo4",
+        "page":  "Be an Election Judge",
+        "url":  "https://api.leadconnectorhq.com/widget/form/H3glDByFPNIFjvKVVbo4",
+        "formName":  "Election Judge Request"
+    },
+    {
+        "pageSlug":  "citizen-action",
+        "embedCode":  "\u003ciframe\n  src=\"https://api.leadconnectorhq.com/widget/form/WMyVEALqZBf3x8U2nIay\"\n  style=\"width:100%;height:100%;border:none;border-radius:3px\"\n  id=\"inline-WMyVEALqZBf3x8U2nIay\" \n  data-layout=\"{\u0027id\u0027:\u0027INLINE\u0027}\"\n  data-trigger-type=\"alwaysShow\"\n  data-trigger-value=\"\"\n  data-activation-type=\"alwaysActivated\"\n  data-activation-value=\"\"\n  data-deactivation-type=\"neverDeactivate\"\n  data-deactivation-value=\"\"\n  data-form-name=\"Petition Request Form\"\n  data-height=\"631\"\n  data-layout-iframe-id=\"inline-WMyVEALqZBf3x8U2nIay\"\n  data-form-id=\"WMyVEALqZBf3x8U2nIay\"\n  title=\"Petition Request Form\"\n      \u003e",
+        "formId":  "inline-WMyVEALqZBf3x8U2nIay",
+        "page":  "Citizen Action",
+        "url":  "https://api.leadconnectorhq.com/widget/form/WMyVEALqZBf3x8U2nIay",
+        "formName":  "Petition Request Form"
+    },
+    {
+        "pageSlug":  "contact-us",
+        "embedCode":  "\u003ciframe\r\n  src=\"https://api.leadconnectorhq.com/widget/form/VKGfCbVl8VpiTtXuEmJl\"\r\n  style=\"width:100%;height:100%;border:none;border-radius:3px\"\r\n  id=\"inline-VKGfCbVl8VpiTtXuEmJl\"\r\n  data-layout=\"{\u0027id\u0027:\u0027INLINE\u0027}\"\r\n  data-trigger-type=\"alwaysShow\"\r\n  data-trigger-value=\"\"\r\n  data-activation-type=\"alwaysActivated\"\r\n  data-activation-value=\"\"\r\n  data-deactivation-type=\"neverDeactivate\"\r\n  data-deactivation-value=\"\"\r\n  data-form-name=\"Secure The Vote Website Form\"\r\n  data-height=\"582\"\r\n  data-layout-iframe-id=\"inline-VKGfCbVl8VpiTtXuEmJl\"\r\n  data-form-id=\"VKGfCbVl8VpiTtXuEmJl\"\r\n  title=\"Secure The Vote Website Form\"\r\n      \u003e",
+        "formId":  "inline-VKGfCbVl8VpiTtXuEmJl",
+        "page":  "Contact Us",
+        "url":  "https://api.leadconnectorhq.com/widget/form/VKGfCbVl8VpiTtXuEmJl",
+        "formName":  "Secure The Vote Website Form"
+    }
+]

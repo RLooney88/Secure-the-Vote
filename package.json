@@ -1,0 +1,26 @@
+{
+  "name": "secure-the-vote-md",
+  "version": "1.0.0",
+  "description": "SecureTheVoteMD Static Site - Eleventy",
+  "scripts": {
+    "start": "eleventy --serve",
+    "build": "eleventy",
+    "clean": "rm -rf public"
+  },
+  "keywords": [
+    "eleventy",
+    "static-site",
+    "voting",
+    "maryland"
+  ],
+  "author": "SecureTheVoteMD",
+  "license": "MIT",
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0",
+    "@11ty/eleventy-plugin-sitemap": "^3.0.0",
+    "luxon": "^3.4.4"
+  },
+  "dependencies": {
+    "markdown-it": "^14.0.0"
+  }
+}

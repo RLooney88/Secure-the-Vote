@@ -1,0 +1,284 @@
+/* ========================================
+   Slider/Carousel Styles (Elementor Slides)
+   ======================================== */
+
+.widget-slides {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.elementor-swiper {
+  position: relative;
+  width: 100%;
+}
+
+.elementor-slides-wrapper {
+  position: relative;
+  width: 100%;
+  height: 600px;
+  overflow: hidden;
+}
+
+.elementor-slides {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  height: 100%;
+}
+
+.swiper-slide {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  color: white;
+}
+
+.swiper-slide-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+}
+
+.swiper-slide-inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 800px;
+  padding: 40px;
+  text-align: center;
+}
+
+.swiper-slide-contents {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.elementor-slide-heading {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.elementor-slide-description {
+  font-size: 1.25rem;
+  color: white;
+  line-height: 1.6;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.elementor-slide-button {
+  display: inline-block;
+  padding: 12px 32px;
+  background: #f59e0b;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.elementor-slide-button:hover {
+  background: #d97706;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* Navigation Arrows */
+.elementor-swiper-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.elementor-swiper-button:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.elementor-swiper-button-prev {
+  left: 20px;
+}
+
+.elementor-swiper-button-next {
+  right: 20px;
+}
+
+.elementor-swiper-button svg {
+  width: 24px;
+  height: 24px;
+  fill: white;
+}
+
+/* Pagination Dots */
+.swiper-pagination {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  gap: 10px;
+}
+
+.swiper-pagination-bullet {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.swiper-pagination-bullet-active {
+  background: white;
+  width: 30px;
+  border-radius: 6px;
+}
+
+/* Marquee */
+marquee {
+  background: #1e3a8a;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+marquee a {
+  color: white;
+  text-decoration: underline;
+}
+
+marquee a:hover {
+  color: #f59e0b;
+}
+
+/* Button Styles */
+.elementor-button-wrapper {
+  display: inline-block;
+}
+
+.elementor-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #1e3a8a;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.elementor-button:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.elementor-button.elementor-size-sm {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+}
+
+.elementor-button.elementor-size-md {
+  padding: 12px 24px;
+  font-size: 1rem;
+}
+
+.elementor-button.elementor-size-lg {
+  padding: 16px 32px;
+  font-size: 1.1rem;
+}
+
+.elementor-button.elementor-animation-float:hover {
+  animation: float 0.3s ease-in-out;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(-2px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.elementor-button-content-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.elementor-button-icon {
+  display: inline-flex;
+  align-items: center;
+}
+
+.elementor-align-center {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .elementor-slides-wrapper {
+    height: 400px;
+  }
+  
+  .elementor-slide-heading {
+    font-size: 1.75rem;
+  }
+  
+  .elementor-slide-description {
+    font-size: 1rem;
+  }
+  
+  .swiper-slide-inner {
+    padding: 20px;
+  }
+  
+  .elementor-swiper-button {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .elementor-swiper-button-prev {
+    left: 10px;
+  }
+  
+  .elementor-swiper-button-next {
+    right: 10px;
+  }
+  
+  marquee {
+    font-size: 0.9rem;
+  }
+}

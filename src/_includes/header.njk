@@ -1,0 +1,34 @@
+<header class="site-header">
+  <div class="container">
+    <div class="header-content">
+      <div class="logo">
+        <a href="/">
+          <h1>Secure The Vote MD</h1>
+        </a>
+      </div>
+      
+      <nav class="main-nav" id="main-nav">
+        <ul>
+          <li><a href="/" {% if page.url == "/" %}class="active"{% endif %}>Home</a></li>
+          <li><a href="/pages/trump-executive-order/" {% if slug == "trump-executive-order" %}class="active"{% endif %}>Trump Executive Order</a></li>
+          <li><a href="/pages/list-maintenance/" {% if slug == "list-maintenance" %}class="active"{% endif %}>List Maintenance</a></li>
+          <li><a href="/pages/signature-verification/" {% if slug == "signature-verification" %}class="active"{% endif %}>Signature Verification</a></li>
+          <li><a href="/pages/voter-id/" {% if slug == "voter-id" %}class="active"{% endif %}>Voter ID</a></li>
+          <li><a href="/pages/board-compliance/" {% if slug == "board-compliance" %}class="active"{% endif %}>Board Compliance</a></li>
+          <li><a href="/pages/be-an-election-judge/" {% if slug == "be-an-election-judge" %}class="active"{% endif %}>Election Judge</a></li>
+          <li><a href="/pages/citizen-action/" {% if slug == "citizen-action" %}class="active"{% endif %}>Citizen Action</a></li>
+          <li><a href="/news/" {% if page.url.startsWith('/news/') %}class="active"{% endif %}>News</a></li>
+          <li><a href="/pages/resources/" {% if slug == "resources" %}class="active"{% endif %}>Resources</a></li>
+          <li><a href="/pages/in-the-news/" {% if slug == "in-the-news" %}class="active"{% endif %}>In The News</a></li>
+          <li><a href="/pages/contact-us/" {% if slug == "contact-us" %}class="active"{% endif %}>Contact Us</a></li>
+        </ul>
+      </nav>
+      
+      <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+</header>
