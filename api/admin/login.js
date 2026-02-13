@@ -75,13 +75,32 @@ module.exports = async function handler(req, res) {
     const admin = result.rows[0];
 
     // Verify password
-    const validPassword = await bcrypt.compare(password, admin.password_hash);
+    let validPassword;
+    try {
+      validPassword = await bcrypt.compare(password, admin.password_hash);
+    } catch (bcryptError) {
+      console.error('Bcrypt error:', bcryptError.message);
+      return res.status(500).json({
+        error: 'Password verification failed',
+        code: 'BCRYPT_ERROR'
+      });
+    }
+    
     if (!validPassword) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
     // Generate JWT token
-    const token = generateToken(admin);
+    let token;
+    try {
+      token = generateToken(admin);
+    } catch (jwtError) {
+      console.error('JWT error:', jwtError.message);
+      return res.status(500).json({
+        error: 'Token generation failed',
+        code: 'JWT_ERROR'
+      });
+    }
 
     // Return success with token
     return res.status(200).json({
