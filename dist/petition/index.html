@@ -1,550 +1,400 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign the Petition - Secure the Vote Maryland</title>
-  <meta name="description" content="Join thousands of Marylanders demanding election integrity. Sign our petition for voter ID, signature verification, and transparent elections.">
-  
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="/images/favicon.png">
-  
-  <!-- Styles -->
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      margin: 0;
-      padding: 0;
-    }
-    
-    .petition-hero {
-      background: linear-gradient(135deg, #9B1E37 0%, #7a1829 100%);
-      color: white;
-      padding: 80px 20px;
-      text-align: center;
-    }
-    
-    .petition-hero h1 {
-      font-size: 3em;
-      margin: 0 0 20px 0;
-      font-weight: 700;
-    }
-    
-    .petition-hero p {
-      font-size: 1.3em;
-      max-width: 800px;
-      margin: 0 auto 30px auto;
-      opacity: 0.95;
-    }
-    
-    .petition-stats {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 20px;
-      border-radius: 10px;
-      display: inline-block;
-      margin-top: 20px;
-    }
-    
-    .petition-stats .stat-number {
-      font-size: 2.5em;
-      font-weight: bold;
-      display: block;
-    }
-    
-    .petition-stats .stat-label {
-      font-size: 1em;
-      opacity: 0.9;
-    }
-    
-    .petition-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 60px 20px;
-    }
-    
-    .petition-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 60px;
-      align-items: start;
-    }
-    
-    @media (max-width: 968px) {
-      .petition-grid {
-        grid-template-columns: 1fr;
-        gap: 40px;
-      }
-    }
-    
-    .petition-info h2 {
-      color: #9B1E37;
-      font-size: 2em;
-      margin-bottom: 20px;
-    }
-    
-    .petition-info h3 {
-      color: #9B1E37;
-      font-size: 1.5em;
-      margin-top: 30px;
-      margin-bottom: 15px;
-    }
-    
-    .petition-info ul {
-      list-style: none;
-      padding: 0;
-    }
-    
-    .petition-info ul li {
-      padding: 12px 0;
-      padding-left: 30px;
-      position: relative;
-    }
-    
-    .petition-info ul li:before {
-      content: "✓";
-      position: absolute;
-      left: 0;
-      color: #9B1E37;
-      font-weight: bold;
-      font-size: 1.3em;
-    }
-    
-    .petition-form-container {
-      background: #f8f9fa;
-      padding: 40px;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-    
-    .petition-form-container h2 {
-      color: #9B1E37;
-      margin-top: 0;
-      margin-bottom: 25px;
-      font-size: 1.8em;
-    }
-    
-    .form-group {
-      margin-bottom: 20px;
-    }
-    
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: #333;
-    }
-    
-    .form-group input,
-    .form-group textarea {
-      width: 100%;
-      padding: 12px;
-      border: 2px solid #ddd;
-      border-radius: 5px;
-      font-size: 1em;
-      transition: border-color 0.3s;
-      box-sizing: border-box;
-    }
-    
-    .form-group input:focus,
-    .form-group textarea:focus {
-      outline: none;
-      border-color: #9B1E37;
-    }
-    
-    .form-group textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-    
-    .form-group.checkbox {
-      display: flex;
-      align-items: start;
-      gap: 10px;
-    }
-    
-    .form-group.checkbox input[type="checkbox"] {
-      width: auto;
-      margin-top: 4px;
-    }
-    
-    .form-group.checkbox label {
-      margin: 0;
-      font-weight: normal;
-    }
-    
-    .submit-button {
-      background: #9B1E37;
-      color: white;
-      border: none;
-      padding: 15px 40px;
-      font-size: 1.1em;
-      font-weight: 600;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background 0.3s;
-      width: 100%;
-    }
-    
-    .submit-button:hover {
-      background: #7a1829;
-    }
-    
-    .submit-button:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-    }
-    
-    .success-message {
-      display: none;
-      background: #d4edda;
-      border: 2px solid #c3e6cb;
-      color: #155724;
-      padding: 20px;
-      border-radius: 5px;
-      margin-top: 20px;
-    }
-    
-    .error-message {
-      display: none;
-      background: #f8d7da;
-      border: 2px solid #f5c6cb;
-      color: #721c24;
-      padding: 20px;
-      border-radius: 5px;
-      margin-top: 20px;
-    }
-    
-    .share-section {
-      background: #f8f9fa;
-      padding: 40px 20px;
-      text-align: center;
-      margin-top: 40px;
-      border-radius: 10px;
-    }
-    
-    .share-section h3 {
-      color: #9B1E37;
-      margin-bottom: 20px;
-    }
-    
-    .share-buttons {
-      display: flex;
-      gap: 15px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    
-    .share-button {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 24px;
-      border-radius: 5px;
-      text-decoration: none;
-      color: white;
-      font-weight: 600;
-      transition: transform 0.2s;
-    }
-    
-    .share-button:hover {
-      transform: translateY(-2px);
-    }
-    
-    .share-button.facebook {
-      background: #1877f2;
-    }
-    
-    .share-button.twitter {
-      background: #1da1f2;
-    }
-    
-    .share-button.email {
-      background: #666;
-    }
-  </style>
-</head>
-<body>
+<html lang="en-US">
 
-<!-- Top Bar -->
-<div class="top-bar">
-  <div class="container">
-    <div class="top-bar-left">
-      <a href="mailto:info@securethevotemd.com" class="top-bar-email">
-        <i class="fas fa-envelope"></i>
-        info@securethevotemd.com
-      </a>
-    </div>
-    <div class="top-bar-right">
-      <div class="social-icons">
-        <a href="https://twitter.com/securethevotemd" target="_blank" rel="noopener" aria-label="Twitter">
-          <i class="fab fa-x-twitter"></i>
-        </a>
-        <a href="https://www.instagram.com/securethevotemd/" target="_blank" rel="noopener" aria-label="Instagram">
-          <i class="fab fa-instagram"></i>
-        </a>
-        <a href="https://www.facebook.com/profile.php?id=61558958704794" target="_blank" rel="noopener" aria-label="Facebook">
-          <i class="fab fa-facebook-f"></i>
-        </a>
-        <a href="https://www.tiktok.com/@securethevotemd?lang=en" target="_blank" rel="noopener" aria-label="TikTok">
-          <i class="fab fa-tiktok"></i>
-        </a>
-        <a href="https://rumble.com/account/" target="_blank" rel="noopener" aria-label="Rumble">
-          <i class="fab fa-r-project"></i>
-        </a>
-        <a href="https://truthsocial.com/@securethevotemd" target="_blank" rel="noopener" aria-label="Truth Social">
-          <i class="fas fa-t"></i>
-        </a>
-        <a href="https://gettr.com/user/securethevotemd" target="_blank" rel="noopener" aria-label="Gettr">
-          <i class="fas fa-g"></i>
-        </a>
-        <a href="https://web.telegram.org/a/#6827045334" target="_blank" rel="noopener" aria-label="Telegram">
-          <i class="fab fa-telegram"></i>
-        </a>
-        <a href="https://www.youtube.com/@SecuretheVoteMD" target="_blank" rel="noopener" aria-label="YouTube">
-          <i class="fab fa-youtube"></i>
-        </a>
-        <a href="https://bsky.app/profile/securethevotemd.bsky.social" target="_blank" rel="noopener" aria-label="Bluesky">
-          <i class="fas fa-cloud"></i>
-        </a>
-      </div>
-    </div>
-  </div>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' />
+
+	<title>Sign the Petition - Secure The Vote MD</title>
+	<link rel="canonical" href="/petition/" />
+	<meta property="og:locale" content="en_US" />
+	<meta property="og:type" content="article" />
+	<meta property="og:title" content="Sign the Petition - Secure The Vote MD" />
+	<meta property="og:description" content="Join us in demanding transparency, accountability, and security in Maryland elections. Sign the petition today." />
+	<meta property="og:url" content="/petition/" />
+	<meta property="og:site_name" content="Secure The Vote MD" />
+
+<link rel='dns-prefetch' href='//www.googletagmanager.com' />
+<link rel="alternate" type="application/rss+xml" title="Secure The Vote MD &raquo; Feed" href="/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Secure The Vote MD &raquo; Comments Feed" href="/comments/feed/" />
+<style id='wp-img-auto-sizes-contain-inline-css'>
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+</style>
+<link rel='stylesheet' id='embed-pdf-viewer-css' href='/wp-content/plugins/embed-pdf-viewer/css/embed-pdf-viewer.css?ver=2.4.7' media='screen' />
+<link rel='stylesheet' id='elementor-frontend-css' href='/wp-content/plugins/elementor/assets/css/frontend.min.css?ver=3.35.4' media='all' />
+<link rel='stylesheet' id='elementor-post-27-css' href='/wp-content/uploads/elementor/css/post-27.css?ver=1770995935' media='all' />
+<link rel='stylesheet' id='elementor-post-28-css' href='/wp-content/uploads/elementor/css/post-28.css?ver=1770995935' media='all' />
+<link rel='stylesheet' id='embedpress-css-css' href='/wp-content/plugins/embedpress/assets/css/embedpress.css?ver=1769615293' media='all' />
+<link rel='stylesheet' id='embedpress-blocks-style-css' href='/wp-content/plugins/embedpress/assets/css/blocks.build.css?ver=1769615293' media='all' />
+<link rel='stylesheet' id='embedpress-lazy-load-css-css' href='/wp-content/plugins/embedpress/assets/css/lazy-load.css?ver=1769615293' media='all' />
+<style id='wp-emoji-styles-inline-css'>
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+</style>
+<style id='pdfemb-pdf-embedder-viewer-style-inline-css'>
+.wp-block-pdfemb-pdf-embedder-viewer{max-width:none}
+</style>
+<style id='global-styles-inline-css'>
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:root { --wp--style--global--content-size: 800px;--wp--style--global--wide-size: 1200px; }:where(body) { margin: 0; }.wp-site-blocks > .alignleft { float: left; margin-right: 2em; }.wp-site-blocks > .alignright { float: right; margin-left: 2em; }.wp-site-blocks > .aligncenter { justify-content: center; margin-left: auto; margin-right: auto; }:where(.wp-site-blocks) > * { margin-block-start: 24px; margin-block-end: 0; }:where(.wp-site-blocks) > :first-child { margin-block-start: 0; }:where(.wp-site-blocks) > :last-child { margin-block-end: 0; }:root { --wp--style--block-gap: 24px; }:root :where(.is-layout-flow) > :first-child{margin-block-start: 0;}:root :where(.is-layout-flow) > :last-child{margin-block-end: 0;}:root :where(.is-layout-flow) > *{margin-block-start: 24px;margin-block-end: 0;}:root :where(.is-layout-constrained) > :first-child{margin-block-start: 0;}:root :where(.is-layout-constrained) > :last-child{margin-block-end: 0;}:root :where(.is-layout-constrained) > *{margin-block-start: 24px;margin-block-end: 0;}:root :where(.is-layout-flex){gap: 24px;}:root :where(.is-layout-grid){gap: 24px;}.is-layout-flow > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}.is-layout-flow > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}.is-layout-flow > .aligncenter{margin-left: auto !important;margin-right: auto !important;}.is-layout-constrained > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}.is-layout-constrained > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}.is-layout-constrained > .aligncenter{margin-left: auto !important;margin-right: auto !important;}.is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)){max-width: var(--wp--style--global--content-size);margin-left: auto !important;margin-right: auto !important;}.is-layout-constrained > .alignwide{max-width: var(--wp--style--global--wide-size);}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}body{padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}a:where(:not(.wp-element-button)){text-decoration: underline;}:root :where(.wp-element-button, .wp-block-button__link){background-color: #32373c;border-width: 0;color: #fff;font-family: inherit;font-size: inherit;font-style: inherit;font-weight: inherit;letter-spacing: inherit;line-height: inherit;padding-top: calc(0.667em + 2px);padding-right: calc(1.333em + 2px);padding-bottom: calc(0.667em + 2px);padding-left: calc(1.333em + 2px);text-decoration: none;text-transform: inherit;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+:root :where(.wp-block-pullquote){font-size: 1.5em;line-height: 1.6;}
+</style>
+<link rel='stylesheet' id='contact-form-7-css' href='/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=6.1.5' media='all' />
+<link rel='stylesheet' id='hello-elementor-css' href='/wp-content/themes/hello-elementor/assets/css/reset.css?ver=3.4.6' media='all' />
+<link rel='stylesheet' id='hello-elementor-theme-style-css' href='/wp-content/themes/hello-elementor/assets/css/theme.css?ver=3.4.6' media='all' />
+<link rel='stylesheet' id='hello-elementor-header-footer-css' href='/wp-content/themes/hello-elementor/assets/css/header-footer.css?ver=3.4.6' media='all' />
+<link rel='stylesheet' id='elementor-post-6-css' href='/wp-content/uploads/elementor/css/post-6.css?ver=1770995935' media='all' />
+<link rel='stylesheet' id='hello-elementor-child-style-css' href='/wp-content/themes/hello-theme-child-master/style.css?ver=2.0.0' media='all' />
+<link rel='stylesheet' id='font-awesome-5-all-css' href='/wp-content/plugins/elementor/assets/lib/font-awesome/css/all.min.css?ver=3.35.4' media='all' />
+<link rel='stylesheet' id='font-awesome-4-shim-css' href='/wp-content/plugins/elementor/assets/lib/font-awesome/css/v4-shims.min.css?ver=3.35.4' media='all' />
+<link rel='stylesheet' id='e-animation-fadeIn-css' href='/wp-content/plugins/elementor/assets/lib/animations/styles/fadeIn.min.css?ver=3.35.4' media='all' />
+<link rel='stylesheet' id='widget-heading-css' href='/wp-content/plugins/elementor/assets/css/widget-heading.min.css?ver=3.35.4' media='all' />
+<link rel='stylesheet' id='widget-divider-css' href='/wp-content/plugins/elementor/assets/css/widget-divider.min.css?ver=3.35.4' media='all' />
+<link rel='stylesheet' id='widget-image-css' href='/wp-content/plugins/elementor/assets/css/widget-image.min.css?ver=3.35.4' media='all' />
+<link rel='stylesheet' id='ekit-widget-styles-css' href='/wp-content/plugins/elementskit-lite/widgets/init/assets/css/widget-styles.css?ver=3.7.9' media='all' />
+<link rel='stylesheet' id='ekit-responsive-css' href='/wp-content/plugins/elementskit-lite/widgets/init/assets/css/responsive.css?ver=3.7.9' media='all' />
+<link rel='stylesheet' id='eael-general-css' href='/wp-content/plugins/essential-addons-for-elementor-lite/assets/front-end/css/view/general.min.css?ver=6.5.11' media='all' />
+<link rel='stylesheet' id='elementor-gf-local-questrial-css' href='/wp-content/uploads/elementor/google-fonts/css/questrial.css?ver=1744833050' media='all' />
+<link rel='stylesheet' id='elementor-icons-ekiticons-css' href='/wp-content/plugins/elementskit-lite/modules/elementskit-icon-pack/assets/css/ekiticons.css?ver=3.7.9' media='all' />
+<script src="/wp-includes/js/jquery/jquery.min.js?ver=3.7.1" id="jquery-core-js"></script>
+<script src="/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1" id="jquery-migrate-js"></script>
+<script src="https://www.googletagmanager.com/gtag/js?id=GT-NCHVR2P4" id="google_gtagjs-js" async></script>
+<script id="google_gtagjs-js-after">
+window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}
+gtag("set","linker",{"domains":["securethevotemd.com"]});
+gtag("js", new Date());
+gtag("set", "developer_id.dZTNiMT", true);
+gtag("config", "GT-NCHVR2P4");
+</script>
+<script src="/wp-content/plugins/elementor/assets/lib/font-awesome/js/v4-shims.min.js?ver=3.35.4" id="font-awesome-4-shim-js"></script>
+<link rel="icon" href="/images/2024/04/cropped-favicon-2-32x32.png" sizes="32x32" />
+<link rel="icon" href="/images/2024/04/cropped-favicon-2-192x192.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="/images/2024/04/cropped-favicon-2-180x180.png" />
+<meta name="msapplication-TileImage" content="/wp-content/uploads/2024/04/cropped-favicon-2-270x270.png" />
+<style id="wp-custom-css">
+p{margin:0;}
+.elementor-27 .elementor-element.elementor-element-379dbb8 .elementskit-navbar-nav > li > a {display: inline-block;text-decoration: none;}
+.elementor-27 .elementor-element.elementor-element-379dbb8 .elementskit-navbar-nav > li > a::after {content: '';display: block;width: 0;height: 2px;background: #f6bf58;transition: width .3s;}
+.elementor-27 .elementor-element.elementor-element-379dbb8 .elementskit-navbar-nav > li > a:hover::after {width: 100%;transition: width .3s;}
+.d-flex{width:100%!important;}
+.name-row{width:45%!important;padding-right:5%!important;}
+.phone-row{width:45%!important;}
+.wpcf7-captchac{margin-top:20px;}
+.single-post #content, .archive #content{max-width: 100%;display: flex;flex-direction: column;align-items: center;}
+.single-post .page-header, .archive .page-header{display:flex;justify-content:center;align-items:center;width: 100%;padding: 40px;min-height:50vh;background:#9B1E37 ;color:white;}
+.single-post .wp-post-image, .archive .wp-post-image{margin-bottom:20px;}
+.single-post .page-header .entry-title, .archive .page-header .entry-title {padding: 0;text-align: center;margin:0;}
+.single-post .page-content .entry-title, .archive .page-content .entry-title{margin-bottom:30px;}
+.single-post .page-content, .archive .page-content {font-size: 18px;max-width: 1200px;padding-top: 65px;text-align-last:left;}
+.archive .page-content .post{margin-bottom:30px;}
+.archive .page-content{padding-bottom: 100px;}
+.single-post .page-content h2, .archive .page-content h2{text-align:left;}
+.single-post .title-comments, .single-post .comment-list{display:none;}
+.single-post #comments{width: 1200px;padding: 40px 0px 130px;}
+.single-post .submit{background-color:#9B1E37;color:white;padding:10px 30px;border-radius:0;border:none!important;margin-top:30px;}
+.single-post .submit:hover{background-color:#F6BF58;}
+.single-post #respond{padding: 30px;background: #f1f1f1;margin-top:20px;}
+.single-post #content, .archive #content{padding:0!important;}
+@media (max-width: 1200px){
+.single-post .page-content{padding:55px 30px 0;}
+.archive .page-content{padding:55px 30px 100px;}
+.single-post #comments{width: inherit;padding: 40px 30px 130px;}
+}
+.wp-block-embed-pdf-viewer-pdf object{border-width:0 0 1px!important;border-color:black!important;margin-top:30px;}
+.wp-block-embed-pdf-viewer-pdf{display: flex;justify-content: center;}
+@media (max-width: 650px){
+.elementor-728 .elementor-element.elementor-element-c345366 .elementskit-post-image-card{display:flow-root;}
+.elementor-728 .elementor-element.elementor-element-c345366 .elementskit-entry-thumb{width:100%!important;min-width:100%!important;}
+}
+</style>
+</head>
+
+<body class="page-template-default page page-id-3283 elementor-default elementor-kit-6 elementor-page elementor-page-3283">
+
+<div data-elementor-type="header" data-elementor-id="27" class="elementor elementor-27 elementor-location-header" data-elementor-post-type="elementor_library">
+	<div class="elementor-element elementor-element-9c10b67 e-con-full e-flex e-con e-parent" data-id="9c10b67" data-element_type="container">
+		<div class="elementor-element elementor-element-88c8094 e-flex e-con-boxed e-con e-child" data-id="88c8094" data-element_type="container">
+			<div class="e-con-inner">
+				<div class="elementor-element elementor-element-d4e2f08 elementor-widget__width-auto elementor-widget elementor-widget-site-logo" data-id="d4e2f08" data-element_type="widget" data-widget_type="site-logo.default">
+					<div class="elementor-widget-container">
+						<div class="hfe-site-logo">
+							<a data-elementor-open-lightbox="" class="elementor-clickable" href="/">
+								<div class="hfe-site-logo-set">
+									<div class="hfe-site-logo-container">
+										<img decoding="async" class="hfe-site-logo-img elementor-animation-" src="/images/2024/04/secure-the-vote-md-logo-06-transparent-background-500-×-125-px-2-1.png" alt=""/>
+									</div>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="elementor-element elementor-element-379dbb8 hfe-nav-menu__align-right hfe-nav-menu__breakpoint-tablet elementor-widget elementor-widget-navigation-menu" data-id="379dbb8" data-element_type="widget" data-widget_type="navigation-menu.default">
+					<div class="elementor-widget-container">
+						<div class="hfe-nav-menu hfe-layout-horizontal hfe-nav-menu__layout-horizontal hfe-pointer__none" data-layout="horizontal">
+							<div class="hfe-nav-menu__toggle elementor-clickable">
+								<div class="hfe-nav-menu-icon">
+									<i aria-hidden="true" tabindex="0" class="fas fa-align-justify"></i>
+								</div>
+							</div>
+							<nav class="hfe-nav-menu__layout-horizontal hfe-nav-menu__submenu-arrow" data-toggle-icon="&lt;i aria-hidden=&quot;true&quot; tabindex=&quot;0&quot; class=&quot;fas fa-align-justify&quot;&gt;&lt;/i&gt;" data-close-icon="&lt;i aria-hidden=&quot;true&quot; tabindex=&quot;0&quot; class=&quot;far fa-window-close&quot;&gt;&lt;/i&gt;" data-full-width="yes">
+								<ul id="menu-1-379dbb8" class="hfe-nav-menu">
+									<li id="menu-item-248" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children parent hfe-has-submenu hfe-creative-menu"><a href="#" class="hfe-menu-item">Accountability<span class="hfe-menu-toggle sub-arrow hfe-menu-child-0"><i class="fa"></i></span></a>
+										<ul class="sub-menu">
+											<li id="menu-item-2779" class="menu-item menu-item-type-post_type menu-item-object-page hfe-creative-menu"><a href="/the-lawsuits/" class="hfe-sub-menu-item">Lawsuits</a></li>
+											<li id="menu-item-1113" class="menu-item menu-item-type-post_type menu-item-object-page hfe-creative-menu"><a href="/vote-validation-project/" class="hfe-sub-menu-item">Vote Validation Project</a></li>
+										</ul>
+									</li>
+									<li id="menu-item-94" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children parent hfe-has-submenu hfe-creative-menu"><a href="/legislation/" class="hfe-menu-item">Legislation<span class="hfe-menu-toggle sub-arrow hfe-menu-child-0"><i class="fa"></i></span></a>
+										<ul class="sub-menu">
+											<li id="menu-item-1115" class="menu-item menu-item-type-post_type menu-item-object-page hfe-creative-menu"><a href="/testimonies/" class="hfe-sub-menu-item">Testimony</a></li>
+										</ul>
+									</li>
+									<li id="menu-item-3397" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children parent hfe-has-submenu hfe-creative-menu"><a href="/register-for-lobby-day-jan-27/" class="hfe-menu-item">Citizen Action<span class="hfe-menu-toggle sub-arrow hfe-menu-child-0"><i class="fa"></i></span></a>
+										<ul class="sub-menu">
+											<li id="menu-item-3398" class="menu-item menu-item-type-post_type menu-item-object-page hfe-creative-menu"><a href="/register-for-lobby-day-jan-27/#register-now" class="hfe-sub-menu-item">Lobby Day</a></li>
+											<li id="menu-item-3399" class="menu-item menu-item-type-custom menu-item-object-custom hfe-creative-menu"><a href="/be-an-election-judge/#apply" class="hfe-sub-menu-item">Be an Election Judge</a></li>
+										</ul>
+									</li>
+									<li id="menu-item-93" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children parent hfe-has-submenu hfe-creative-menu"><a href="/resources/" class="hfe-menu-item">Resources<span class="hfe-menu-toggle sub-arrow hfe-menu-child-0"><i class="fa"></i></span></a>
+										<ul class="sub-menu">
+											<li id="menu-item-3400" class="menu-item menu-item-type-post_type menu-item-object-page hfe-creative-menu"><a href="/faqs/" class="hfe-sub-menu-item">FAQ</a></li>
+										</ul>
+									</li>
+									<li id="menu-item-92" class="menu-item menu-item-type-post_type menu-item-object-page hfe-creative-menu"><a href="/news/" class="hfe-menu-item">News</a></li>
+									<li id="menu-item-3396" class="menu-item menu-item-type-post_type menu-item-object-page hfe-creative-menu"><a href="/contact-us/" class="hfe-menu-item">Contact</a></li>
+								</ul>
+							</nav>
+						</div>
+					</div>
+				</div>
+				<div class="elementor-element elementor-element-a44f55d elementor-widget__width-auto elementor-hidden-mobile elementor-widget elementor-widget-shortcode" data-id="a44f55d" data-element_type="widget" data-widget_type="shortcode.default">
+					<div class="elementor-widget-container">
+						<div class="elementor-shortcode">
+							<a href="/contact-us/" class="donation-button" style="display: inline-block; padding: 15px 32px; font-size: 18px; font-weight: 600; text-align: center; text-decoration: none; color: white; background-color: #F6BF58; border-radius: 50px; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+								Contact
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="elementor-element elementor-element-ffa3f97 elementor-widget__width-auto elementor-widget elementor-widget-elementskit-header-offcanvas" data-id="ffa3f97" data-element_type="widget" data-widget_type="elementskit-header-offcanvas.default">
+					<div class="elementor-widget-container">
+						<div class="ekit-wid-con">
+							<div class="ekit-header-offcanvas--btn-wraper">
+								<button type="button" class="ekit-header-offcanvas--btn ekit-offcanvas-panel-btn--toggle" data-triger-target="#ekit-header-offcanvas--ffa3f97" data-close-label="Close">
+									<span class="ekit-header-offcanvas--btn-icon">
+										<i aria-hidden="true" class="icon icon-menu-8"></i>
+									</span>
+								</button>
+							</div>
+							<div id="ekit-header-offcanvas--ffa3f97" class="ekit-header-offcanvas--panel-content elementor-repeater-item-71d8086 ekit-offcanvas-panel--slide-left">
+								<div class="ekit-header-offcanvas--panel-inner">
+									<button type="button" class="ekit-header-offcanvas--close-btn ekit-offcanvas-panel-btn--toggle" data-triger-target="#ekit-header-offcanvas--ffa3f97" data-close-label="Close">
+										<i aria-hidden="true" class="icon icon-multiply"></i>
+									</button>
+									<div class="ekit-header-offcanvas--header-content-wraper">
+										<div data-elementor-type="wp-post" data-elementor-id="28" class="elementor elementor-28" data-elementor-post-type="elementskit_template">
+											<div class="elementor-element elementor-element-57eb38b e-con-full e-flex e-con e-parent" data-id="57eb38b" data-element_type="container">
+												<div class="elementor-element elementor-element-ca6eb1c elementor-widget elementor-widget-heading" data-id="ca6eb1c" data-element_type="widget" data-widget_type="heading.default">
+													<div class="elementor-widget-container">
+														<h2 class="elementor-heading-title elementor-size-default">SECURE THE VOTE<br>MARYLAND</h2>
+													</div>
+												</div>
+												<div class="elementor-element elementor-element-70de01e elementor-widget-divider--view-line elementor-widget elementor-widget-divider" data-id="70de01e" data-element_type="widget" data-widget_type="divider.default">
+													<div class="elementor-widget-container">
+														<div class="elementor-divider">
+															<span class="elementor-divider-separator"></span>
+														</div>
+													</div>
+												</div>
+												<div class="elementor-element elementor-element-32f7af7 elementor-widget elementor-widget-text-editor" data-id="32f7af7" data-element_type="widget" data-widget_type="text-editor.default">
+													<div class="elementor-widget-container">
+														<p>SECURE THE VOTE MD is a local, non-partisan, all-volunteer, grassroots organization that formed to restore trust in Maryland elections. We advocate for transparent, non-partisan election processes, secure chain of custody for ballots and accurate tabulation.</p>
+													</div>
+												</div>
+												<div class="elementor-element elementor-element-3c52fd4 e-grid-align-left elementor-shape-rounded elementor-grid-0 e-grid-align-tablet-center e-grid-align-mobile-center elementor-widget elementor-widget-social-icons" data-id="3c52fd4" data-element_type="widget" data-widget_type="social-icons.default">
+													<div class="elementor-widget-container">
+														<div class="elementor-social-icons-wrapper elementor-grid">
+															<span class="elementor-grid-item">
+																<a class="elementor-icon elementor-social-icon elementor-social-icon-facebook-f elementor-animation-grow elementor-repeater-item-d4c3fc9" href="https://www.facebook.com/securethevotemd" target="_blank">
+																	<span class="elementor-screen-only">Facebook-f</span>
+																	<i class="fab fa-facebook-f"></i>
+																</a>
+															</span>
+															<span class="elementor-grid-item">
+																<a class="elementor-icon elementor-social-icon elementor-social-icon-x-twitter elementor-animation-grow elementor-repeater-item-5c87d52" href="https://x.com/securevotemd" target="_blank">
+																	<span class="elementor-screen-only">X-twitter</span>
+																	<i class="fab fa-x-twitter"></i>
+																</a>
+															</span>
+															<span class="elementor-grid-item">
+																<a class="elementor-icon elementor-social-icon elementor-social-icon-instagram elementor-animation-grow elementor-repeater-item-e8a3e1e" href="https://www.instagram.com/secure.the.vote.md/" target="_blank">
+																	<span class="elementor-screen-only">Instagram</span>
+																	<i class="fab fa-instagram"></i>
+																</a>
+															</span>
+															<span class="elementor-grid-item">
+																<a class="elementor-icon elementor-social-icon elementor-social-icon-youtube elementor-animation-grow elementor-repeater-item-8f4da55" href="https://www.youtube.com/@SecureTheVoteMD" target="_blank">
+																	<span class="elementor-screen-only">Youtube</span>
+																	<i class="fab fa-youtube"></i>
+																</a>
+															</span>
+															<span class="elementor-grid-item">
+																<a class="elementor-icon elementor-social-icon elementor-social-icon-telegram elementor-animation-grow elementor-repeater-item-bc8b1e1" href="https://t.me/SecureTheVoteMD" target="_blank">
+																	<span class="elementor-screen-only">Telegram</span>
+																	<i class="fab fa-telegram"></i>
+																</a>
+															</span>
+															<span class="elementor-grid-item">
+																<a class="elementor-icon elementor-social-icon elementor-social-icon-whatsapp elementor-animation-grow elementor-repeater-item-8bf0291" href="https://chat.whatsapp.com/JlxLV4PeK7hGf2JDcSo6bH" target="_blank">
+																	<span class="elementor-screen-only">Whatsapp</span>
+																	<i class="fab fa-whatsapp"></i>
+																</a>
+															</span>
+															<span class="elementor-grid-item">
+																<a class="elementor-icon elementor-social-icon elementor-social-icon-link elementor-animation-grow elementor-repeater-item-6d94a45" href="https://gab.com/SecureTheVoteMD" target="_blank">
+																	<span class="elementor-screen-only">Link</span>
+																	<i class="fas fa-link"></i>
+																</a>
+															</span>
+															<span class="elementor-grid-item">
+																<a class="elementor-icon elementor-social-icon elementor-social-icon-link elementor-animation-grow elementor-repeater-item-2f69df0" href="https://gettr.com/user/securethevotemd" target="_blank">
+																	<span class="elementor-screen-only">Link</span>
+																	<i class="fas fa-link"></i>
+																</a>
+															</span>
+															<span class="elementor-grid-item">
+																<a class="elementor-icon elementor-social-icon elementor-social-icon-link elementor-animation-grow elementor-repeater-item-ee50f8a" href="https://truthsocial.com/@SecureTheVoteMD" target="_blank">
+																	<span class="elementor-screen-only">Link</span>
+																	<i class="fas fa-link"></i>
+																</a>
+															</span>
+															<span class="elementor-grid-item">
+																<a class="elementor-icon elementor-social-icon elementor-social-icon-link elementor-animation-grow elementor-repeater-item-7ea1278" href="https://rumble.com/c/SecureTheVoteMD" target="_blank">
+																	<span class="elementor-screen-only">Link</span>
+																	<i class="fas fa-link"></i>
+																</a>
+															</span>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
-<!-- Main Header -->
-<header class="site-header">
-  <div class="container">
-    <div class="header-wrapper">
-      <div class="site-logo">
-        <a href="/">
-          <img src="/images/logo.png" alt="Secure the Vote Maryland" />
-        </a>
-      </div>
-
-      <nav class="main-navigation">
-        <button class="mobile-menu-toggle" aria-label="Toggle menu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-
-        <ul class="menu">
-          <li><a href="/">Home</a></li>
-          <li class="menu-item-has-children">
-            <a href="#">Accountability <i class="fas fa-chevron-down"></i></a>
-            <ul class="sub-menu">
-              <li><a href="/pages/trump-executive-order/">Trump Executive Order</a></li>
-              <li><a href="/pages/board-compliance/">Board Compliance</a></li>
-            </ul>
-          </li>
-          <li class="menu-item-has-children">
-            <a href="#">Legislation <i class="fas fa-chevron-down"></i></a>
-            <ul class="sub-menu">
-              <li><a href="/pages/voter-id/">Voter ID</a></li>
-              <li><a href="/pages/signature-verification/">Signature Verification</a></li>
-            </ul>
-          </li>
-          <li class="menu-item-has-children">
-            <a href="/pages/citizen-action/">Citizen Action <i class="fas fa-chevron-down"></i></a>
-            <ul class="sub-menu">
-              <li><a href="/pages/be-an-election-judge/">Be an Election Judge</a></li>
-              <li><a href="/pages/poll-watchers-toolkit/">Poll Watchers Toolkit</a></li>
-              <li><a href="/pages/sign-the-petition/">Sign the Petition</a></li>
-            </ul>
-          </li>
-          <li class="menu-item-has-children">
-            <a href="/pages/resources/">Resources <i class="fas fa-chevron-down"></i></a>
-            <ul class="sub-menu">
-              <li><a href="/pages/in-the-news/">In The News</a></li>
-              <li><a href="/pages/whats-happening/">What's Happening</a></li>
-            </ul>
-          </li>
-          <li class="menu-item-has-children">
-            <a href="#">News <i class="fas fa-chevron-down"></i></a>
-            <ul class="sub-menu">
-              <li><a href="/news/">All News</a></li>
-              <li><a href="/news/citizen-action/">Citizen Action</a></li>
-              <li><a href="/news/lawsuit-documents/">Lawsuit Documents</a></li>
-              <li><a href="/news/score-card/">Score Card</a></li>
-            </ul>
-          </li>
-          <li><a href="/pages/contact-us/">Contact Us</a></li>
-        </ul>
-      </nav>
-
-      <div class="header-donate">
-        <a href="https://donorbox.org/united-sovereign-americans-maryland-donation" target="_blank" class="donate-button">
-          Donate Now
-        </a>
-      </div>
-    </div>
-  </div>
-</header>
-
-<!-- Petition Hero -->
-<section class="petition-hero">
-  <h1>Demand Election Integrity in Maryland</h1>
-  <p>Join thousands of Marylanders calling for transparent, secure elections. Your signature makes a difference.</p>
-  <div class="petition-stats">
-    <span class="stat-number" id="signature-count">Loading...</span>
-    <span class="stat-label">signatures and counting</span>
-  </div>
-</section>
-
 <!-- Main Content -->
-<main class="petition-content">
-  <div class="petition-grid">
-    <div class="petition-info">
-      <h2>Why This Petition Matters</h2>
-      <p>Maryland's elections must be transparent, secure, and trustworthy. We're calling on our state legislature and election officials to implement common-sense reforms that will restore confidence in our democratic process.</p>
-      
-      <h3>What We're Fighting For:</h3>
-      <ul>
-        <li><strong>Voter ID Requirements:</strong> Ensure every voter is who they claim to be</li>
-        <li><strong>Signature Verification:</strong> Validate mail-in ballots with proper authentication</li>
-        <li><strong>Transparent Vote Counting:</strong> Open the process to public observation</li>
-        <li><strong>Regular List Maintenance:</strong> Keep voter rolls accurate and up-to-date</li>
-        <li><strong>Paper Ballot Trail:</strong> Maintain verifiable records of every vote</li>
-        <li><strong>Board Accountability:</strong> Hold election officials responsible for compliance</li>
-      </ul>
-      
-      <h3>Your Voice Matters</h3>
-      <p>Every signature sends a powerful message to our elected officials. Together, we can secure Maryland's elections and protect the integrity of our democracy.</p>
-      
-      <div class="share-section">
-        <h3>Share This Petition</h3>
-        <div class="share-buttons">
-          <a href="https://www.facebook.com/sharer/sharer.php?u=https://securethevotemd.com/petition/" target="_blank" class="share-button facebook">
-            <i class="fab fa-facebook-f"></i> Share on Facebook
-          </a>
-          <a href="https://twitter.com/intent/tweet?text=Join%20me%20in%20demanding%20election%20integrity%20in%20Maryland!&url=https://securethevotemd.com/petition/" target="_blank" class="share-button twitter">
-            <i class="fab fa-twitter"></i> Share on Twitter
-          </a>
-          <a href="mailto:?subject=Sign%20the%20Election%20Integrity%20Petition&body=I%20just%20signed%20a%20petition%20for%20election%20integrity%20in%20Maryland.%20Join%20me:%20https://securethevotemd.com/petition/" class="share-button email">
-            <i class="fas fa-envelope"></i> Share via Email
-          </a>
-        </div>
-      </div>
-    </div>
-    
-    <div class="petition-form-container">
-      <h2>Add Your Name</h2>
-      <form id="petition-form">
-        <div class="form-group">
-          <label for="firstName">First Name *</label>
-          <input type="text" id="firstName" name="firstName" required>
-        </div>
-        
-        <div class="form-group">
-          <label for="lastName">Last Name *</label>
-          <input type="text" id="lastName" name="lastName" required>
-        </div>
-        
-        <div class="form-group">
-          <label for="email">Email Address *</label>
-          <input type="email" id="email" name="email" required>
-        </div>
-        
-        <div class="form-group">
-          <label for="zipCode">ZIP Code *</label>
-          <input type="text" id="zipCode" name="zipCode" pattern="[0-9]{5}" required>
-        </div>
-        
-        <div class="form-group">
-          <label for="phone">Phone Number (optional)</label>
-          <input type="tel" id="phone" name="phone">
-        </div>
-        
-        <div class="form-group">
-          <label for="comments">Comments (optional)</label>
-          <textarea id="comments" name="comments"></textarea>
-        </div>
-        
-        <div class="form-group checkbox">
-          <input type="checkbox" id="updates" name="updates" checked>
-          <label for="updates">Keep me updated on election integrity efforts in Maryland</label>
-        </div>
-        
-        <button type="submit" class="submit-button">Sign the Petition</button>
-        
-        <div class="success-message" id="success-message">
-          <strong>Thank you!</strong> Your signature has been added. Share this petition to amplify your voice!
-        </div>
-        
-        <div class="error-message" id="error-message">
-          <strong>Oops!</strong> Something went wrong. Please try again.
-        </div>
-      </form>
-    </div>
-  </div>
-</main>
+<div data-elementor-type="wp-page" data-elementor-id="petition" class="elementor elementor-petition">
+	<div class="elementor-element elementor-element-main e-flex e-con-boxed e-con e-parent" data-id="main" data-element_type="container" style="background-color: #ffffff; padding: 80px 20px;">
+		<div class="e-con-inner" style="max-width: 1200px; margin: 0 auto;">
+			
+			<!-- Hero Section -->
+			<section style="text-align: center; margin-bottom: 80px;">
+				<div style="max-width: 900px; margin: 0 auto;">
+					<h1 style="color: #9B1E37; font-size: 48px; font-weight: 700; margin-bottom: 24px; line-height: 1.2;">
+						Sign the Petition for Election Security
+					</h1>
+					<p style="color: #666666; font-size: 20px; line-height: 1.6; margin-bottom: 32px;">
+						Join thousands of Marylanders demanding transparent, secure, and accountable elections. Your voice matters—add it to ours today.
+					</p>
+				</div>
+			</section>
 
-<footer class="site-footer">
-  <div class="container">
-    <div class="footer-content">
-      <div class="footer-section">
-        <h3>Secure The Vote MD</h3>
-        <p>Strengthening our Constitutional Republic through secure voting. Citizens must be able to have trust that their elections are secure and accurate for the persistence of democratic institutions.</p>
-      </div>
-      
-      <div class="footer-section">
-        <h4>Quick Links</h4>
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/pages/trump-executive-order/">Trump Executive Order</a></li>
-          <li><a href="/pages/list-maintenance/">List Maintenance</a></li>
-          <li><a href="/pages/signature-verification/">Signature Verification</a></li>
-          <li><a href="/pages/voter-id/">Voter ID</a></li>
-          <li><a href="/pages/board-compliance/">Board Compliance</a></li>
-        </ul>
-      </div>
-      
-      <div class="footer-section">
-        <h4>Take Action</h4>
-        <ul>
-          <li><a href="/pages/be-an-election-judge/">Be an Election Judge</a></li>
-          <li><a href="/pages/citizen-action/">Citizen Action</a></li>
-          <li><a href="/pages/sign-the-petition/">Sign the Petition</a></li>
-          <li><a href="/pages/poll-watchers-toolkit/">Poll Watchers Toolkit</a></li>
-        </ul>
-      </div>
-      
-      <div class="footer-section">
-        <h4>News & Updates</h4>
-        <ul>
-          <li><a href="/news/">All News</a></li>
-          <li><a href="/news/citizen-action/">Citizen Action</a></li>
-          <li><a href="/news/lawsuit-documents/">Lawsuit Documents</a></li>
-          <li><a href="/news/score-card/">Score Card</a></li>
-          <li><a href="/feed.xml">RSS Feed</a></li>
-        </ul>
-      </div>
-      
-      <div class="footer-section">
-        <h4>Resources</h4>
-        <ul>
-          <li><a href="/pages/resources/">Resources</a></li>
-          <li><a href="/pages/in-the-news/">In The News</a></li>
-          <li><a href="/pages/whats-happening/">What's Happening</a></li>
-          <li><a href="/pages/contact-us/">Contact Us</a></li>
-        </ul>
-      </div>
-    </div>
-    
-    <div class="footer-bottom">
-      <p>&copy; 2026 Secure The Vote MD. All rights reserved.</p>
-    </div>
-  </div>
-</footer>
+			<!-- Why This Matters Section -->
+			<section style="background-color: #f9f9f9; padding: 60px 40px; border-radius: 8px; margin-bottom: 60px;">
+				<div style="max-width: 800px; margin: 0 auto;">
+					<h2 style="color: #9B1E37; font-size: 36px; font-weight: 700; text-align: center; margin-bottom: 32px;">
+						Why This Petition Matters
+					</h2>
+					<p style="color: #333333; font-size: 18px; line-height: 1.8; margin-bottom: 24px;">
+						Maryland's election system faces critical challenges that undermine public trust. From opaque ballot handling to inadequate verification processes, our elections lack the transparency and security that voters deserve.
+					</p>
+					<p style="color: #333333; font-size: 18px; line-height: 1.8; margin-bottom: 24px;">
+						This petition calls on Maryland lawmakers to implement common-sense reforms that ensure every legal vote is counted accurately and every voter can have confidence in the results.
+					</p>
+					
+					<!-- Key Demands -->
+					<div style="margin-top: 40px;">
+						<h3 style="color: #9B1E37; font-size: 24px; font-weight: 600; margin-bottom: 20px;">
+							Our Key Demands:
+						</h3>
+						<ul style="color: #333333; font-size: 18px; line-height: 2; list-style: none; padding-left: 0;">
+							<li style="margin-bottom: 16px; padding-left: 32px; position: relative;">
+								<span style="position: absolute; left: 0; color: #9B1E37; font-weight: bold;">✓</span>
+								Full chain of custody documentation for all ballots
+							</li>
+							<li style="margin-bottom: 16px; padding-left: 32px; position: relative;">
+								<span style="position: absolute; left: 0; color: #9B1E37; font-weight: bold;">✓</span>
+								Independent audits of election results
+							</li>
+							<li style="margin-bottom: 16px; padding-left: 32px; position: relative;">
+								<span style="position: absolute; left: 0; color: #9B1E37; font-weight: bold;">✓</span>
+								Voter ID requirements to prevent fraud
+							</li>
+							<li style="margin-bottom: 16px; padding-left: 32px; position: relative;">
+								<span style="position: absolute; left: 0; color: #9B1E37; font-weight: bold;">✓</span>
+								Public access to election process observation
+							</li>
+							<li style="margin-bottom: 16px; padding-left: 32px; position: relative;">
+								<span style="position: absolute; left: 0; color: #9B1E37; font-weight: bold;">✓</span>
+								Enhanced cybersecurity protections for voting systems
+							</li>
+						</ul>
+					</div>
+				</div>
+			</section>
 
-<!-- Scripts -->
-<script src="/js/main.js"></script>
-<script src="/js/petition.js"></script>
+			<!-- Petition Form Section -->
+			<section id="petition-form" style="max-width: 700px; margin: 0 auto 80px; padding: 50px; background-color: #ffffff; border: 2px solid #9B1E37; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+				<h2 style="color: #9B1E37; font-size: 32px; font-weight: 700; text-align: center; margin-bottom: 32px;">
+					Add Your Name
+				</h2>
+				<div id="petition-container"></div>
+				<script src="/js/petition.js"></script>
+			</section>
+
+			<!-- Share Section -->
+			<section style="text-align: center; padding: 60px 40px; background: linear-gradient(135deg, #9B1E37 0%, #7a1829 100%); border-radius: 8px;">
+				<div style="max-width: 800px; margin: 0 auto;">
+					<h3 style="color: #ffffff; font-size: 32px; font-weight: 700; margin-bottom: 20px;">
+						Want to Do More?
+					</h3>
+					<p style="color: #ffffff; font-size: 18px; margin-bottom: 32px; opacity: 0.95;">
+						Share this petition with friends, family, and colleagues. Together, we can build a movement for election security in Maryland.
+					</p>
+					<div style="display: flex; justify-content: center; gap: 24px; flex-wrap: wrap;">
+						<a href="https://www.facebook.com/sharer/sharer.php?u=https://securethevotemd.com/petition/" target="_blank" style="color: #ffffff; font-weight: 600; text-decoration: none; font-size: 16px; padding: 12px 24px; background-color: rgba(255,255,255,0.2); border-radius: 50px; transition: all 0.3s ease;">
+							Share on Facebook
+						</a>
+						<a href="https://twitter.com/intent/tweet?url=https://securethevotemd.com/petition/&text=Sign%20the%20petition%20for%20election%20security%20in%20Maryland" target="_blank" style="color: #ffffff; font-weight: 600; text-decoration: none; font-size: 16px; padding: 12px 24px; background-color: rgba(255,255,255,0.2); border-radius: 50px; transition: all 0.3s ease;">
+							Share on Twitter
+						</a>
+						<a href="mailto:?subject=Sign%20the%20Election%20Security%20Petition&body=I%20just%20signed%20this%20petition%20for%20election%20security%20in%20Maryland.%20Join%20me:%20https://securethevotemd.com/petition/" style="color: #ffffff; font-weight: 600; text-decoration: none; font-size: 16px; padding: 12px 24px; background-color: rgba(255,255,255,0.2); border-radius: 50px; transition: all 0.3s ease;">
+							Email to a Friend
+						</a>
+					</div>
+				</div>
+			</section>
+
+		</div>
+	</div>
+</div>
 
 </body>
 </html>
