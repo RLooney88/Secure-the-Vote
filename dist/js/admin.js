@@ -1313,6 +1313,15 @@
     // Deployment modal event listeners
     elements.deploymentCancel.addEventListener('click', handleDeploymentCancel);
     elements.deploymentManual.addEventListener('click', handleDeploymentManual);
+
+    // Listen for messages from site-editor iframe
+    window.addEventListener('message', (event) => {
+      if (event.data?.action === 'preview') {
+        previewStaging();
+      } else if (event.data?.action === 'publish') {
+        publishToProduction();
+      }
+    });
   }
 
   // Modal configurations for preview vs publish

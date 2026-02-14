@@ -679,61 +679,41 @@
       const actions = document.createElement('div');
       actions.className = 'actions';
       actions.innerHTML = `
-        <button onclick="createPreview()">🔍 Preview Changes</button>
-        <button class="primary" onclick="approveChanges()">✅ Approve & Publish</button>
+        <button onclick="createPreview()">Preview Changes</button>
+        <button class="primary" onclick="approveChanges()">Publish Changes</button>
       `;
       
       lastMessage.querySelector('.message-content').appendChild(actions);
     }
     
-    async function createPreview() {
-      addMessage('assistant', 'Checking staging preview...');
-      
-      try {
-        const res = await fetch(`${API_URL}/sites/${SITE_ID}/preview`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
-        });
-        
-        const data = await res.json();
-        
-        if (!res.ok) {
-          throw new Error(data.error || 'Preview failed');
-        }
-        
-        // Open preview in new tab
-        window.open(data.previewUrl, '_blank');
-        
-        addMessage('assistant', `✅ Staging preview opened in new tab!\n\n🔗 ${data.previewUrl}\n\n📋 This shows the STAGING branch with your latest changes.\n\nIf you're satisfied, click "Approve & Publish" to deploy to the live site.`);
-        
-      } catch (error) {
-        addMessage('assistant', `❌ Preview error: ${error.message}`);
+    function createPreview() {
+      // Trigger the parent dashboard's Preview Edits modal (with deployment polling)
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ action: 'preview' }, '*');
+        addMessage('assistant', 'Opening preview — check the deployment progress popup!');
+      } else {
+        // Fallback if not in iframe
+        window.open('https://secure-the-vote-git-staging-rcl-integrated.vercel.app', '_blank');
+        addMessage('assistant', 'Preview opened in a new tab.');
       }
     }
     
-    async function approveChanges() {
-      if (!confirm('This will publish staging changes to production. Continue?')) {
-        return;
-      }
-      
-      addMessage('assistant', 'Publishing staging to production...');
-      
-      try {
-        const res = await fetch(`${API_URL}/sites/${SITE_ID}/publish`, {
+    function approveChanges() {
+      // Trigger the parent dashboard's Publish Edits modal (with deployment polling)
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ action: 'publish' }, '*');
+        addMessage('assistant', 'Publishing — check the deployment progress popup!');
+      } else {
+        // Fallback if not in iframe
+        if (!confirm('Publish all changes to the live site?')) return;
+        fetch(`${API_URL}/sites/${SITE_ID}/publish`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' }
+        }).then(r => r.json()).then(data => {
+          addMessage('assistant', 'Changes published! The live site will update in about 30 seconds.');
+        }).catch(err => {
+          addMessage('assistant', `Publish error: ${err.message}`);
         });
-        
-        const data = await res.json();
-        
-        if (!res.ok) {
-          throw new Error(data.error || 'Publish failed');
-        }
-        
-        addMessage('assistant', `🎉 Changes published to production!\n\nLive at: ${data.productionUrl || 'https://securethevotemd.com'}\n\nProduction deployment will complete in ~30 seconds.`);
-        
-      } catch (error) {
-        addMessage('assistant', `❌ Publish error: ${error.message}`);
       }
     }
     
