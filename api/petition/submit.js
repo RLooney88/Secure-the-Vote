@@ -44,8 +44,49 @@ async function sendEmail(to, subject, htmlContent, cc = null, bcc = null) {
   }
 }
 
+/**
+ * Strip HTML tags from string to prevent XSS
+ */
+function stripHtml(str) {
+  if (typeof str !== 'string') return str;
+  return str.replace(/<[^>]*>/g, '').trim();
+}
+
+/**
+ * Sanitize user input
+ */
+function sanitizeInput(input) {
+  if (typeof input === 'string') {
+    return stripHtml(input).substring(0, 1000); // Limit string length
+  }
+  if (typeof input === 'object' && input !== null) {
+    const sanitized = {};
+    for (const [key, value] of Object.entries(input)) {
+      if (typeof value === 'string') {
+        sanitized[key] = stripHtml(value).substring(0, 1000);
+      } else if (typeof value === 'number' || typeof value === 'boolean') {
+        sanitized[key] = value;
+      }
+    }
+    return sanitized;
+  }
+  return input;
+}
+
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  // Validate Content-Type
+  const contentType = req.headers['content-type'];
+  if (!contentType || !contentType.includes('application/json')) {
+    return res.status(400).json({ error: 'Content-Type must be application/json' });
+  }
+
+  // Check request size (max 100KB)
+  const contentLength = parseInt(req.headers['content-length'] || '0');
+  if (contentLength > 100000) {
+    return res.status(413).json({ error: 'Request too large' });
+  }
 
   const pool = new Pool({ 
     connectionString: (process.env.DATABASE_URL || '').trim(), 
@@ -66,8 +107,19 @@ module.exports = async function handler(req, res) {
       anonymous,
       optin,
       custom_data,
-      petition_message
+      petition_message,
+      website // Honeypot field
     } = req.body;
+
+    // Honeypot check - reject if honeypot field is filled
+    if (website) {
+      console.log('Honeypot triggered - bot detected');
+      // Return success to not tip off the bot
+      return res.status(200).json({ 
+        success: true, 
+        message: 'Thank you for signing the petition!' 
+      });
+    }
 
     // Validate required fields
     if (!full_name || !email) {
@@ -77,7 +129,18 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    // Type validation
+    if (typeof full_name !== 'string' || typeof email !== 'string') {
+      return res.status(400).json({ error: 'Invalid input types' });
+    }
+
+    // Sanitize inputs
+    const sanitizedFullName = stripHtml(full_name);
+    const sanitizedEmail = email.toLowerCase().trim();
+    const sanitizedPetitionMessage = petition_message ? stripHtml(petition_message) : '';
+
+    // Email format validation
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(sanitizedEmail)) {
       return res.status(400).json({ error: 'Invalid email format' });
     }
 
@@ -105,7 +168,7 @@ module.exports = async function handler(req, res) {
     const ipAddress = req.headers['x-forwarded-for']?.split(',')[0] || req.headers['x-real-ip'] || '';
     const existing = await pool.query(
       'SELECT id FROM petition_signatures WHERE email = $1 AND petition_name = $2',
-      [email.toLowerCase(), petition_name || 'default']
+      [sanitizedEmail, petition_name || 'default']
     );
 
     if (existing.rows.length > 0) {
@@ -117,7 +180,15 @@ module.exports = async function handler(req, res) {
       ? crypto.randomBytes(32).toString('hex')
       : null;
 
-    // Insert signature
+    // Sanitize all string inputs
+    const sanitizedZipCode = zip_code ? stripHtml(String(zip_code)).substring(0, 20) : null;
+    const sanitizedStreet = street ? stripHtml(String(street)).substring(0, 200) : null;
+    const sanitizedCity = city ? stripHtml(String(city)).substring(0, 100) : null;
+    const sanitizedState = state ? stripHtml(String(state)).substring(0, 50) : null;
+    const sanitizedCountry = country ? stripHtml(String(country)).substring(0, 50) : null;
+    const sanitizedCustomData = custom_data ? sanitizeInput(custom_data) : {};
+
+    // Insert signature (using parameterized queries to prevent SQL injection)
     const signatureResult = await pool.query(
       `INSERT INTO petition_signatures (
         petition_name, full_name, email, zip_code, ip_address,
@@ -127,19 +198,19 @@ module.exports = async function handler(req, res) {
       RETURNING id, created_at`,
       [
         petition_name || 'default',
-        full_name,
-        email.toLowerCase(),
-        zip_code || null,
-        ipAddress,
-        street || null,
-        city || null,
-        state || null,
-        country || null,
+        sanitizedFullName,
+        sanitizedEmail,
+        sanitizedZipCode,
+        ipAddress.substring(0, 45), // Limit IP length
+        sanitizedStreet,
+        sanitizedCity,
+        sanitizedState,
+        sanitizedCountry,
         !petition.requires_confirmation, // Auto-confirm if confirmation not required
         confirmationToken,
-        anonymous || false,
-        optin || false,
-        JSON.stringify(custom_data || {})
+        Boolean(anonymous),
+        Boolean(optin),
+        JSON.stringify(sanitizedCustomData)
       ]
     );
 
@@ -162,8 +233,8 @@ module.exports = async function handler(req, res) {
       const confirmHtml = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #9B1E37;">Confirm Your Petition Signature</h2>
-          <p>Dear ${full_name},</p>
-          <p>Thank you for signing our petition: <strong>${petition.title}</strong></p>
+          <p>Dear ${sanitizedFullName},</p>
+          <p>Thank you for signing our petition: <strong>${stripHtml(petition.title)}</strong></p>
           <p>Please confirm your signature by clicking the button below:</p>
           <div style="text-align: center; margin: 30px 0;">
             <a href="${confirmUrl}" style="background: #9B1E37; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">Confirm My Signature</a>
@@ -174,28 +245,27 @@ module.exports = async function handler(req, res) {
         </div>
       `;
       
-      await sendEmail(email, 'Please Confirm Your Petition Signature', confirmHtml);
+      await sendEmail(sanitizedEmail, 'Please Confirm Your Petition Signature', confirmHtml);
     }
 
     // Send petition email to target if enabled and confirmed (or confirmation not required)
     if (petition.sends_email && !petition.requires_confirmation) {
-      const messageToSend = petition_message || petition.petition_message || '';
       
       const petitionEmailHtml = `
         <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto;">
-          <h2 style="color: #9B1E37;">${petition.email_subject || petition.title}</h2>
-          ${petition.greeting ? `<p>${petition.greeting}</p>` : ''}
+          <h2 style="color: #9B1E37;">${stripHtml(petition.email_subject || petition.title)}</h2>
+          ${petition.greeting ? `<p>${stripHtml(petition.greeting)}</p>` : ''}
           <div style="background: #f5f5f5; padding: 20px; margin: 20px 0; border-left: 4px solid #9B1E37;">
-            ${messageToSend.replace(/\n/g, '<br>')}
+            ${sanitizedPetitionMessage.replace(/\n/g, '<br>')}
           </div>
           <h3>Signer Information:</h3>
-          <p><strong>Name:</strong> ${full_name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          ${zip_code ? `<p><strong>Zip Code:</strong> ${zip_code}</p>` : ''}
-          ${street ? `<p><strong>Street:</strong> ${street}</p>` : ''}
-          ${city ? `<p><strong>City:</strong> ${city}</p>` : ''}
-          ${state ? `<p><strong>State:</strong> ${state}</p>` : ''}
-          ${country ? `<p><strong>Country:</strong> ${country}</p>` : ''}
+          <p><strong>Name:</strong> ${sanitizedFullName}</p>
+          <p><strong>Email:</strong> ${sanitizedEmail}</p>
+          ${sanitizedZipCode ? `<p><strong>Zip Code:</strong> ${sanitizedZipCode}</p>` : ''}
+          ${sanitizedStreet ? `<p><strong>Street:</strong> ${sanitizedStreet}</p>` : ''}
+          ${sanitizedCity ? `<p><strong>City:</strong> ${sanitizedCity}</p>` : ''}
+          ${sanitizedState ? `<p><strong>State:</strong> ${sanitizedState}</p>` : ''}
+          ${sanitizedCountry ? `<p><strong>Country:</strong> ${sanitizedCountry}</p>` : ''}
           ${customFieldsHtml}
           <p style="margin-top: 30px; color: #666; font-size: 12px;">
             This petition signature was submitted on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}
@@ -208,7 +278,7 @@ module.exports = async function handler(req, res) {
         petition.email_subject || `New Petition Signature: ${petition.title}`,
         petitionEmailHtml,
         petition.target_email_cc,
-        petition.bcc_signer ? email : null
+        petition.bcc_signer ? sanitizedEmail : null
       );
     }
 
