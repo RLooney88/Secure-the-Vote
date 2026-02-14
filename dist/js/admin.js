@@ -1333,7 +1333,7 @@
 
   // Publish staging to production
   async function publishToProduction() {
-    if (!confirm('This will publish ALL staging changes to the live production site.\n\nAre you sure you want to continue?')) {
+    if (!confirm('This will publish ALL staging changes to the live production site.\n\nThis includes:\n- File changes (staging → main)\n- Draft posts → Published\n- Draft petitions → Published\n\nAre you sure you want to continue?')) {
       return;
     }
     
@@ -1342,27 +1342,57 @@
     
     try {
       elements.publishProductionBtn.disabled = true;
-      elements.publishProductionBtn.textContent = '⏳ Publishing...';
+      elements.publishProductionBtn.textContent = 'Publishing...';
       
-      const res = await fetch(`${API_URL}/sites/${SITE_ID}/publish`, {
+      // Step 1: Publish file changes (staging → main)
+      const fileRes = await fetch(`${API_URL}/sites/${SITE_ID}/publish`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });
       
-      const data = await res.json();
-      
-      if (!res.ok) {
-        throw new Error(data.error || 'Publish failed');
+      if (!fileRes.ok) {
+        const fileData = await fileRes.json();
+        throw new Error(fileData.error || 'File publish failed');
       }
       
-      alert(`✅ Changes published to production!\n\nLive site will update in ~30 seconds.\n\nProduction URL: ${data.productionUrl || 'https://securethevotemd.com'}`);
+      // Step 2: Publish draft posts
+      const postsRes = await fetch('/api/admin/posts/publish-drafts', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${state.token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      // Step 3: Publish draft petitions
+      const petitionsRes = await fetch('/api/admin/petitions/publish-drafts', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${state.token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      const fileData = await fileRes.json();
+      const postsData = postsRes.ok ? await postsRes.json() : { publishedCount: 0 };
+      const petitionsData = petitionsRes.ok ? await petitionsRes.json() : { publishedCount: 0 };
+      
+      alert(`✅ Published to production!\n\nFile changes: Deployed\nPosts published: ${postsData.publishedCount || 0}\nPetitions published: ${petitionsData.publishedCount || 0}\n\nLive site will update in ~30 seconds.`);
+      
+      // Reload posts/petitions if on those tabs
+      if (document.querySelector('[data-tab="posts"].active')) {
+        loadPosts();
+      }
+      if (document.querySelector('[data-tab="petitions"].active')) {
+        loadPetitions();
+      }
       
     } catch (error) {
       console.error('Publish error:', error);
       alert(`Publish error: ${error.message}`);
     } finally {
       elements.publishProductionBtn.disabled = false;
-      elements.publishProductionBtn.textContent = '✅ Publish to Production';
+      elements.publishProductionBtn.textContent = 'Publish to Production';
     }
   }
 

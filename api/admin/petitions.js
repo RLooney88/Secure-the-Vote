@@ -64,8 +64,8 @@ module.exports = async function handler(req, res) {
           allow_anonymous, show_signature_list, signature_privacy, social_sharing,
           optin_enabled, optin_label, bcc_signer,
           thank_you_email, thank_you_subject, thank_you_content,
-          redirect_url, expires, expiration_date, custom_fields
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32)
+          redirect_url, expires, expiration_date, custom_fields, status
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, 'draft')
          RETURNING *`,
         [
           name, title, description, active !== false,
