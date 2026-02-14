@@ -1484,33 +1484,7 @@
           }
         }
       } else {
-        // If proxy fails, try direct API call (may fail due to CORS)
-        try {
-          const directResponse = await fetch(
-            `https://api.vercel.com/v6/deployments?projectId=${VERCEL_CONFIG.projectId}&target=${activeModalConfig.pollTarget}&limit=1`,
-            {
-              method: 'GET',
-              headers: {
-                'Authorization': `Bearer ${state.token}`,
-                'Content-Type': 'application/json'
-              }
-            }
-          );
-          
-          if (directResponse.ok) {
-            const data = await directResponse.json();
-            if (data.deployments && data.deployments.length > 0) {
-              const latestDeployment = data.deployments[0];
-              if (latestDeployment.state === 'READY') {
-                onDeploymentReady();
-                return;
-              }
-            }
-          }
-        } catch (e) {
-          // Direct API call failed due to CORS, continue with stage cycling
-          console.log('Direct Vercel API call blocked by CORS, continuing with stages...');
-        }
+        console.log('Deployment status proxy returned non-OK, will retry...');
       }
     } catch (error) {
       console.log('Vercel polling error (continuing):', error.message);
