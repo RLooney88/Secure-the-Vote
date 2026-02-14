@@ -14,8 +14,8 @@ async function updateGitHubFile(path, contentUpdater) {
     'User-Agent': 'SecureTheVote-Admin'
   };
 
-  // Get current file
-  const getResp = await fetch(apiBase, { headers });
+  // Get current file from staging branch
+  const getResp = await fetch(`${apiBase}?ref=staging`, { headers });
   if (!getResp.ok) return { updated: false, reason: `Failed to read ${path}: ${getResp.status}` };
   const fileData = await getResp.json();
 
@@ -25,14 +25,15 @@ async function updateGitHubFile(path, contentUpdater) {
 
   if (newContent === currentContent) return { updated: false, reason: 'No changes needed' };
 
-  // Update file
+  // Update file on staging branch
   const putResp = await fetch(apiBase, {
     method: 'PUT',
     headers: { ...headers, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       message: 'Update banner via admin dashboard',
       content: Buffer.from(newContent).toString('base64'),
-      sha: fileData.sha
+      sha: fileData.sha,
+      branch: 'staging'
     })
   });
 
