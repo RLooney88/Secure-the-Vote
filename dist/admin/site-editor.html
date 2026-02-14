@@ -368,7 +368,7 @@
     }
     
     async function createPreview() {
-      addMessage('assistant', 'Creating preview deployment... This will take about 30 seconds.');
+      addMessage('assistant', 'Checking staging preview...');
       
       try {
         const res = await fetch(`${API_URL}/sites/${SITE_ID}/preview`, {
@@ -382,7 +382,10 @@
           throw new Error(data.error || 'Preview failed');
         }
         
-        addMessage('assistant', `✅ Preview ready!\n\n🔗 ${data.previewUrl}\n\nReview the changes and click "Approve & Publish" to deploy to production.`);
+        // Open preview in new tab
+        window.open(data.previewUrl, '_blank');
+        
+        addMessage('assistant', `✅ Staging preview opened in new tab!\n\n🔗 ${data.previewUrl}\n\n📋 This shows the STAGING branch with your latest changes.\n\nIf you're satisfied, click "Approve & Publish" to deploy to the live site.`);
         
       } catch (error) {
         addMessage('assistant', `❌ Preview error: ${error.message}`);
@@ -390,27 +393,25 @@
     }
     
     async function approveChanges() {
-      if (!confirm('This will publish changes to production. Continue?')) {
+      if (!confirm('This will publish staging changes to production. Continue?')) {
         return;
       }
       
-      addMessage('assistant', 'Publishing to production...');
+      addMessage('assistant', 'Publishing staging to production...');
       
       try {
-        // TODO: Get preview branch from previous response
-        const res = await fetch(`${API_URL}/sites/${SITE_ID}/approve`, {
+        const res = await fetch(`${API_URL}/sites/${SITE_ID}/publish`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ previewBranch: 'preview-latest' })
+          headers: { 'Content-Type': 'application/json' }
         });
         
         const data = await res.json();
         
         if (!res.ok) {
-          throw new Error(data.error || 'Approval failed');
+          throw new Error(data.error || 'Publish failed');
         }
         
-        addMessage('assistant', '🎉 Changes published to production! Live at https://securethevotemd.com');
+        addMessage('assistant', `🎉 Changes published to production!\n\nLive at: ${data.productionUrl || 'https://securethevotemd.com'}\n\nProduction deployment will complete in ~30 seconds.`);
         
       } catch (error) {
         addMessage('assistant', `❌ Publish error: ${error.message}`);
