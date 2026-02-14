@@ -852,3 +852,102 @@ small {
     white-space: nowrap;
   }
 }
+/* Petition Editor Sections */
+.petition-section {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  background: var(--surface);
+}
+
+.petition-section summary {
+  cursor: pointer;
+  padding: 16px 20px;
+  user-select: none;
+  list-style: none;
+  background: linear-gradient(to right, rgba(155, 30, 55, 0.05), transparent);
+  border-radius: var(--radius);
+}
+
+.petition-section summary::-webkit-details-marker {
+  display: none;
+}
+
+.petition-section summary::before {
+  content: '?';
+  display: inline-block;
+  margin-right: 12px;
+  transition: transform 0.2s;
+  color: var(--primary-color);
+}
+
+.petition-section[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.petition-section summary h3 {
+  display: inline;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.petition-section summary:hover {
+  background: linear-gradient(to right, rgba(155, 30, 55, 0.08), transparent);
+}
+
+.petition-section .section-content {
+  padding: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+/* Custom Field Builder */
+.custom-field-item {
+  background: var(--background);
+  padding: 16px;
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  border: 1px solid var(--border-color);
+}
+
+.custom-field-item hr {
+  margin: 16px 0 0 0;
+  border: none;
+  border-top: 1px solid var(--border-color);
+}
+
+.custom-field-item .form-row {
+  margin-bottom: 12px;
+}
+
+.custom-field-item .remove-cf-btn {
+  margin-top: 20px;
+}
+
+#custom-fields-container:empty::before {
+  content: 'No custom fields added yet. Click "Add Custom Field" to get started.';
+  display: block;
+  padding: 20px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+#add-custom-field-btn {
+  margin-top: 12px;
+}
+
+/* Petition Message Editor (Quill) */
+#petition-message-editor {
+  background: white;
+}
+
+.ql-toolbar.ql-snow {
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+}
+
+.ql-container.ql-snow {
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+}

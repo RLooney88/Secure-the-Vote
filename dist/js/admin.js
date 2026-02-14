@@ -649,6 +649,8 @@
 
   // === PETITIONS FUNCTIONALITY ===
 
+  let petitionMessageQuill = null;
+
   async function loadPetitionsList() {
     setLoading(true);
     try {
@@ -678,7 +680,7 @@
       <tr>
         <td>${escapeHtml(petition.name)}</td>
         <td>${escapeHtml(petition.title)}</td>
-        <td>${petition.signature_count || 0}</td>
+        <td>${petition.signature_count || 0}${petition.goal ? ' / ' + petition.goal : ''}</td>
         <td><span class="badge status-${petition.active ? 'active' : 'inactive'}">${petition.active ? 'Active' : 'Inactive'}</span></td>
         <td class="action-btns">
           <button class="btn btn-small btn-edit edit-petition-btn" data-id="${petition.id}">Edit</button>
@@ -696,30 +698,189 @@
     });
   }
 
+  function initPetitionMessageEditor() {
+    if (!petitionMessageQuill) {
+      petitionMessageQuill = new Quill('#petition-message-editor', {
+        theme: 'snow',
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline'],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            ['link'],
+            ['clean']
+          ]
+        }
+      });
+    }
+  }
+
+  function renderCustomFields(customFields = []) {
+    const container = document.getElementById('custom-fields-container');
+    container.innerHTML = customFields.map((field, index) => `
+      <div class="custom-field-item" data-index="${index}">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Field Label</label>
+            <input type="text" class="cf-label" value="${escapeHtml(field.label || '')}" placeholder="e.g., County">
+          </div>
+          <div class="form-group">
+            <label>Field Type</label>
+            <select class="cf-type">
+              <option value="text" ${field.type === 'text' ? 'selected' : ''}>Text</option>
+              <option value="dropdown" ${field.type === 'dropdown' ? 'selected' : ''}>Dropdown</option>
+              <option value="checkbox" ${field.type === 'checkbox' ? 'selected' : ''}>Checkbox</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row cf-values-row" style="display: ${field.type === 'dropdown' ? 'block' : 'none'};">
+          <div class="form-group">
+            <label>Dropdown Values (comma-separated)</label>
+            <input type="text" class="cf-values" value="${escapeHtml((field.values || []).join(', '))}">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" class="cf-required" ${field.required ? 'checked' : ''}>
+              <span>Required</span>
+            </label>
+          </div>
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" class="cf-include-email" ${field.included_in_email ? 'checked' : ''}>
+              <span>Include in email</span>
+            </label>
+          </div>
+          <div class="form-group">
+            <button type="button" class="btn btn-small btn-danger remove-cf-btn">Remove</button>
+          </div>
+        </div>
+        <hr>
+      </div>
+    `).join('');
+
+    // Add event listeners
+    container.querySelectorAll('.cf-type').forEach(select => {
+      select.addEventListener('change', (e) => {
+        const item = e.target.closest('.custom-field-item');
+        const valuesRow = item.querySelector('.cf-values-row');
+        valuesRow.style.display = e.target.value === 'dropdown' ? 'block' : 'none';
+      });
+    });
+
+    container.querySelectorAll('.remove-cf-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.target.closest('.custom-field-item').remove();
+      });
+    });
+  }
+
+  function getCustomFieldsData() {
+    const customFields = [];
+    document.querySelectorAll('.custom-field-item').forEach(item => {
+      const label = item.querySelector('.cf-label').value.trim();
+      if (!label) return;
+
+      const field = {
+        label,
+        type: item.querySelector('.cf-type').value,
+        required: item.querySelector('.cf-required').checked,
+        included_in_email: item.querySelector('.cf-include-email').checked
+      };
+
+      if (field.type === 'dropdown') {
+        const valuesStr = item.querySelector('.cf-values').value;
+        field.values = valuesStr.split(',').map(v => v.trim()).filter(v => v);
+      }
+
+      customFields.push(field);
+    });
+    return customFields;
+  }
+
   function showPetitionEditor(petition = null) {
     elements.petitionsListView.style.display = 'none';
     elements.petitionEditorView.style.display = 'block';
     elements.newPetitionBtn.style.display = 'none';
 
+    initPetitionMessageEditor();
+
     if (petition) {
       state.currentPetitionId = petition.id;
-      elements.petitionId.value = petition.id;
-      elements.petitionName.value = petition.name;
-      elements.petitionTitle.value = petition.title;
-      elements.petitionDescription.value = petition.description || '';
-      elements.petitionActive.checked = petition.active;
+      document.getElementById('petition-id').value = petition.id;
+      document.getElementById('petition-name').value = petition.name || '';
+      document.getElementById('petition-title').value = petition.title || '';
+      document.getElementById('petition-description').value = petition.description || '';
+      document.getElementById('petition-active').checked = petition.active !== false;
 
-      // Set field checkboxes
-      const fields = JSON.parse(petition.fields || '[]');
+      // Email settings
+      document.getElementById('petition-target-email').value = petition.target_email || '';
+      document.getElementById('petition-target-email-cc').value = petition.target_email_cc || '';
+      document.getElementById('petition-email-subject').value = petition.email_subject || '';
+      document.getElementById('petition-greeting').value = petition.greeting || '';
+      document.getElementById('petition-sends-email').checked = petition.sends_email !== false;
+      document.getElementById('petition-bcc-signer').checked = petition.bcc_signer || false;
+
+      // Petition content
+      petitionMessageQuill.root.innerHTML = petition.petition_message || '';
+      document.getElementById('petition-display-message').checked = petition.display_message !== false;
+      document.getElementById('petition-message-editable').checked = petition.message_editable || false;
+
+      // Goals & expiration
+      document.getElementById('petition-goal').value = petition.goal || '';
+      document.getElementById('petition-goal-auto-increase').checked = petition.goal_auto_increase || false;
+      document.getElementById('petition-goal-bump-percent').value = petition.goal_bump_percent || 25;
+      document.getElementById('petition-goal-trigger-percent').value = petition.goal_trigger_percent || 90;
+      document.getElementById('petition-expires').checked = petition.expires || false;
+      if (petition.expiration_date) {
+        const date = new Date(petition.expiration_date);
+        document.getElementById('petition-expiration-date').value = date.toISOString().slice(0, 16);
+      } else {
+        document.getElementById('petition-expiration-date').value = '';
+      }
+
+      // Signer options
+      document.getElementById('petition-allow-anonymous').checked = petition.allow_anonymous || false;
+      document.getElementById('petition-requires-confirmation').checked = petition.requires_confirmation || false;
+      document.getElementById('petition-optin-enabled').checked = petition.optin_enabled || false;
+      document.getElementById('petition-optin-label').value = petition.optin_label || 'Add me to your mailing list';
+      document.getElementById('petition-redirect-url').value = petition.redirect_url || '';
+
+      // Display options
+      document.getElementById('petition-show-signature-list').checked = petition.show_signature_list !== false;
+      document.getElementById('petition-signature-privacy').value = petition.signature_privacy || 'first_initial';
+      document.getElementById('petition-social-sharing').checked = petition.social_sharing !== false;
+
+      // Form fields
+      const fields = JSON.parse(petition.fields || '["full_name","email","zip_code"]');
       document.querySelectorAll('.field-checkbox').forEach(cb => {
         cb.checked = fields.includes(cb.value);
       });
+
+      // Custom fields
+      const customFields = petition.custom_fields ? JSON.parse(petition.custom_fields) : [];
+      renderCustomFields(customFields);
+
+      // Thank you email
+      document.getElementById('petition-thank-you-email').checked = petition.thank_you_email || false;
+      document.getElementById('petition-thank-you-subject').value = petition.thank_you_subject || '';
+      document.getElementById('petition-thank-you-content').value = petition.thank_you_content || '';
+
     } else {
       state.currentPetitionId = null;
       elements.petitionForm.reset();
-      elements.petitionActive.checked = true;
+      document.getElementById('petition-active').checked = true;
+      document.getElementById('petition-sends-email').checked = true;
+      document.getElementById('petition-display-message').checked = true;
+      document.getElementById('petition-show-signature-list').checked = true;
+      document.getElementById('petition-social-sharing').checked = true;
+      document.getElementById('petition-signature-privacy').value = 'first_initial';
+      document.getElementById('petition-goal-bump-percent').value = 25;
+      document.getElementById('petition-goal-trigger-percent').value = 90;
+      document.getElementById('petition-optin-label').value = 'Add me to your mailing list';
+      petitionMessageQuill.root.innerHTML = '';
+      renderCustomFields([]);
       
-      // Default fields
       document.querySelectorAll('.field-checkbox').forEach(cb => {
         cb.checked = ['full_name', 'email', 'zip_code'].includes(cb.value);
       });
@@ -758,13 +919,55 @@
     e.preventDefault();
 
     const fields = Array.from(document.querySelectorAll('.field-checkbox:checked')).map(cb => cb.value);
+    const customFields = getCustomFieldsData();
 
     const petitionData = {
-      name: elements.petitionName.value,
-      title: elements.petitionTitle.value,
-      description: elements.petitionDescription.value,
-      active: elements.petitionActive.checked,
-      fields
+      name: document.getElementById('petition-name').value,
+      title: document.getElementById('petition-title').value,
+      description: document.getElementById('petition-description').value,
+      active: document.getElementById('petition-active').checked,
+      fields,
+
+      // Email settings
+      target_email: document.getElementById('petition-target-email').value || null,
+      target_email_cc: document.getElementById('petition-target-email-cc').value || null,
+      email_subject: document.getElementById('petition-email-subject').value || null,
+      greeting: document.getElementById('petition-greeting').value || null,
+      sends_email: document.getElementById('petition-sends-email').checked,
+      bcc_signer: document.getElementById('petition-bcc-signer').checked,
+
+      // Petition content
+      petition_message: petitionMessageQuill.root.innerHTML,
+      display_message: document.getElementById('petition-display-message').checked,
+      message_editable: document.getElementById('petition-message-editable').checked,
+
+      // Goals & expiration
+      goal: parseInt(document.getElementById('petition-goal').value) || null,
+      goal_auto_increase: document.getElementById('petition-goal-auto-increase').checked,
+      goal_bump_percent: parseInt(document.getElementById('petition-goal-bump-percent').value) || 25,
+      goal_trigger_percent: parseInt(document.getElementById('petition-goal-trigger-percent').value) || 90,
+      expires: document.getElementById('petition-expires').checked,
+      expiration_date: document.getElementById('petition-expiration-date').value || null,
+
+      // Signer options
+      allow_anonymous: document.getElementById('petition-allow-anonymous').checked,
+      requires_confirmation: document.getElementById('petition-requires-confirmation').checked,
+      optin_enabled: document.getElementById('petition-optin-enabled').checked,
+      optin_label: document.getElementById('petition-optin-label').value,
+      redirect_url: document.getElementById('petition-redirect-url').value || null,
+
+      // Display options
+      show_signature_list: document.getElementById('petition-show-signature-list').checked,
+      signature_privacy: document.getElementById('petition-signature-privacy').value,
+      social_sharing: document.getElementById('petition-social-sharing').checked,
+
+      // Custom fields
+      custom_fields: customFields,
+
+      // Thank you email
+      thank_you_email: document.getElementById('petition-thank-you-email').checked,
+      thank_you_subject: document.getElementById('petition-thank-you-subject').value || null,
+      thank_you_content: document.getElementById('petition-thank-you-content').value || null
     };
 
     setLoading(true);
@@ -782,6 +985,7 @@
       }
 
       await loadPetitionsList();
+      await loadPetitionsFilter();
       hidePetitionEditor();
     } catch (error) {
       alert('Failed to save petition: ' + error.message);
@@ -1080,6 +1284,18 @@
     elements.newPetitionBtn.addEventListener('click', () => showPetitionEditor());
     elements.cancelPetitionBtn.addEventListener('click', hidePetitionEditor);
     elements.petitionForm.addEventListener('submit', savePetition);
+    
+    // Add custom field button
+    document.getElementById('add-custom-field-btn').addEventListener('click', () => {
+      const currentFields = getCustomFieldsData();
+      currentFields.push({
+        label: '',
+        type: 'text',
+        required: false,
+        included_in_email: true
+      });
+      renderCustomFields(currentFields);
+    });
   }
 
   // Start app

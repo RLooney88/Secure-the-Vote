@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="page-title">Petition - Secure the Vote MD</title>
+  <meta name="description" id="page-description" content="Sign our petition to secure Maryland elections">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/petition.css">
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+</head>
+<body>
+  <!-- Navigation (reuse from main site) -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-content">
+        <a href="/" class="logo-link">
+          <img src="/images/logo.png" alt="Secure the Vote MD" class="logo">
+        </a>
+        <nav class="main-nav">
+          <a href="/">Home</a>
+          <a href="/citizen-action/">Take Action</a>
+          <a href="/resources/">Resources</a>
+          <a href="/contact-us/">Contact</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="petition-page">
+    <div class="container">
+      <div id="loading-view" class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading petition...</p>
+      </div>
+
+      <div id="error-view" class="error-state" style="display: none;">
+        <div class="error-icon">⚠️</div>
+        <h2 id="error-title">Petition Not Found</h2>
+        <p id="error-message">This petition could not be loaded.</p>
+        <a href="/" class="btn btn-primary">Return Home</a>
+      </div>
+
+      <div id="petition-view" class="petition-container" style="display: none;">
+        <div class="petition-header">
+          <h1 id="petition-title"></h1>
+          <p id="petition-description" class="petition-subtitle"></p>
+        </div>
+
+        <!-- Progress Section -->
+        <div id="progress-section" class="petition-progress" style="display: none;">
+          <div class="progress-stats">
+            <div class="signature-count">
+              <span id="current-signatures" class="count-number">0</span>
+              <span class="count-label">signatures</span>
+            </div>
+            <div class="signature-goal" id="goal-display" style="display: none;">
+              <span>Goal: <strong id="goal-number">0</strong></span>
+            </div>
+          </div>
+          <div class="progress-bar-container">
+            <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- Petition Message -->
+        <div id="petition-message-section" class="petition-message" style="display: none;">
+          <div id="petition-message-content"></div>
+        </div>
+
+        <!-- Signing Form -->
+        <div id="sign-section" class="petition-sign-section">
+          <h2>Sign This Petition</h2>
+          
+          <form id="petition-sign-form">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="sign-full-name">Full Name *</label>
+                <input type="text" id="sign-full-name" name="full_name" required>
+              </div>
+
+              <div class="form-group">
+                <label for="sign-email">Email Address *</label>
+                <input type="email" id="sign-email" name="email" required>
+              </div>
+
+              <div id="dynamic-fields-container">
+                <!-- Dynamic fields inserted here -->
+              </div>
+
+              <div id="custom-fields-container">
+                <!-- Custom fields inserted here -->
+              </div>
+            </div>
+
+            <!-- Editable Message (if enabled) -->
+            <div id="editable-message-section" style="display: none;">
+              <div class="form-group">
+                <label for="sign-message">Your Message (optional - edit if desired)</label>
+                <textarea id="sign-message" name="petition_message" rows="6"></textarea>
+              </div>
+            </div>
+
+            <!-- Anonymous Option -->
+            <div id="anonymous-option" style="display: none;">
+              <label class="checkbox-label">
+                <input type="checkbox" id="sign-anonymous" name="anonymous">
+                <span>Sign anonymously (your name will not appear in the public list)</span>
+              </label>
+            </div>
+
+            <!-- Opt-in Option -->
+            <div id="optin-option" style="display: none;">
+              <label class="checkbox-label">
+                <input type="checkbox" id="sign-optin" name="optin">
+                <span id="optin-label">Add me to your mailing list</span>
+              </label>
+            </div>
+
+            <div id="form-error" class="error-message" style="display: none;"></div>
+
+            <button type="submit" id="submit-btn" class="btn btn-primary btn-large">Sign the Petition</button>
+          </form>
+        </div>
+
+        <!-- Thank You Section (shown after signing) -->
+        <div id="thank-you-section" class="thank-you-section" style="display: none;">
+          <div class="thank-you-icon">✓</div>
+          <h2>Thank You for Signing!</h2>
+          <p id="thank-you-message">Your signature has been recorded.</p>
+          
+          <div id="social-share-section" style="display: none;">
+            <h3>Share This Petition</h3>
+            <div class="social-buttons">
+              <a href="#" id="share-facebook" class="btn btn-social btn-facebook" target="_blank">
+                Share on Facebook
+              </a>
+              <a href="#" id="share-x" class="btn btn-social btn-x" target="_blank">
+                Share on X (Twitter)
+              </a>
+            </div>
+          </div>
+
+          <div class="thank-you-actions">
+            <a href="/" class="btn btn-outline">Return Home</a>
+          </div>
+        </div>
+
+        <!-- Signature List -->
+        <div id="signatures-section" class="signatures-section" style="display: none;">
+          <h2>Recent Signatures</h2>
+          <div id="signatures-list" class="signatures-list">
+            <!-- Signatures inserted here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2026 Secure the Vote MD. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="/js/petition.js"></script>
+</body>
+</html>
