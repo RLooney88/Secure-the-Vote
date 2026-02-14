@@ -1397,16 +1397,15 @@
     const titleEl = elements.deploymentModal.querySelector('.deployment-header h2');
     if (titleEl) titleEl.textContent = activeModalConfig.title;
     
-    // Build progress list
-    elements.progressList.innerHTML = activeModalConfig.stages.map((stage, index) => `
-      <li class="progress-item" id="stage-${stage.id}" data-index="${index}">
+    // Single rotating status line
+    elements.progressList.innerHTML = `
+      <li class="progress-item active" id="stage-current">
         <span class="progress-icon">
-          <span class="progress-spinner" style="display: ${index === 0 ? 'inline-block' : 'none'}"></span>
-          <span class="progress-checkmark" style="display: none;">&#10003;</span>
+          <span class="progress-spinner" style="display: inline-block"></span>
         </span>
-        <span class="progress-text">${stage.text}</span>
+        <span class="progress-text stage-fade">${activeModalConfig.stages[0].text}</span>
       </li>
-    `).join('');
+    `;
   }
 
   // Hide deployment modal
@@ -1432,41 +1431,31 @@
     }
   }
 
-  // Advance to next stage
+  // Advance to next stage — single line fade swap
   function advanceToNextStage() {
-    const currentItem = elements.progressList.querySelector(`[data-index="${deploymentState.currentStageIndex}"]`);
-    if (currentItem) {
-      currentItem.classList.remove('active');
-      currentItem.classList.add('completed');
-      currentItem.querySelector('.progress-spinner').style.display = 'none';
-      currentItem.querySelector('.progress-checkmark').style.display = 'inline-block';
-    }
-
+    if (!deploymentState.isRunning) return;
+    
     deploymentState.currentStageIndex++;
 
-    // Cycle through extra stages if we've gone through all main stages
-    let stageIndex = deploymentState.currentStageIndex;
-    let stageData;
-    let stageDuration = 2500 + Math.random() * 1000; // 2.5-3.5 seconds
+    // Combine main + extra stages and cycle through them
+    const allStages = [...activeModalConfig.stages, ...activeModalConfig.extraStages];
+    const stageIndex = deploymentState.currentStageIndex % allStages.length;
+    const stageData = allStages[stageIndex];
+    const stageDuration = 2500 + Math.random() * 1500; // 2.5-4 seconds
 
-    if (stageIndex < activeModalConfig.stages.length) {
-      stageData = activeModalConfig.stages[stageIndex];
-    } else {
-      // Use extra stages for cycling
-      const extraIndex = (stageIndex - activeModalConfig.stages.length) % activeModalConfig.extraStages.length;
-      stageData = activeModalConfig.extraStages[extraIndex];
-      stageDuration = 3000 + Math.random() * 1000; // 3-4 seconds for extra stages
+    const textEl = elements.progressList.querySelector('.stage-fade');
+    if (textEl) {
+      // Fade out
+      textEl.style.opacity = '0';
+      setTimeout(() => {
+        textEl.textContent = stageData.text;
+        // Fade in
+        textEl.style.opacity = '1';
+      }, 300);
     }
 
-    const nextItem = elements.progressList.querySelector(`[data-index="${Math.min(stageIndex, activeModalConfig.stages.length - 1)}"]`);
-    
-    if (nextItem && deploymentState.isRunning) {
-      nextItem.classList.add('active');
-      nextItem.querySelector('.progress-spinner').style.display = 'inline-block';
-
-      // Schedule next advance
-      deploymentState.stageTimeoutId = setTimeout(advanceToNextStage, stageDuration);
-    }
+    // Schedule next advance
+    deploymentState.stageTimeoutId = setTimeout(advanceToNextStage, stageDuration);
   }
 
   // Poll Vercel deployment status
@@ -1535,13 +1524,22 @@
   function onDeploymentReady() {
     cleanupDeployment();
 
-    // Complete current stage
-    const currentItem = elements.progressList.querySelector(`[data-index="${deploymentState.currentStageIndex}"]`);
+    // Swap the spinner line to success
+    const currentItem = document.getElementById('stage-current');
     if (currentItem) {
-      currentItem.classList.remove('active');
-      currentItem.classList.add('completed');
-      currentItem.querySelector('.progress-spinner').style.display = 'none';
-      currentItem.querySelector('.progress-checkmark').style.display = 'inline-block';
+      const spinner = currentItem.querySelector('.progress-spinner');
+      if (spinner) spinner.style.display = 'none';
+      // Add checkmark
+      const icon = currentItem.querySelector('.progress-icon');
+      if (icon) icon.innerHTML = '<span class="progress-checkmark" style="display:inline-block">&#10003;</span>';
+      const textEl = currentItem.querySelector('.stage-fade');
+      if (textEl) {
+        textEl.style.opacity = '0';
+        setTimeout(() => {
+          textEl.textContent = activeModalConfig.successText;
+          textEl.style.opacity = '1';
+        }, 300);
+      }
     }
 
     // Show final success message
@@ -1550,10 +1548,10 @@
     elements.deploymentFinal.style.display = 'flex';
     elements.deploymentCancel.style.display = 'none';
 
-    // Wait 1 second then run completion handler
+    // Wait 1.5 seconds then run completion handler
     setTimeout(() => {
       activeModalConfig.onReady();
-    }, 1000);
+    }, 1500);
   }
 
   // Handle deployment timeout
@@ -1565,22 +1563,19 @@
     elements.deploymentCancel.style.color = '#888';
     elements.deploymentManual.style.display = 'inline-block';
     
-    // Mark current stage as complete
-    const currentItem = elements.progressList.querySelector(`[data-index="${deploymentState.currentStageIndex}"]`);
+    // Swap current line to timeout message
+    const currentItem = document.getElementById('stage-current');
     if (currentItem) {
-      currentItem.querySelector('.progress-spinner').style.display = 'none';
-      currentItem.querySelector('.progress-checkmark').style.display = 'inline-block';
+      const spinner = currentItem.querySelector('.progress-spinner');
+      if (spinner) spinner.style.display = 'none';
+      const icon = currentItem.querySelector('.progress-icon');
+      if (icon) icon.innerHTML = '<span class="progress-checkmark" style="display:inline-block;color:#F6BF58">!</span>';
+      const textEl = currentItem.querySelector('.stage-fade');
+      if (textEl) {
+        textEl.style.color = '#F6BF58';
+        textEl.textContent = activeModalConfig.timeoutText;
+      }
     }
-
-    // Show timeout message
-    const timeoutItem = document.createElement('li');
-    timeoutItem.className = 'progress-item completed';
-    timeoutItem.style.color = '#F6BF58';
-    timeoutItem.innerHTML = `
-      <span class="progress-icon"><span class="progress-checkmark">!</span></span>
-      <span class="progress-text">${activeModalConfig.timeoutText}</span>
-    `;
-    elements.progressList.appendChild(timeoutItem);
   }
 
   // Start deployment modal with given config
