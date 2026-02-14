@@ -40,7 +40,6 @@
           <span class="subtitle">Admin Dashboard</span>
         </div>
         <div class="header-right">
-          <button id="export-btn" class="btn btn-secondary">Export CSV</button>
           <button id="logout-btn" class="btn btn-outline">Logout</button>
         </div>
       </header>
@@ -76,6 +75,7 @@
                   <option value="">All Petitions</option>
                 </select>
                 <input type="text" id="search-input" placeholder="Search signatures...">
+                <button id="export-btn" class="btn btn-secondary btn-small">Export CSV</button>
               </div>
             </div>
             <table class="signatures-table">
@@ -237,21 +237,32 @@
           <div class="banner-section">
             <div class="section-header">
               <h2>Homepage Banner</h2>
-              <div class="banner-toggle">
-                <label class="checkbox-label">
-                  <input type="checkbox" id="banner-enabled-toggle">
-                  <span>Banner Enabled</span>
-                </label>
-              </div>
             </div>
 
             <div class="card">
-              <h3>Banner Slides</h3>
-              <button id="add-slide-btn" class="btn btn-primary" style="margin-bottom: 20px;">Add Slide</button>
-              
-              <div id="slides-list">
-                <!-- Populated by JS -->
-              </div>
+              <h3>Scrolling Text Banner</h3>
+              <form id="banner-form">
+                <div class="form-group">
+                  <label for="banner-text">Banner Text *</label>
+                  <textarea id="banner-text" rows="3" placeholder="JOIN US FOR SECURE THE VOTE ACT 2026 LOBBY DAY — WED FEB 4 AT 9AM — CLICK HERE TO REGISTER!" required></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label for="banner-link">Link URL *</label>
+                  <input type="url" id="banner-link" placeholder="/register-for-lobby-day-jan-27/#register-now" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="banner-enabled">
+                    <span>Banner Enabled</span>
+                  </label>
+                </div>
+
+                <div id="banner-form-message" style="display: none;"></div>
+
+                <button type="submit" class="btn btn-primary">Save Banner Settings</button>
+              </form>
             </div>
           </div>
         </div>

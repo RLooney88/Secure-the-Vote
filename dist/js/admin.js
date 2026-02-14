@@ -8,8 +8,8 @@
     signatures: [],
     admins: [],
     posts: [],
-    slides: [],
     petitions: [],
+    petitionsList: [],
     currentAdminId: null,
     currentPostId: null,
     currentPetitionId: null,
@@ -42,7 +42,6 @@
     pageInfo: document.getElementById('page-info'),
     prevPage: document.getElementById('prev-page'),
     nextPage: document.getElementById('next-page'),
-    exportBtn: document.getElementById('export-btn'),
     logoutBtn: document.getElementById('logout-btn'),
     loading: document.getElementById('loading'),
     addAdminForm: document.getElementById('add-admin-form'),
@@ -84,9 +83,11 @@
     postSearch: document.getElementById('post-search'),
     
     // New elements - Banner
-    bannerEnabledToggle: document.getElementById('banner-enabled-toggle'),
-    addSlideBtn: document.getElementById('add-slide-btn'),
-    slidesList: document.getElementById('slides-list'),
+    bannerForm: document.getElementById('banner-form'),
+    bannerText: document.getElementById('banner-text'),
+    bannerLink: document.getElementById('banner-link'),
+    bannerEnabled: document.getElementById('banner-enabled'),
+    bannerFormMessage: document.getElementById('banner-form-message'),
     
     // New elements - Petitions
     newPetitionBtn: document.getElementById('new-petition-btn'),
@@ -295,15 +296,15 @@
     }
   }
 
-  // Load petitions for filter
-  async function loadPetitions() {
+  // Load petitions for filter (Fix 1: Load from petitions API)
+  async function loadPetitionsFilter() {
     try {
-      const data = await api('admin/signatures?limit=1000');
-      const petitions = [...new Set(data.signatures.map(s => s.petition_name))];
+      const data = await api('admin/petitions');
+      state.petitionsList = data.petitions || [];
       
       elements.petitionFilter.innerHTML = `
         <option value="">All Petitions</option>
-        ${petitions.map(p => `<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`).join('')}
+        ${state.petitionsList.map(p => `<option value="${escapeHtml(p.name)}">${escapeHtml(p.title || p.name)}</option>`).join('')}
       `;
     } catch (error) {
       console.error('Failed to load petitions:', error);
@@ -606,15 +607,15 @@
     document.querySelectorAll('.char-count')[1].textContent = `${seoDesc.length}/160`;
   }
 
-  // === BANNER FUNCTIONALITY ===
+  // === BANNER FUNCTIONALITY (Fix 2: Simple text/link/toggle) ===
 
   async function loadBanner() {
     setLoading(true);
     try {
-      const data = await api('admin/banner');
-      state.slides = data.slides;
-      elements.bannerEnabledToggle.checked = data.bannerEnabled;
-      renderSlides();
+      const data = await api('admin/banner-settings');
+      elements.bannerText.value = data.settings.banner_text || '';
+      elements.bannerLink.value = data.settings.banner_link || '';
+      elements.bannerEnabled.checked = data.settings.banner_enabled === 'true';
     } catch (error) {
       console.error('Failed to load banner:', error);
     } finally {
@@ -622,164 +623,25 @@
     }
   }
 
-  function renderSlides() {
-    if (state.slides.length === 0) {
-      elements.slidesList.innerHTML = '<p style="color: var(--text-secondary);">No slides yet. Click "Add Slide" to create one.</p>';
-      return;
-    }
-
-    elements.slidesList.innerHTML = state.slides.map(slide => `
-      <div class="slide-item" data-id="${slide.id}">
-        <div class="slide-item-header">
-          <h4>Slide ${slide.sort_order + 1}: ${escapeHtml(slide.title)}</h4>
-          <div class="slide-item-actions">
-            <button class="btn-icon move-up" data-id="${slide.id}" title="Move up">↑</button>
-            <button class="btn-icon move-down" data-id="${slide.id}" title="Move down">↓</button>
-            <button class="btn btn-small btn-delete delete-slide-btn" data-id="${slide.id}">Delete</button>
-          </div>
-        </div>
-        <div class="slide-item-body">
-          <input type="text" class="slide-title" value="${escapeHtml(slide.title)}" placeholder="Title" data-id="${slide.id}">
-          <textarea class="slide-description" rows="2" placeholder="Description" data-id="${slide.id}">${escapeHtml(slide.description || '')}</textarea>
-          <input type="text" class="slide-link-url" value="${escapeHtml(slide.link_url || '')}" placeholder="Link URL" data-id="${slide.id}">
-          <input type="text" class="slide-link-text" value="${escapeHtml(slide.link_text || '')}" placeholder="Link Text" data-id="${slide.id}">
-          <input type="text" class="slide-bg-image" value="${escapeHtml(slide.background_image || '')}" placeholder="Background Image URL" data-id="${slide.id}">
-          <label class="checkbox-label">
-            <input type="checkbox" class="slide-active" ${slide.active ? 'checked' : ''} data-id="${slide.id}">
-            <span>Active</span>
-          </label>
-        </div>
-        <button class="btn btn-primary btn-small save-slide-btn" data-id="${slide.id}">Save Changes</button>
-      </div>
-    `).join('');
-
-    // Attach event listeners
-    document.querySelectorAll('.save-slide-btn').forEach(btn => {
-      btn.addEventListener('click', () => saveSlide(parseInt(btn.dataset.id)));
-    });
-
-    document.querySelectorAll('.delete-slide-btn').forEach(btn => {
-      btn.addEventListener('click', () => deleteSlide(parseInt(btn.dataset.id)));
-    });
-
-    document.querySelectorAll('.move-up').forEach(btn => {
-      btn.addEventListener('click', () => moveSlide(parseInt(btn.dataset.id), -1));
-    });
-
-    document.querySelectorAll('.move-down').forEach(btn => {
-      btn.addEventListener('click', () => moveSlide(parseInt(btn.dataset.id), 1));
-    });
-  }
-
-  async function addSlide() {
+  async function saveBanner(e) {
+    e.preventDefault();
     setLoading(true);
-    try {
-      await api('admin/banner', {
-        method: 'POST',
-        body: JSON.stringify({
-          title: 'New Slide',
-          description: '',
-          link_url: '',
-          link_text: 'Discover more',
-          background_image: '',
-          sort_order: state.slides.length,
-          active: true
-        })
-      });
+    hideError(elements.bannerFormMessage);
 
-      await loadBanner();
-    } catch (error) {
-      alert('Failed to add slide: ' + error.message);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function saveSlide(slideId) {
-    const title = document.querySelector(`.slide-title[data-id="${slideId}"]`).value;
-    const description = document.querySelector(`.slide-description[data-id="${slideId}"]`).value;
-    const link_url = document.querySelector(`.slide-link-url[data-id="${slideId}"]`).value;
-    const link_text = document.querySelector(`.slide-link-text[data-id="${slideId}"]`).value;
-    const background_image = document.querySelector(`.slide-bg-image[data-id="${slideId}"]`).value;
-    const active = document.querySelector(`.slide-active[data-id="${slideId}"]`).checked;
-
-    const slide = state.slides.find(s => s.id === slideId);
-
-    setLoading(true);
-    try {
-      await api(`admin/banner?id=${slideId}`, {
-        method: 'PUT',
-        body: JSON.stringify({
-          title,
-          description,
-          link_url,
-          link_text,
-          background_image,
-          sort_order: slide.sort_order,
-          active
-        })
-      });
-
-      alert('Slide updated!');
-      await loadBanner();
-    } catch (error) {
-      alert('Failed to save slide: ' + error.message);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function deleteSlide(slideId) {
-    if (!confirm('Delete this slide?')) return;
-
-    setLoading(true);
-    try {
-      await api(`admin/banner?id=${slideId}`, { method: 'DELETE' });
-      await loadBanner();
-    } catch (error) {
-      alert('Failed to delete slide: ' + error.message);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function moveSlide(slideId, direction) {
-    const currentIndex = state.slides.findIndex(s => s.id === slideId);
-    const newIndex = currentIndex + direction;
-
-    if (newIndex < 0 || newIndex >= state.slides.length) return;
-
-    const newOrder = [...state.slides];
-    [newOrder[currentIndex], newOrder[newIndex]] = [newOrder[newIndex], newOrder[currentIndex]];
-
-    setLoading(true);
     try {
       await api('admin/banner-settings', {
         method: 'PUT',
         body: JSON.stringify({
-          slideOrder: newOrder.map(s => s.id)
+          banner_text: elements.bannerText.value,
+          banner_link: elements.bannerLink.value,
+          banner_enabled: elements.bannerEnabled.checked ? 'true' : 'false'
         })
       });
 
-      await loadBanner();
+      showSuccess('Banner settings saved successfully!', elements.bannerFormMessage);
+      setTimeout(() => hideError(elements.bannerFormMessage), 3000);
     } catch (error) {
-      alert('Failed to reorder slides: ' + error.message);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function toggleBanner() {
-    setLoading(true);
-    try {
-      await api('admin/banner-settings', {
-        method: 'PUT',
-        body: JSON.stringify({
-          bannerEnabled: elements.bannerEnabledToggle.checked
-        })
-      });
-    } catch (error) {
-      alert('Failed to toggle banner: ' + error.message);
+      showError('Failed to save banner: ' + error.message, elements.bannerFormMessage);
     } finally {
       setLoading(false);
     }
@@ -952,7 +814,7 @@
 
       await Promise.all([
         loadSignatures(),
-        loadPetitions()
+        loadPetitionsFilter()
       ]);
     } catch (error) {
       showError(error.message);
@@ -974,13 +836,20 @@
     state.petitions = [];
   }
 
-  // Export handler
+  // Export handler (Fix 3: Require petition selection)
   function handleExport() {
-    const url = `/api/admin/export`;
+    const selectedPetition = elements.petitionFilter.value;
+    
+    if (!selectedPetition) {
+      alert('Please select a specific petition to export signatures.');
+      return;
+    }
+
+    const url = `/api/admin/export?petition=${encodeURIComponent(selectedPetition)}`;
     const link = document.createElement('a');
     link.href = url;
     link.setAttribute('Authorization', `Bearer ${state.token}`);
-    link.download = 'signatures.csv';
+    link.download = `signatures-${selectedPetition}.csv`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -1113,7 +982,7 @@
       loadAdmins();
     } else if (tabName === 'posts' && state.posts.length === 0) {
       loadPosts();
-    } else if (tabName === 'banner' && state.slides.length === 0) {
+    } else if (tabName === 'banner') {
       loadBanner();
     } else if (tabName === 'petitions' && state.petitions.length === 0) {
       loadPetitionsList();
@@ -1140,7 +1009,6 @@
     // Existing event listeners
     elements.loginForm.addEventListener('submit', handleLogin);
     elements.logoutBtn.addEventListener('click', handleLogout);
-    elements.exportBtn.addEventListener('click', handleExport);
     elements.addAdminForm.addEventListener('submit', handleAddAdmin);
     elements.prevPage.addEventListener('click', handlePrevPage);
     elements.nextPage.addEventListener('click', handleNextPage);
@@ -1151,6 +1019,12 @@
       state.deleteTargetId = null;
     });
     elements.confirmDelete.addEventListener('click', handleDeleteAdmin);
+
+    // Export button (moved to signatures section)
+    const exportBtn = document.getElementById('export-btn');
+    if (exportBtn) {
+      exportBtn.addEventListener('click', handleExport);
+    }
 
     elements.tabBtns.forEach(btn => {
       btn.addEventListener('click', () => handleTabSwitch(btn.dataset.tab));
@@ -1200,8 +1074,7 @@
     elements.postSeoDescription.addEventListener('input', updateCharCounts);
 
     // New event listeners - Banner
-    elements.bannerEnabledToggle.addEventListener('change', toggleBanner);
-    elements.addSlideBtn.addEventListener('click', addSlide);
+    elements.bannerForm.addEventListener('submit', saveBanner);
 
     // New event listeners - Petitions
     elements.newPetitionBtn.addEventListener('click', () => showPetitionEditor());

@@ -1,12 +1,8 @@
-// API endpoint for banner settings (toggle, reorder)
+// API endpoint for banner settings (simple text/link/toggle - Fix 2)
 const { Pool } = require('pg');
 const { requireAuth } = require('./_auth.js');
 
 module.exports = async function handler(req, res) {
-  if (req.method !== 'PUT') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
   const pool = new Pool({
     connectionString: (process.env.DATABASE_URL || '').trim(),
     ssl: { rejectUnauthorized: false },
@@ -15,32 +11,67 @@ module.exports = async function handler(req, res) {
 
   try {
     const admin = requireAuth(req);
-    const { bannerEnabled, slideOrder } = req.body;
 
-    // Update banner enabled setting
-    if (typeof bannerEnabled === 'boolean') {
-      await pool.query(
-        `INSERT INTO site_settings (key, value, updated_at)
-         VALUES ('banner_enabled', $1, CURRENT_TIMESTAMP)
-         ON CONFLICT (key) DO UPDATE SET value = $1, updated_at = CURRENT_TIMESTAMP`,
-        [bannerEnabled.toString()]
+    if (req.method === 'GET') {
+      // Load banner settings
+      const result = await pool.query(
+        `SELECT key, value FROM site_settings 
+         WHERE key IN ('banner_text', 'banner_link', 'banner_enabled')`
       );
-    }
 
-    // Update slide order
-    if (Array.isArray(slideOrder)) {
-      for (let i = 0; i < slideOrder.length; i++) {
+      const settings = {};
+      result.rows.forEach(row => {
+        settings[row.key] = row.value;
+      });
+
+      return res.status(200).json({
+        success: true,
+        settings: {
+          banner_text: settings.banner_text || '',
+          banner_link: settings.banner_link || '',
+          banner_enabled: settings.banner_enabled || 'false'
+        }
+      });
+
+    } else if (req.method === 'PUT') {
+      // Save banner settings
+      const { banner_text, banner_link, banner_enabled } = req.body;
+
+      if (banner_text !== undefined) {
         await pool.query(
-          'UPDATE banner_slides SET sort_order = $1 WHERE id = $2',
-          [i, slideOrder[i]]
+          `INSERT INTO site_settings (key, value, updated_at)
+           VALUES ('banner_text', $1, CURRENT_TIMESTAMP)
+           ON CONFLICT (key) DO UPDATE SET value = $1, updated_at = CURRENT_TIMESTAMP`,
+          [banner_text]
         );
       }
-    }
 
-    return res.status(200).json({
-      success: true,
-      message: 'Banner settings updated successfully'
-    });
+      if (banner_link !== undefined) {
+        await pool.query(
+          `INSERT INTO site_settings (key, value, updated_at)
+           VALUES ('banner_link', $1, CURRENT_TIMESTAMP)
+           ON CONFLICT (key) DO UPDATE SET value = $1, updated_at = CURRENT_TIMESTAMP`,
+          [banner_link]
+        );
+      }
+
+      if (banner_enabled !== undefined) {
+        await pool.query(
+          `INSERT INTO site_settings (key, value, updated_at)
+           VALUES ('banner_enabled', $1, CURRENT_TIMESTAMP)
+           ON CONFLICT (key) DO UPDATE SET value = $1, updated_at = CURRENT_TIMESTAMP`,
+          [banner_enabled]
+        );
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: 'Banner settings updated successfully'
+      });
+
+    } else {
+      return res.status(405).json({ error: 'Method not allowed' });
+    }
 
   } catch (error) {
     console.error('Banner settings error:', error);

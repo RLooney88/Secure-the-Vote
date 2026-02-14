@@ -578,6 +578,12 @@ body {
   color: var(--primary-color);
 }
 
+/* Fix 4: Petition/Post buttons normal width */
+.section-header .btn {
+  width: auto;
+  white-space: nowrap;
+}
+
 /* Posts Section */
 .posts-section,
 .banner-section,

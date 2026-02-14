@@ -9,9 +9,19 @@ module.exports = async function handler(req, res) {
   try {
     requireAuth(req);
 
-    const result = await pool.query(
-      'SELECT petition_name, full_name, email, zip_code, created_at, ip_address FROM petition_signatures ORDER BY created_at DESC'
-    );
+    // Fix 3: Support petition filter
+    const { petition } = req.query;
+    let query = 'SELECT petition_name, full_name, email, zip_code, created_at, ip_address FROM petition_signatures';
+    const params = [];
+
+    if (petition) {
+      query += ' WHERE petition_name = $1';
+      params.push(petition);
+    }
+
+    query += ' ORDER BY created_at DESC';
+
+    const result = await pool.query(query, params);
 
     const headers = ['Petition', 'Full Name', 'Email', 'Zip Code', 'Created At', 'IP Address'];
     const rows = result.rows.map(row => [
@@ -25,7 +35,8 @@ module.exports = async function handler(req, res) {
 
     const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
     res.setHeader('Content-Type', 'text/csv');
-    res.setHeader('Content-Disposition', `attachment; filename="signatures-${new Date().toISOString().split('T')[0]}.csv"`);
+    const filename = petition ? `signatures-${petition}-${new Date().toISOString().split('T')[0]}.csv` : `signatures-${new Date().toISOString().split('T')[0]}.csv`;
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     return res.status(200).send(csv);
   } catch (error) {
     console.error('Export error:', error.message);
