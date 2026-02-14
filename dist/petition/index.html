@@ -1,360 +1,550 @@
 <!DOCTYPE html>
-<html lang="en-US">
-
+<html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' />
-
-	<title>Sign the Petition - Secure The Vote MD</title>
-	<link rel="canonical" href="/petition/" />
-	<meta property="og:locale" content="en_US" />
-	<meta property="og:type" content="article" />
-	<meta property="og:title" content="Sign the Petition - Secure The Vote MD" />
-	<meta property="og:description" content="Join thousands of Marylanders demanding comprehensive election security reforms." />
-	<meta property="og:url" content="/petition/" />
-	<meta property="og:site_name" content="Secure The Vote MD" />
-
-<link rel='dns-prefetch' href='//www.googletagmanager.com' />
-<link rel="alternate" type="application/rss+xml" title="Secure The Vote MD &raquo; Feed" href="/feed/" />
-<link rel='stylesheet' id='elementor-frontend-css' href='/wp-content/plugins/elementor/assets/css/frontend.min.css?ver=3.35.4' media='all' />
-<link rel='stylesheet' id='elementor-post-27-css' href='/wp-content/uploads/elementor/css/post-27.css?ver=1770995935' media='all' />
-<link rel='stylesheet' id='elementor-post-28-css' href='/wp-content/uploads/elementor/css/post-28.css?ver=1770995935' media='all' />
-<link rel='stylesheet' id='hello-elementor-css' href='/wp-content/themes/hello-elementor/assets/css/reset.css?ver=3.4.6' media='all' />
-<link rel='stylesheet' id='hello-elementor-theme-style-css' href='/wp-content/themes/hello-elementor/assets/css/theme.css?ver=3.4.6' media='all' />
-<link rel='stylesheet' id='hello-elementor-header-footer-css' href='/wp-content/themes/hello-elementor/assets/css/header-footer.css?ver=3.4.6' media='all' />
-<link rel='stylesheet' id='elementor-post-6-css' href='/wp-content/uploads/elementor/css/post-6.css?ver=1770995935' media='all' />
-<link rel='stylesheet' id='hello-elementor-child-style-css' href='/wp-content/themes/hello-theme-child-master/style.css?ver=2.0.0' media='all' />
-<link rel='stylesheet' id='font-awesome-5-all-css' href='/wp-content/plugins/elementor/assets/lib/font-awesome/css/all.min.css?ver=3.35.4' media='all' />
-<link rel='stylesheet' id='ekit-widget-styles-css' href='/wp-content/plugins/elementskit-lite/widgets/init/assets/css/widget-styles.css?ver=3.7.9' media='all' />
-<link rel='stylesheet' id='ekit-responsive-css' href='/wp-content/plugins/elementskit-lite/widgets/init/assets/css/responsive.css?ver=3.7.9' media='all' />
-<link rel='stylesheet' id='elementor-icons-ekiticons-css' href='/wp-content/plugins/elementskit-lite/modules/elementskit-icon-pack/assets/css/ekiticons.css?ver=3.7.9' media='all' />
-<link rel="stylesheet" href="/css/petition.css">
-<link rel="icon" type="image/png" href="/images/favicon.png">
-<script src="/wp-includes/js/jquery/jquery.min.js?ver=3.7.1" id="jquery-core-js"></script>
-<style>
-body {
-    font-size: 20px;
-}
-a {
-    font-size: 20px;
-}
-.petition-page {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 60px 30px 100px;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign the Petition - Secure the Vote Maryland</title>
+  <meta name="description" content="Join thousands of Marylanders demanding election integrity. Sign our petition for voter ID, signature verification, and transparent elections.">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .petition-hero {
+      background: linear-gradient(135deg, #9B1E37 0%, #7a1829 100%);
+      color: white;
+      padding: 80px 20px;
+      text-align: center;
+    }
+    
+    .petition-hero h1 {
+      font-size: 3em;
+      margin: 0 0 20px 0;
+      font-weight: 700;
+    }
+    
+    .petition-hero p {
+      font-size: 1.3em;
+      max-width: 800px;
+      margin: 0 auto 30px auto;
+      opacity: 0.95;
+    }
+    
+    .petition-stats {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      display: inline-block;
+      margin-top: 20px;
+    }
+    
+    .petition-stats .stat-number {
+      font-size: 2.5em;
+      font-weight: bold;
+      display: block;
+    }
+    
+    .petition-stats .stat-label {
+      font-size: 1em;
+      opacity: 0.9;
+    }
+    
+    .petition-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 20px;
+    }
+    
+    .petition-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+    
+    @media (max-width: 968px) {
+      .petition-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+    }
+    
+    .petition-info h2 {
+      color: #9B1E37;
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+    
+    .petition-info h3 {
+      color: #9B1E37;
+      font-size: 1.5em;
+      margin-top: 30px;
+      margin-bottom: 15px;
+    }
+    
+    .petition-info ul {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .petition-info ul li {
+      padding: 12px 0;
+      padding-left: 30px;
+      position: relative;
+    }
+    
+    .petition-info ul li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #9B1E37;
+      font-weight: bold;
+      font-size: 1.3em;
+    }
+    
+    .petition-form-container {
+      background: #f8f9fa;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .petition-form-container h2 {
+      color: #9B1E37;
+      margin-top: 0;
+      margin-bottom: 25px;
+      font-size: 1.8em;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 5px;
+      font-size: 1em;
+      transition: border-color 0.3s;
+      box-sizing: border-box;
+    }
+    
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #9B1E37;
+    }
+    
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    .form-group.checkbox {
+      display: flex;
+      align-items: start;
+      gap: 10px;
+    }
+    
+    .form-group.checkbox input[type="checkbox"] {
+      width: auto;
+      margin-top: 4px;
+    }
+    
+    .form-group.checkbox label {
+      margin: 0;
+      font-weight: normal;
+    }
+    
+    .submit-button {
+      background: #9B1E37;
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      font-size: 1.1em;
+      font-weight: 600;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+      width: 100%;
+    }
+    
+    .submit-button:hover {
+      background: #7a1829;
+    }
+    
+    .submit-button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    
+    .success-message {
+      display: none;
+      background: #d4edda;
+      border: 2px solid #c3e6cb;
+      color: #155724;
+      padding: 20px;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+    
+    .error-message {
+      display: none;
+      background: #f8d7da;
+      border: 2px solid #f5c6cb;
+      color: #721c24;
+      padding: 20px;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+    
+    .share-section {
+      background: #f8f9fa;
+      padding: 40px 20px;
+      text-align: center;
+      margin-top: 40px;
+      border-radius: 10px;
+    }
+    
+    .share-section h3 {
+      color: #9B1E37;
+      margin-bottom: 20px;
+    }
+    
+    .share-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .share-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 24px;
+      border-radius: 5px;
+      text-decoration: none;
+      color: white;
+      font-weight: 600;
+      transition: transform 0.2s;
+    }
+    
+    .share-button:hover {
+      transform: translateY(-2px);
+    }
+    
+    .share-button.facebook {
+      background: #1877f2;
+    }
+    
+    .share-button.twitter {
+      background: #1da1f2;
+    }
+    
+    .share-button.email {
+      background: #666;
+    }
+  </style>
 </head>
+<body>
 
-<body class="wp-singular page-template-default page page-id-petition wp-embed-responsive wp-theme-hello-elementor wp-child-theme-hello-theme-child-master hello-elementor-default elementor-default elementor-kit-6 elementor-page elementor-page-petition">
+<!-- Top Bar -->
+<div class="top-bar">
+  <div class="container">
+    <div class="top-bar-left">
+      <a href="mailto:info@securethevotemd.com" class="top-bar-email">
+        <i class="fas fa-envelope"></i>
+        info@securethevotemd.com
+      </a>
+    </div>
+    <div class="top-bar-right">
+      <div class="social-icons">
+        <a href="https://twitter.com/securethevotemd" target="_blank" rel="noopener" aria-label="Twitter">
+          <i class="fab fa-x-twitter"></i>
+        </a>
+        <a href="https://www.instagram.com/securethevotemd/" target="_blank" rel="noopener" aria-label="Instagram">
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a href="https://www.facebook.com/profile.php?id=61558958704794" target="_blank" rel="noopener" aria-label="Facebook">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a href="https://www.tiktok.com/@securethevotemd?lang=en" target="_blank" rel="noopener" aria-label="TikTok">
+          <i class="fab fa-tiktok"></i>
+        </a>
+        <a href="https://rumble.com/account/" target="_blank" rel="noopener" aria-label="Rumble">
+          <i class="fab fa-r-project"></i>
+        </a>
+        <a href="https://truthsocial.com/@securethevotemd" target="_blank" rel="noopener" aria-label="Truth Social">
+          <i class="fas fa-t"></i>
+        </a>
+        <a href="https://gettr.com/user/securethevotemd" target="_blank" rel="noopener" aria-label="Gettr">
+          <i class="fas fa-g"></i>
+        </a>
+        <a href="https://web.telegram.org/a/#6827045334" target="_blank" rel="noopener" aria-label="Telegram">
+          <i class="fab fa-telegram"></i>
+        </a>
+        <a href="https://www.youtube.com/@SecuretheVoteMD" target="_blank" rel="noopener" aria-label="YouTube">
+          <i class="fab fa-youtube"></i>
+        </a>
+        <a href="https://bsky.app/profile/securethevotemd.bsky.social" target="_blank" rel="noopener" aria-label="Bluesky">
+          <i class="fas fa-cloud"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
 
-	<a class="skip-link screen-reader-text" href="#content">Skip to content</a>
-	
-	<div class="ekit-template-content-markup ekit-template-content-header ekit-template-content-theme-support">
-		<div data-elementor-type="wp-post" data-elementor-id="27" class="elementor elementor-27" data-elementor-post-type="elementskit_template">
-			<div class="elementor-element elementor-element-b1feba8 elementor-hidden-desktop e-flex e-con-boxed e-con e-parent" data-id="b1feba8" data-element_type="container" data-settings='{"background_background":"classic"}'>
-				<div class="e-con-inner">
-					<div class="elementor-element elementor-element-6ff679e e-con-full elementor-hidden-mobile e-flex e-con e-child" data-id="6ff679e" data-element_type="container">
-						<div class="elementor-element elementor-element-d79f001 elementor-icon-list--layout-traditional elementor-list-item-link-full_width elementor-widget elementor-widget-icon-list" data-id="d79f001" data-element_type="widget" data-widget_type="icon-list.default">
-							<div class="elementor-widget-container">
-								<ul class="elementor-icon-list-items">
-									<li class="elementor-icon-list-item">
-										<a href="mailto:info@securethevotemd.com">
-											<span class="elementor-icon-list-icon">
-												<svg aria-hidden="true" class="e-font-icon-svg e-fas-envelope" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z"></path></svg>
-											</span>
-											<span class="elementor-icon-list-text">info@securethevotemd.com</span>
-										</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="elementor-element elementor-element-452e8ff e-con-full e-flex e-con e-child" data-id="452e8ff" data-element_type="container">
-						<div class="elementor-element elementor-element-ddaad58 e-grid-align-right e-grid-align-mobile-center elementor-shape-rounded elementor-grid-0 elementor-widget elementor-widget-social-icons" data-id="ddaad58" data-element_type="widget" data-widget_type="social-icons.default">
-							<div class="elementor-widget-container">
-								<div class="elementor-social-icons-wrapper elementor-grid" role="list">
-									<span class="elementor-grid-item" role="listitem">
-										<a class="elementor-icon elementor-social-icon elementor-social-icon-x-twitter elementor-animation-grow" href="https://twitter.com/securethevotemd" target="_blank">
-											<span class="elementor-screen-only">X-twitter</span>
-											<svg aria-hidden="true" class="e-font-icon-svg e-fab-x-twitter" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"></path></svg>
-										</a>
-									</span>
-									<span class="elementor-grid-item" role="listitem">
-										<a class="elementor-icon elementor-social-icon elementor-social-icon-facebook-f elementor-animation-grow" href="https://www.facebook.com/profile.php?id=61558958704794" target="_blank">
-											<span class="elementor-screen-only">Facebook-f</span>
-											<svg aria-hidden="true" class="e-font-icon-svg e-fab-facebook-f" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"></path></svg>
-										</a>
-									</span>
-									<span class="elementor-grid-item" role="listitem">
-										<a class="elementor-icon elementor-social-icon elementor-social-icon-youtube elementor-animation-grow" href="https://www.youtube.com/@SecuretheVoteMD" target="_blank">
-											<span class="elementor-screen-only">Youtube</span>
-											<svg aria-hidden="true" class="e-font-icon-svg e-fab-youtube" viewBox="0 0 576 512" xmlns="http://www.w3.org/2000/svg"><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"></path></svg>
-										</a>
-									</span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			
-			<div class="elementor-element elementor-element-8875e57 elementor-hidden-tablet elementor-hidden-mobile e-flex e-con-boxed e-con e-parent" data-id="8875e57" data-element_type="container" data-settings='{"background_background":"classic"}'>
-				<div class="e-con-inner">
-					<div class="elementor-element elementor-element-02af740 e-con-full e-flex e-con e-child" data-id="02af740" data-element_type="container">
-						<div class="elementor-element elementor-element-054ca93 elementor-icon-list--layout-traditional elementor-list-item-link-full_width elementor-widget elementor-widget-icon-list" data-id="054ca93" data-element_type="widget" data-widget_type="icon-list.default">
-							<div class="elementor-widget-container">
-								<ul class="elementor-icon-list-items">
-									<li class="elementor-icon-list-item">
-										<a href="mailto:info@securethevotemd.com">
-											<span class="elementor-icon-list-icon">
-												<svg aria-hidden="true" class="e-font-icon-svg e-fas-envelope" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z"></path></svg>
-											</span>
-											<span class="elementor-icon-list-text">info@securethevotemd.com</span>
-										</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="elementor-element elementor-element-df8715f e-con-full e-flex e-con e-child" data-id="df8715f" data-element_type="container">
-						<div class="elementor-element elementor-element-660e450 e-grid-align-right elementor-shape-rounded elementor-grid-0 elementor-widget elementor-widget-social-icons" data-id="660e450" data-element_type="widget" data-widget_type="social-icons.default">
-							<div class="elementor-widget-container">
-								<div class="elementor-social-icons-wrapper elementor-grid" role="list">
-									<span class="elementor-grid-item" role="listitem">
-										<a class="elementor-icon elementor-social-icon elementor-social-icon-x-twitter elementor-animation-grow" href="https://twitter.com/securethevotemd" target="_blank">
-											<span class="elementor-screen-only">X-twitter</span>
-											<svg aria-hidden="true" class="e-font-icon-svg e-fab-x-twitter" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"></path></svg>
-										</a>
-									</span>
-									<span class="elementor-grid-item" role="listitem">
-										<a class="elementor-icon elementor-social-icon elementor-social-icon-facebook-f elementor-animation-grow" href="https://www.facebook.com/profile.php?id=61558958704794" target="_blank">
-											<span class="elementor-screen-only">Facebook-f</span>
-											<svg aria-hidden="true" class="e-font-icon-svg e-fab-facebook-f" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"></path></svg>
-										</a>
-									</span>
-									<span class="elementor-grid-item" role="listitem">
-										<a class="elementor-icon elementor-social-icon elementor-social-icon-youtube elementor-animation-grow" href="https://www.youtube.com/@SecuretheVoteMD" target="_blank">
-											<span class="elementor-screen-only">Youtube</span>
-											<svg aria-hidden="true" class="e-font-icon-svg e-fab-youtube" viewBox="0 0 576 512" xmlns="http://www.w3.org/2000/svg"><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"></path></svg>
-										</a>
-									</span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			
-			<section class="elementor-section elementor-top-section elementor-element elementor-element-e27a5b3 elementor-section-content-middle elementor-section-boxed elementor-section-height-default" data-id="e27a5b3" data-element_type="section">
-				<div class="elementor-container elementor-column-gap-default">
-					<div class="elementor-column elementor-col-50 elementor-top-column elementor-element elementor-element-5afb6d4" data-id="5afb6d4" data-element_type="column">
-						<div class="elementor-widget-wrap elementor-element-populated">
-							<section class="elementor-section elementor-inner-section elementor-element elementor-element-8355067 elementor-section-content-middle elementor-reverse-tablet elementor-reverse-mobile elementor-section-boxed elementor-section-height-default" data-id="8355067" data-element_type="section">
-								<div class="elementor-container elementor-column-gap-default">
-									<div class="elementor-column elementor-col-33 elementor-inner-column elementor-element elementor-element-9e39ce8" data-id="9e39ce8" data-element_type="column">
-										<div class="elementor-widget-wrap elementor-element-populated">
-											<div class="elementor-element elementor-element-d2de1f4 elementor-widget elementor-widget-image" data-id="d2de1f4" data-element_type="widget" data-widget_type="image.default">
-												<div class="elementor-widget-container">
-													<a href="/">
-														<img width="640" height="195" src="/images/2024/04/LOGOsecurethevote_yellowMD.png" class="attachment-large size-large wp-image-285" alt="Secure The Vote MD" />
-													</a>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="elementor-column elementor-col-33 elementor-inner-column elementor-element elementor-element-685ff32" data-id="685ff32" data-element_type="column">
-										<div class="elementor-widget-wrap elementor-element-populated">
-											<div class="elementor-element elementor-element-379dbb8 elementor-widget elementor-widget-ekit-nav-menu" data-id="379dbb8" data-element_type="widget" data-widget_type="ekit-nav-menu.default">
-												<div class="elementor-widget-container">
-													<nav class="ekit-wid-con ekit_menu_responsive_tablet" data-hamburger-icon="icon icon-burger-menu" data-hamburger-icon-type="icon" data-responsive-breakpoint="1024">
-														<button class="elementskit-menu-hamburger elementskit-menu-toggler" type="button" aria-label="hamburger-icon">
-															<i aria-hidden="true" class="ekit-menu-icon icon icon-burger-menu"></i>
-														</button>
-														<div id="ekit-megamenu-main-menu" class="elementskit-menu-container elementskit-menu-offcanvas-elements elementskit-navbar-nav-default ekit-nav-menu-one-page-no ekit-nav-dropdown-hover">
-															<ul id="menu-main-menu" class="elementskit-navbar-nav elementskit-menu-po-right submenu-click-on-icon">
-																<li id="menu-item-55" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home menu-item-55 nav-item elementskit-mobile-builder-content" data-vertical-menu=750px><a href="/" class="ekit-menu-nav-link">Home</a></li>
-																<li id="menu-item-2687" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-2687 nav-item elementskit-dropdown-has relative_position elementskit-dropdown-menu-default_width elementskit-mobile-builder-content" data-vertical-menu=750px>
-																	<a href="#" class="ekit-menu-nav-link ekit-menu-dropdown-toggle">Accountability<i aria-hidden="true" class="icon icon-down-arrow1 elementskit-submenu-indicator"></i></a>
-																	<ul class="elementskit-dropdown elementskit-submenu-panel">
-																		<li id="menu-item-2688" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2688 nav-item elementskit-mobile-builder-content" data-vertical-menu=750px><a href="/trump-executive-order/" class=" dropdown-item">Trump EO</a></li>
-																		<li id="menu-item-2699" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2699 nav-item elementskit-mobile-builder-content" data-vertical-menu=750px><a href="/list-maintenance/" class=" dropdown-item">List Maintenance</a></li>
-																		<li id="menu-item-2709" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2709 nav-item elementskit-mobile-builder-content" data-vertical-menu=750px><a href="/board-compliance/" class=" dropdown-item">Board Compliance</a></li>
-																	</ul>
-																</li>
-																<li id="menu-item-2718" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-2718 nav-item elementskit-dropdown-has relative_position elementskit-dropdown-menu-default_width elementskit-mobile-builder-content" data-vertical-menu=750px>
-																	<a href="#" class="ekit-menu-nav-link ekit-menu-dropdown-toggle">Legislation<i aria-hidden="true" class="icon icon-down-arrow1 elementskit-submenu-indicator"></i></a>
-																	<ul class="elementskit-dropdown elementskit-submenu-panel">
-																		<li id="menu-item-2717" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2717 nav-item elementskit-mobile-builder-content" data-vertical-menu=750px><a href="/voter-id/" class=" dropdown-item">Voter ID</a></li>
-																		<li id="menu-item-2733" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2733 nav-item elementskit-mobile-builder-content" data-vertical-menu=750px><a href="/signature-verification/" class=" dropdown-item">Signature Verification</a></li>
-																	</ul>
-																</li>
-																<li id="menu-item-794" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-794 nav-item elementskit-dropdown-has relative_position elementskit-dropdown-menu-default_width elementskit-mobile-builder-content" data-vertical-menu=750px>
-																	<a href="/citizen-action/" class="ekit-menu-nav-link ekit-menu-dropdown-toggle">Citizen Action<i aria-hidden="true" class="icon icon-down-arrow1 elementskit-submenu-indicator"></i></a>
-																	<ul class="elementskit-dropdown elementskit-submenu-panel">
-																		<li id="menu-item-2557" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2557 nav-item elementskit-mobile-builder-content" data-vertical-menu=750px><a href="/register-for-lobby-day-jan-27/" class=" dropdown-item">Citizen Action</a></li>
-																		<li id="menu-item-1745" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item menu-item-1745 nav-item elementskit-mobile-builder-content active" data-vertical-menu=750px><a href="/sign-the-petition/" class=" dropdown-item active">Sign the Petition</a></li>
-																		<li id="menu-item-1803" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1803 nav-item elementskit-mobile-builder-content" data-vertical-menu=750px><a href="/2024/05/01/poll-watchers-toolkit/" class=" dropdown-item">Poll Watcher's Toolkit</a></li>
-																		<li id="menu-item-1746" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1746 nav-item elementskit-mobile-builder-content" data-vertical-menu=750px><a href="/2024/04/19/how-to-testify-at-the-mga/" class=" dropdown-item">Testify at MGA</a></li>
-																	</ul>
-																</li>
-																<li id="menu-item-1316" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-1316 nav-item elementskit-dropdown-has relative_position elementskit-dropdown-menu-default_width elementskit-mobile-builder-content" data-vertical-menu=750px>
-																	<a href="/resources/" class="ekit-menu-nav-link ekit-menu-dropdown-toggle">Resources<i aria-hidden="true" class="icon icon-down-arrow1 elementskit-submenu-indicator"></i></a>
-																	<ul class="elementskit-dropdown elementskit-submenu-panel">
-																		<li id="menu-item-2559" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2559 nav-item elementskit-mobile-builder-content" data-vertical-menu=750px><a href="/check-voter-registration/" class=" dropdown-item">Check Voter Registration</a></li>
-																		<li id="menu-item-3003" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-3003 nav-item elementskit-mobile-builder-content" data-vertical-menu=750px><a href="/be-an-election-judge/" class=" dropdown-item">Be an Election Judge</a></li>
-																		<li id="menu-item-2560" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2560 nav-item elementskit-mobile-builder-content" data-vertical-menu=750px><a target="_blank" href="https://maryland.maps.arcgis.com/apps/webappviewer/index.html?id=177afa87a67746a4ac5496b2d0897fb7" class=" dropdown-item">Find Your Representatives</a></li>
-																		<li id="menu-item-3157" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3157 nav-item elementskit-mobile-builder-content" data-vertical-menu=750px><a href="/maryland-nvra-violations/" class=" dropdown-item">Maryland NVRA Violations</a></li>
-																		<li id="menu-item-3156" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3156 nav-item elementskit-mobile-builder-content" data-vertical-menu=750px><a href="/voter-registration-inflation/" class=" dropdown-item">Voter Registration Inflation</a></li>
-																		<li id="menu-item-1500" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1500 nav-item elementskit-mobile-builder-content" data-vertical-menu=750px><a href="/lawsuit-document/" class=" dropdown-item">Litigation Documents</a></li>
-																	</ul>
-																</li>
-																<li id="menu-item-2665" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-2665 nav-item elementskit-dropdown-has relative_position elementskit-dropdown-menu-default_width elementskit-mobile-builder-content" data-vertical-menu=750px>
-																	<a href="#" class="ekit-menu-nav-link ekit-menu-dropdown-toggle">News<i aria-hidden="true" class="icon icon-down-arrow1 elementskit-submenu-indicator"></i></a>
-																	<ul class="elementskit-dropdown elementskit-submenu-panel">
-																		<li id="menu-item-1501" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1501 nav-item elementskit-mobile-builder-content" data-vertical-menu=750px><a href="/press-release/" class=" dropdown-item">Press Release / News</a></li>
-																		<li id="menu-item-1498" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1498 nav-item elementskit-mobile-builder-content" data-vertical-menu=750px><a href="/in-the-news/" class=" dropdown-item">In the news</a></li>
-																	</ul>
-																</li>
-																<li id="menu-item-1932" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1932 nav-item elementskit-mobile-builder-content" data-vertical-menu=750px><a href="/contact-us/" class="ekit-menu-nav-link">Contact Us</a></li>
-															</ul>
-															<div class="elementskit-nav-identity-panel">
-																<button class="elementskit-menu-close elementskit-menu-toggler" type="button">X</button>
-															</div>
-														</div>
-														<div class="elementskit-menu-overlay elementskit-menu-offcanvas-elements elementskit-menu-toggler ekit-nav-menu--overlay"></div>
-													</nav>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</section>
-						</div>
-					</div>
-				</div>
-			</section>
-		</div>
-	</div>
+<!-- Main Header -->
+<header class="site-header">
+  <div class="container">
+    <div class="header-wrapper">
+      <div class="site-logo">
+        <a href="/">
+          <img src="/images/logo.png" alt="Secure the Vote Maryland" />
+        </a>
+      </div>
 
-	<main class="petition-page" id="content">
-		<div class="container">
-			<div id="loading-view" class="loading-state">
-				<div class="spinner"></div>
-				<p>Loading petition...</p>
-			</div>
+      <nav class="main-navigation">
+        <button class="mobile-menu-toggle" aria-label="Toggle menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
 
-			<div id="error-view" class="error-state" style="display: none;">
-				<div class="error-icon">⚠️</div>
-				<h2 id="error-title">Petition Not Found</h2>
-				<p id="error-message">This petition could not be loaded.</p>
-				<a href="/" class="btn btn-primary">Return Home</a>
-			</div>
+        <ul class="menu">
+          <li><a href="/">Home</a></li>
+          <li class="menu-item-has-children">
+            <a href="#">Accountability <i class="fas fa-chevron-down"></i></a>
+            <ul class="sub-menu">
+              <li><a href="/pages/trump-executive-order/">Trump Executive Order</a></li>
+              <li><a href="/pages/board-compliance/">Board Compliance</a></li>
+            </ul>
+          </li>
+          <li class="menu-item-has-children">
+            <a href="#">Legislation <i class="fas fa-chevron-down"></i></a>
+            <ul class="sub-menu">
+              <li><a href="/pages/voter-id/">Voter ID</a></li>
+              <li><a href="/pages/signature-verification/">Signature Verification</a></li>
+            </ul>
+          </li>
+          <li class="menu-item-has-children">
+            <a href="/pages/citizen-action/">Citizen Action <i class="fas fa-chevron-down"></i></a>
+            <ul class="sub-menu">
+              <li><a href="/pages/be-an-election-judge/">Be an Election Judge</a></li>
+              <li><a href="/pages/poll-watchers-toolkit/">Poll Watchers Toolkit</a></li>
+              <li><a href="/pages/sign-the-petition/">Sign the Petition</a></li>
+            </ul>
+          </li>
+          <li class="menu-item-has-children">
+            <a href="/pages/resources/">Resources <i class="fas fa-chevron-down"></i></a>
+            <ul class="sub-menu">
+              <li><a href="/pages/in-the-news/">In The News</a></li>
+              <li><a href="/pages/whats-happening/">What's Happening</a></li>
+            </ul>
+          </li>
+          <li class="menu-item-has-children">
+            <a href="#">News <i class="fas fa-chevron-down"></i></a>
+            <ul class="sub-menu">
+              <li><a href="/news/">All News</a></li>
+              <li><a href="/news/citizen-action/">Citizen Action</a></li>
+              <li><a href="/news/lawsuit-documents/">Lawsuit Documents</a></li>
+              <li><a href="/news/score-card/">Score Card</a></li>
+            </ul>
+          </li>
+          <li><a href="/pages/contact-us/">Contact Us</a></li>
+        </ul>
+      </nav>
 
-			<div id="petition-view" class="petition-container" style="display: none;">
-				<div class="petition-header">
-					<h1 id="petition-title"></h1>
-					<p id="petition-description" class="petition-subtitle"></p>
-				</div>
+      <div class="header-donate">
+        <a href="https://donorbox.org/united-sovereign-americans-maryland-donation" target="_blank" class="donate-button">
+          Donate Now
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
 
-				<!-- Progress Section -->
-				<div id="progress-section" class="progress-section">
-					<div class="progress-bar-container">
-						<div id="progress-bar" class="progress-bar"></div>
-					</div>
-					<p class="progress-text">
-						<span id="signature-count">0</span> signatures
-						<span id="goal-text"></span>
-					</p>
-				</div>
+<!-- Petition Hero -->
+<section class="petition-hero">
+  <h1>Demand Election Integrity in Maryland</h1>
+  <p>Join thousands of Marylanders calling for transparent, secure elections. Your signature makes a difference.</p>
+  <div class="petition-stats">
+    <span class="stat-number" id="signature-count">Loading...</span>
+    <span class="stat-label">signatures and counting</span>
+  </div>
+</section>
 
-				<!-- Petition Form -->
-				<div id="form-section" class="petition-form-section">
-					<h2>Sign This Petition</h2>
-					<form id="petition-form" class="petition-form">
-						<div class="form-row">
-							<div class="form-group">
-								<label for="firstName">First Name *</label>
-								<input type="text" id="firstName" name="firstName" required>
-							</div>
-							<div class="form-group">
-								<label for="lastName">Last Name *</label>
-								<input type="text" id="lastName" name="lastName" required>
-							</div>
-						</div>
+<!-- Main Content -->
+<main class="petition-content">
+  <div class="petition-grid">
+    <div class="petition-info">
+      <h2>Why This Petition Matters</h2>
+      <p>Maryland's elections must be transparent, secure, and trustworthy. We're calling on our state legislature and election officials to implement common-sense reforms that will restore confidence in our democratic process.</p>
+      
+      <h3>What We're Fighting For:</h3>
+      <ul>
+        <li><strong>Voter ID Requirements:</strong> Ensure every voter is who they claim to be</li>
+        <li><strong>Signature Verification:</strong> Validate mail-in ballots with proper authentication</li>
+        <li><strong>Transparent Vote Counting:</strong> Open the process to public observation</li>
+        <li><strong>Regular List Maintenance:</strong> Keep voter rolls accurate and up-to-date</li>
+        <li><strong>Paper Ballot Trail:</strong> Maintain verifiable records of every vote</li>
+        <li><strong>Board Accountability:</strong> Hold election officials responsible for compliance</li>
+      </ul>
+      
+      <h3>Your Voice Matters</h3>
+      <p>Every signature sends a powerful message to our elected officials. Together, we can secure Maryland's elections and protect the integrity of our democracy.</p>
+      
+      <div class="share-section">
+        <h3>Share This Petition</h3>
+        <div class="share-buttons">
+          <a href="https://www.facebook.com/sharer/sharer.php?u=https://securethevotemd.com/petition/" target="_blank" class="share-button facebook">
+            <i class="fab fa-facebook-f"></i> Share on Facebook
+          </a>
+          <a href="https://twitter.com/intent/tweet?text=Join%20me%20in%20demanding%20election%20integrity%20in%20Maryland!&url=https://securethevotemd.com/petition/" target="_blank" class="share-button twitter">
+            <i class="fab fa-twitter"></i> Share on Twitter
+          </a>
+          <a href="mailto:?subject=Sign%20the%20Election%20Integrity%20Petition&body=I%20just%20signed%20a%20petition%20for%20election%20integrity%20in%20Maryland.%20Join%20me:%20https://securethevotemd.com/petition/" class="share-button email">
+            <i class="fas fa-envelope"></i> Share via Email
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="petition-form-container">
+      <h2>Add Your Name</h2>
+      <form id="petition-form">
+        <div class="form-group">
+          <label for="firstName">First Name *</label>
+          <input type="text" id="firstName" name="firstName" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="lastName">Last Name *</label>
+          <input type="text" id="lastName" name="lastName" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email Address *</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="zipCode">ZIP Code *</label>
+          <input type="text" id="zipCode" name="zipCode" pattern="[0-9]{5}" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="phone">Phone Number (optional)</label>
+          <input type="tel" id="phone" name="phone">
+        </div>
+        
+        <div class="form-group">
+          <label for="comments">Comments (optional)</label>
+          <textarea id="comments" name="comments"></textarea>
+        </div>
+        
+        <div class="form-group checkbox">
+          <input type="checkbox" id="updates" name="updates" checked>
+          <label for="updates">Keep me updated on election integrity efforts in Maryland</label>
+        </div>
+        
+        <button type="submit" class="submit-button">Sign the Petition</button>
+        
+        <div class="success-message" id="success-message">
+          <strong>Thank you!</strong> Your signature has been added. Share this petition to amplify your voice!
+        </div>
+        
+        <div class="error-message" id="error-message">
+          <strong>Oops!</strong> Something went wrong. Please try again.
+        </div>
+      </form>
+    </div>
+  </div>
+</main>
 
-						<div class="form-group">
-							<label for="email">Email *</label>
-							<input type="email" id="email" name="email" required>
-						</div>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Secure The Vote MD</h3>
+        <p>Strengthening our Constitutional Republic through secure voting. Citizens must be able to have trust that their elections are secure and accurate for the persistence of democratic institutions.</p>
+      </div>
+      
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/pages/trump-executive-order/">Trump Executive Order</a></li>
+          <li><a href="/pages/list-maintenance/">List Maintenance</a></li>
+          <li><a href="/pages/signature-verification/">Signature Verification</a></li>
+          <li><a href="/pages/voter-id/">Voter ID</a></li>
+          <li><a href="/pages/board-compliance/">Board Compliance</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h4>Take Action</h4>
+        <ul>
+          <li><a href="/pages/be-an-election-judge/">Be an Election Judge</a></li>
+          <li><a href="/pages/citizen-action/">Citizen Action</a></li>
+          <li><a href="/pages/sign-the-petition/">Sign the Petition</a></li>
+          <li><a href="/pages/poll-watchers-toolkit/">Poll Watchers Toolkit</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h4>News & Updates</h4>
+        <ul>
+          <li><a href="/news/">All News</a></li>
+          <li><a href="/news/citizen-action/">Citizen Action</a></li>
+          <li><a href="/news/lawsuit-documents/">Lawsuit Documents</a></li>
+          <li><a href="/news/score-card/">Score Card</a></li>
+          <li><a href="/feed.xml">RSS Feed</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="/pages/resources/">Resources</a></li>
+          <li><a href="/pages/in-the-news/">In The News</a></li>
+          <li><a href="/pages/whats-happening/">What's Happening</a></li>
+          <li><a href="/pages/contact-us/">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; 2026 Secure The Vote MD. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
 
-						<div class="form-group">
-							<label for="city">City</label>
-							<input type="text" id="city" name="city">
-						</div>
+<!-- Scripts -->
+<script src="/js/main.js"></script>
+<script src="/js/petition.js"></script>
 
-						<div class="form-group">
-							<label for="zipCode">Zip Code *</label>
-							<input type="text" id="zipCode" name="zipCode" required pattern="[0-9]{5}">
-						</div>
-
-						<div class="form-group checkbox-group">
-							<label>
-								<input type="checkbox" id="displayPublicly" name="displayPublicly" checked>
-								Display my name publicly
-							</label>
-						</div>
-
-						<button type="submit" class="btn btn-primary" style="background-color: #9B1E37;">Sign Petition</button>
-					</form>
-				</div>
-
-				<!-- Thank You Section -->
-				<div id="thank-you-section" class="thank-you-section" style="display: none;">
-					<div class="thank-you-content">
-						<div class="thank-you-icon">✓</div>
-						<h2>Thank You for Signing!</h2>
-						<p>Your signature has been recorded. Help us reach our goal by sharing this petition:</p>
-
-						<div class="social-buttons">
-							<a href="#" id="share-facebook" class="btn btn-social btn-facebook" target="_blank">
-								Share on Facebook
-							</a>
-							<a href="#" id="share-x" class="btn btn-social btn-x" target="_blank">
-								Share on X (Twitter)
-							</a>
-						</div>
-					</div>
-
-					<div class="thank-you-actions">
-						<a href="/" class="btn btn-outline">Return Home</a>
-					</div>
-				</div>
-
-				<!-- Signature List -->
-				<div id="signatures-section" class="signatures-section" style="display: none;">
-					<h2>Recent Signatures</h2>
-					<div id="signatures-list" class="signatures-list">
-						<!-- Signatures inserted here -->
-					</div>
-				</div>
-			</div>
-		</div>
-	</main>
-
-	<footer class="site-footer" style="background-color: #9B1E37; color: white; padding: 40px 0; margin-top: 80px;">
-		<div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 30px; text-align: center;">
-			<p style="margin: 0; font-size: 18px;">&copy; 2026 Secure the Vote MD. All rights reserved.</p>
-			<div style="margin-top: 20px;">
-				<a href="/" style="color: #F6BF58; margin: 0 15px; text-decoration: none;">Home</a>
-				<a href="/contact-us/" style="color: #F6BF58; margin: 0 15px; text-decoration: none;">Contact Us</a>
-				<a href="/resources/" style="color: #F6BF58; margin: 0 15px; text-decoration: none;">Resources</a>
-			</div>
-		</div>
-	</footer>
-
-	<script src="/js/petition.js"></script>
-	<script src="/wp-content/plugins/elementskit-lite/widgets/init/assets/js/widget-scripts.js?ver=3.7.9"></script>
 </body>
 </html>
