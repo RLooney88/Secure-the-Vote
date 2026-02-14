@@ -2,6 +2,41 @@
   "version": 2,
   "buildCommand": "echo 'No build needed - static files already in dist/'",
   "outputDirectory": "dist",
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(), payment=()"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://api.leadconnectorhq.com https://msgsndr.com https://storage.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.leadconnectorhq.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https: blob:; frame-src https://api.leadconnectorhq.com https://msgsndr.com; connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://api.leadconnectorhq.com https://msgsndr.com; form-action 'self' https://api.leadconnectorhq.com; base-uri 'self'; object-src 'none'; upgrade-insecure-requests;"
+        }
+      ]
+    }
+  ],
   "routes": [
     {
       "src": "/api/(.*)",
@@ -12,7 +47,8 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/$1"
+      "dest": "/$1",
+      "status": 404
     }
   ]
 }
