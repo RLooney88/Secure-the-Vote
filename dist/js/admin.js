@@ -102,7 +102,14 @@
     petitionTitle: document.getElementById('petition-title'),
     petitionDescription: document.getElementById('petition-description'),
     petitionActive: document.getElementById('petition-active'),
-    cancelPetitionBtn: document.getElementById('cancel-petition-btn')
+    cancelPetitionBtn: document.getElementById('cancel-petition-btn'),
+    
+    // Deployment Modal
+    deploymentModal: document.getElementById('deployment-modal'),
+    progressList: document.getElementById('progress-list'),
+    deploymentCancel: document.getElementById('deployment-cancel'),
+    deploymentManual: document.getElementById('deployment-manual'),
+    deploymentFinal: document.getElementById('deployment-final')
   };
 
   // API helper
@@ -1302,26 +1309,355 @@
     // Global Preview/Publish buttons
     elements.previewStagingBtn.addEventListener('click', previewStaging);
     elements.publishProductionBtn.addEventListener('click', publishToProduction);
+
+    // Deployment modal event listeners
+    elements.deploymentCancel.addEventListener('click', handleDeploymentCancel);
+    elements.deploymentManual.addEventListener('click', handleDeploymentManual);
   }
 
-  // Preview staging deployment - just opens the Vercel staging URL directly
+  // Modal configurations for preview vs publish
+  const MODAL_CONFIGS = {
+    preview: {
+      title: 'Deploying Preview',
+      stages: [
+        { id: 'saving', text: 'Saving changes...' },
+        { id: 'pushing', text: 'Pushing to staging...' },
+        { id: 'building', text: 'Building site...' },
+        { id: 'term-limits', text: 'Considering the ramifications of term limits...' },
+        { id: 'optimizing', text: 'Optimizing assets...' },
+        { id: 'handsome', text: 'Thinking about how handsome Roddy is...' },
+        { id: 'deploying', text: 'Deploying to preview...' },
+        { id: 'almost', text: 'Almost there...' },
+      ],
+      extraStages: [
+        { id: 'final-checks', text: 'Running final checks...' },
+        { id: 'verifying', text: 'Verifying deployment...' },
+        { id: 'polishing', text: 'Polishing the edges...' },
+      ],
+      pollTarget: 'preview',
+      successText: 'Preview ready!',
+      timeoutText: 'Preview may still be building...',
+      onReady: () => {
+        window.open(VERCEL_CONFIG.stagingUrl, '_blank');
+        setTimeout(hideDeploymentModal, 500);
+      }
+    },
+    publish: {
+      title: 'Publishing to Production',
+      stages: [
+        { id: 'merging', text: 'Merging staging to production...' },
+        { id: 'posts', text: 'Publishing draft posts...' },
+        { id: 'petitions', text: 'Publishing draft petitions...' },
+        { id: 'building', text: 'Building production site...' },
+        { id: 'will-of-people', text: 'Considering the will of the people...' },
+        { id: 'optimizing', text: 'Optimizing for production...' },
+        { id: 'going-live', text: 'Going live...' },
+      ],
+      extraStages: [
+        { id: 'propagating', text: 'Propagating to edge network...' },
+        { id: 'validating', text: 'Validating production build...' },
+        { id: 'warming', text: 'Warming up the servers...' },
+      ],
+      pollTarget: 'production',
+      successText: 'Changes are live!',
+      timeoutText: 'Production may still be building...',
+      onReady: () => {
+        // Reload relevant tabs
+        if (document.querySelector('[data-tab="posts"].active')) loadPosts();
+        if (document.querySelector('[data-tab="petitions"].active')) loadPetitions();
+        setTimeout(hideDeploymentModal, 2000);
+      }
+    }
+  };
+
+  let activeModalConfig = MODAL_CONFIGS.preview;
+
+  let deploymentState = {
+    isRunning: false,
+    currentStageIndex: 0,
+    pollInterval: null,
+    timeoutId: null,
+    stageTimeoutId: null
+  };
+
+  // Vercel configuration
+  const VERCEL_CONFIG = {
+    projectId: 'prj_ToDYtaNFY2C3qT8vWrDPvoxIebn5',
+    stagingUrl: 'https://secure-the-vote-git-staging-rlooney88s-projects.vercel.app',
+    productionUrl: 'https://securethevotemd.com'
+  };
+
+  // Show deployment modal
+  function showDeploymentModal() {
+    elements.deploymentModal.style.display = 'flex';
+    elements.deploymentManual.style.display = 'none';
+    elements.deploymentFinal.style.display = 'none';
+    
+    // Update title
+    const titleEl = elements.deploymentModal.querySelector('.deployment-header h2');
+    if (titleEl) titleEl.textContent = activeModalConfig.title;
+    
+    // Build progress list
+    elements.progressList.innerHTML = activeModalConfig.stages.map((stage, index) => `
+      <li class="progress-item" id="stage-${stage.id}" data-index="${index}">
+        <span class="progress-icon">
+          <span class="progress-spinner" style="display: ${index === 0 ? 'inline-block' : 'none'}"></span>
+          <span class="progress-checkmark" style="display: none;">&#10003;</span>
+        </span>
+        <span class="progress-text">${stage.text}</span>
+      </li>
+    `).join('');
+  }
+
+  // Hide deployment modal
+  function hideDeploymentModal() {
+    elements.deploymentModal.style.display = 'none';
+    cleanupDeployment();
+  }
+
+  // Cleanup deployment state
+  function cleanupDeployment() {
+    deploymentState.isRunning = false;
+    if (deploymentState.pollInterval) {
+      clearInterval(deploymentState.pollInterval);
+      deploymentState.pollInterval = null;
+    }
+    if (deploymentState.timeoutId) {
+      clearTimeout(deploymentState.timeoutId);
+      deploymentState.timeoutId = null;
+    }
+    if (deploymentState.stageTimeoutId) {
+      clearTimeout(deploymentState.stageTimeoutId);
+      deploymentState.stageTimeoutId = null;
+    }
+  }
+
+  // Advance to next stage
+  function advanceToNextStage() {
+    const currentItem = elements.progressList.querySelector(`[data-index="${deploymentState.currentStageIndex}"]`);
+    if (currentItem) {
+      currentItem.classList.remove('active');
+      currentItem.classList.add('completed');
+      currentItem.querySelector('.progress-spinner').style.display = 'none';
+      currentItem.querySelector('.progress-checkmark').style.display = 'inline-block';
+    }
+
+    deploymentState.currentStageIndex++;
+
+    // Cycle through extra stages if we've gone through all main stages
+    let stageIndex = deploymentState.currentStageIndex;
+    let stageData;
+    let stageDuration = 2500 + Math.random() * 1000; // 2.5-3.5 seconds
+
+    if (stageIndex < activeModalConfig.stages.length) {
+      stageData = activeModalConfig.stages[stageIndex];
+    } else {
+      // Use extra stages for cycling
+      const extraIndex = (stageIndex - activeModalConfig.stages.length) % activeModalConfig.extraStages.length;
+      stageData = activeModalConfig.extraStages[extraIndex];
+      stageDuration = 3000 + Math.random() * 1000; // 3-4 seconds for extra stages
+    }
+
+    const nextItem = elements.progressList.querySelector(`[data-index="${Math.min(stageIndex, activeModalConfig.stages.length - 1)}"]`);
+    
+    if (nextItem && deploymentState.isRunning) {
+      nextItem.classList.add('active');
+      nextItem.querySelector('.progress-spinner').style.display = 'inline-block';
+
+      // Schedule next advance
+      deploymentState.stageTimeoutId = setTimeout(advanceToNextStage, stageDuration);
+    }
+  }
+
+  // Poll Vercel deployment status
+  async function pollVercelDeployment() {
+    if (!deploymentState.isRunning) return;
+
+    try {
+      // Try to get deployment status from proxy endpoint first
+      let response = await fetch(`/api/admin/deployment-status?target=${activeModalConfig.pollTarget}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Check if we have a deployment in READY state
+        if (data.deployments && data.deployments.length > 0) {
+          const latestDeployment = data.deployments[0];
+          
+          if (latestDeployment.state === 'READY') {
+            onDeploymentReady();
+            return;
+          }
+        }
+      } else {
+        // If proxy fails, try direct API call (may fail due to CORS)
+        try {
+          const directResponse = await fetch(
+            `https://api.vercel.com/v6/deployments?projectId=${VERCEL_CONFIG.projectId}&target=${activeModalConfig.pollTarget}&limit=1`,
+            {
+              method: 'GET',
+              headers: {
+                'Authorization': `Bearer ${state.token}`,
+                'Content-Type': 'application/json'
+              }
+            }
+          );
+          
+          if (directResponse.ok) {
+            const data = await directResponse.json();
+            if (data.deployments && data.deployments.length > 0) {
+              const latestDeployment = data.deployments[0];
+              if (latestDeployment.state === 'READY') {
+                onDeploymentReady();
+                return;
+              }
+            }
+          }
+        } catch (e) {
+          // Direct API call failed due to CORS, continue with stage cycling
+          console.log('Direct Vercel API call blocked by CORS, continuing with stages...');
+        }
+      }
+    } catch (error) {
+      console.log('Vercel polling error (continuing):', error.message);
+    }
+
+    // Continue polling
+    deploymentState.pollInterval = setTimeout(pollVercelDeployment, 4000);
+  }
+
+  // Handle deployment ready
+  function onDeploymentReady() {
+    cleanupDeployment();
+
+    // Complete current stage
+    const currentItem = elements.progressList.querySelector(`[data-index="${deploymentState.currentStageIndex}"]`);
+    if (currentItem) {
+      currentItem.classList.remove('active');
+      currentItem.classList.add('completed');
+      currentItem.querySelector('.progress-spinner').style.display = 'none';
+      currentItem.querySelector('.progress-checkmark').style.display = 'inline-block';
+    }
+
+    // Show final success message
+    const finalText = elements.deploymentFinal.querySelector('.final-text');
+    if (finalText) finalText.textContent = activeModalConfig.successText;
+    elements.deploymentFinal.style.display = 'flex';
+    elements.deploymentCancel.style.display = 'none';
+
+    // Wait 1 second then run completion handler
+    setTimeout(() => {
+      activeModalConfig.onReady();
+    }, 1000);
+  }
+
+  // Handle deployment timeout
+  function onDeploymentTimeout() {
+    cleanupDeployment();
+    
+    // Show manual open button
+    elements.deploymentCancel.textContent = 'Close';
+    elements.deploymentCancel.style.color = '#888';
+    elements.deploymentManual.style.display = 'inline-block';
+    
+    // Mark current stage as complete
+    const currentItem = elements.progressList.querySelector(`[data-index="${deploymentState.currentStageIndex}"]`);
+    if (currentItem) {
+      currentItem.querySelector('.progress-spinner').style.display = 'none';
+      currentItem.querySelector('.progress-checkmark').style.display = 'inline-block';
+    }
+
+    // Show timeout message
+    const timeoutItem = document.createElement('li');
+    timeoutItem.className = 'progress-item completed';
+    timeoutItem.style.color = '#F6BF58';
+    timeoutItem.innerHTML = `
+      <span class="progress-icon"><span class="progress-checkmark">!</span></span>
+      <span class="progress-text">${activeModalConfig.timeoutText}</span>
+    `;
+    elements.progressList.appendChild(timeoutItem);
+  }
+
+  // Start deployment modal with given config
+  function startDeploymentModal(configKey) {
+    activeModalConfig = MODAL_CONFIGS[configKey];
+    
+    // Reset deployment state
+    deploymentState = {
+      isRunning: true,
+      currentStageIndex: 0,
+      pollInterval: null,
+      timeoutId: null,
+      stageTimeoutId: null
+    };
+
+    // Show modal
+    showDeploymentModal();
+
+    // Start progress animation (first stage immediately active)
+    const firstItem = elements.progressList.querySelector('[data-index="0"]');
+    if (firstItem) {
+      firstItem.classList.add('active');
+    }
+
+    // Start Vercel polling
+    setTimeout(pollVercelDeployment, 1000);
+
+    // Set timeout for 60 seconds
+    deploymentState.timeoutId = setTimeout(onDeploymentTimeout, 60000);
+
+    // Schedule first stage advance after 2.5 seconds
+    deploymentState.stageTimeoutId = setTimeout(advanceToNextStage, 2500);
+  }
+
+  // Preview staging deployment with modal
   function previewStaging() {
-    const STAGING_URL = 'https://secure-the-vote-git-staging-rcl-integrated.vercel.app';
-    window.open(STAGING_URL, '_blank');
+    startDeploymentModal('preview');
+  }
+
+  // Handle modal cancel
+  function handleDeploymentCancel(e) {
+    e.preventDefault();
+    if (elements.deploymentManual.style.display !== 'none') {
+      // If in timeout state, just close
+      hideDeploymentModal();
+    } else {
+      // Confirm cancellation during active deployment
+      if (confirm('Cancel deployment preview?')) {
+        hideDeploymentModal();
+      }
+    }
+  }
+
+  // Handle manual open
+  function handleDeploymentManual(e) {
+    e.preventDefault();
+    const url = activeModalConfig.pollTarget === 'preview' 
+      ? VERCEL_CONFIG.stagingUrl 
+      : VERCEL_CONFIG.productionUrl;
+    window.open(url, '_blank');
+    hideDeploymentModal();
   }
 
   // Publish staging to production
   async function publishToProduction() {
-    if (!confirm('This will publish ALL staging changes to the live production site.\n\nThis includes:\n- File changes (staging → main)\n- Draft posts → Published\n- Draft petitions → Published\n\nAre you sure you want to continue?')) {
+    if (!confirm('Publish ALL changes to the live site?\n\nThis merges staging, publishes draft posts and petitions.')) {
       return;
     }
     
     const API_URL = 'https://site-builder-ai-production.up.railway.app';
     const SITE_ID = 'securethevotemd';
     
+    // Start the modal animation
+    startDeploymentModal('publish');
+    
     try {
       elements.publishProductionBtn.disabled = true;
-      elements.publishProductionBtn.textContent = 'Publishing...';
       
       // Step 1: Publish file changes (staging → main)
       const fileRes = await fetch(`${API_URL}/sites/${SITE_ID}/publish`, {
@@ -1352,26 +1688,16 @@
         }
       });
       
-      const fileData = await fileRes.json();
-      const postsData = postsRes.ok ? await postsRes.json() : { publishedCount: 0 };
-      const petitionsData = petitionsRes.ok ? await petitionsRes.json() : { publishedCount: 0 };
-      
-      alert(`✅ Published to production!\n\nFile changes: Deployed\nPosts published: ${postsData.publishedCount || 0}\nPetitions published: ${petitionsData.publishedCount || 0}\n\nLive site will update in ~30 seconds.`);
-      
-      // Reload posts/petitions if on those tabs
-      if (document.querySelector('[data-tab="posts"].active')) {
-        loadPosts();
-      }
-      if (document.querySelector('[data-tab="petitions"].active')) {
-        loadPetitions();
-      }
+      // API calls done — the modal + Vercel polling will handle the rest
+      // The modal's onReady callback reloads tabs when production deployment is live
+      console.log('Publish API calls complete, waiting for production deployment...');
       
     } catch (error) {
       console.error('Publish error:', error);
+      hideDeploymentModal();
       alert(`Publish error: ${error.message}`);
     } finally {
       elements.publishProductionBtn.disabled = false;
-      elements.publishProductionBtn.textContent = 'Publish Edits';
     }
   }
 

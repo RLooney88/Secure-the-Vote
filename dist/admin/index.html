@@ -6,6 +6,187 @@
   <title>Admin Dashboard - SecureTheVote</title>
   <link rel="stylesheet" href="/css/admin.css">
   <link rel="stylesheet" href="/css/page-transitions.css">
+  <style>
+    /* Deployment Progress Modal Styles */
+    .deployment-modal {
+      z-index: 10000;
+    }
+    
+    .deployment-modal .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      animation: fadeIn 0.3s ease-out;
+    }
+    
+    .deployment-modal-content {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 480px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: slideUp 0.4s ease-out;
+    }
+    
+    .deployment-header {
+      background: #1a1a2e;
+      color: #fff;
+      padding: 20px 24px;
+      border-radius: 12px 12px 0 0;
+    }
+    
+    .deployment-header h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    
+    .deployment-progress {
+      padding: 24px;
+    }
+    
+    .progress-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .progress-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0;
+      opacity: 0.4;
+      transition: opacity 0.3s ease, color 0.3s ease;
+    }
+    
+    .progress-item:last-child {
+      border-bottom: none;
+    }
+    
+    .progress-item.active {
+      opacity: 1;
+    }
+    
+    .progress-item.completed {
+      opacity: 1;
+      color: #4CAF50;
+    }
+    
+    .progress-icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .progress-spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #e0e0e0;
+      border-top-color: #1a1a2e;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    .progress-checkmark {
+      font-size: 1.2rem;
+      color: #4CAF50;
+    }
+    
+    .progress-text {
+      font-size: 0.95rem;
+      color: #333;
+    }
+    
+    .deployment-footer {
+      padding: 16px 24px 24px;
+      text-align: center;
+      border-top: 1px solid #f0f0f0;
+      margin-top: -8px;
+    }
+    
+    .deployment-final {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      animation: pulse 0.5s ease-out;
+    }
+    
+    .final-checkmark {
+      font-size: 1.5rem;
+      color: #4CAF50;
+    }
+    
+    .final-text {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #F6BF58;
+    }
+    
+    .cancel-link,
+    .manual-link {
+      color: #888;
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    
+    .cancel-link:hover,
+    .manual-link:hover {
+      color: #333;
+    }
+    
+    .manual-link {
+      margin-left: 16px;
+      padding: 6px 16px;
+      background: #1a1a2e;
+      color: #fff;
+      border-radius: 4px;
+    }
+    
+    .manual-link:hover {
+      background: #2a2a4e;
+      color: #fff;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -40%);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+      }
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(0.9); opacity: 0; }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
   <!-- Quill Editor -->
   <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
 </head>
@@ -671,6 +852,29 @@
     <!-- Loading Overlay -->
     <div id="loading" class="loading-overlay" style="display: none;">
       <div class="spinner"></div>
+    </div>
+
+    <!-- Deployment Progress Modal -->
+    <div id="deployment-modal" class="modal deployment-modal" style="display: none;">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content deployment-modal-content">
+        <div class="deployment-header">
+          <h2>Deploying Preview</h2>
+        </div>
+        <div class="deployment-progress">
+          <ul class="progress-list" id="progress-list">
+            <!-- Progress items will be added dynamically -->
+          </ul>
+        </div>
+        <div class="deployment-footer">
+          <div id="deployment-final" class="deployment-final" style="display: none;">
+            <span class="final-checkmark">&#10003;</span>
+            <span class="final-text">Preview ready!</span>
+          </div>
+          <a href="#" id="deployment-cancel" class="cancel-link">Cancel</a>
+          <a href="#" id="deployment-manual" class="manual-link" style="display: none;">Open Preview</a>
+        </div>
+      </div>
     </div>
   </div>
 
