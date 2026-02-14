@@ -52,6 +52,7 @@
         <button class="tab-btn" data-tab="banner">Banner</button>
         <button class="tab-btn" data-tab="petitions">Petitions</button>
         <button class="tab-btn" data-tab="admins">Admin Users</button>
+        <button class="tab-btn" data-tab="site-editor">🤖 Site Editor</button>
       </nav>
 
       <main class="dashboard-main">
@@ -640,6 +641,15 @@
               </table>
             </div>
           </div>
+        </div>
+
+        <!-- Site Editor Tab -->
+        <div id="tab-site-editor" class="tab-content" style="display: none;">
+          <iframe 
+            src="/admin/site-editor.html" 
+            style="width: 100%; height: calc(100vh - 200px); border: none; border-radius: 8px;"
+            title="Site Editor AI"
+          ></iframe>
         </div>
       </main>
     </div>
