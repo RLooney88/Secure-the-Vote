@@ -9,6 +9,81 @@
   <link rel="stylesheet" href="/css/admin.css">
   <link rel="stylesheet" href="/css/page-transitions.css">
   <style>
+    /* Branding Tab Styles */
+    .branding-section summary {
+      cursor: pointer;
+      user-select: none;
+      padding: 12px 0;
+      font-weight: 600;
+    }
+    
+    .branding-section summary h3 {
+      display: inline;
+      margin: 0;
+    }
+    
+    .branding-section .section-content {
+      padding: 16px 0;
+    }
+    
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    
+    .color-input-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    
+    .color-input-group input[type="color"] {
+      width: 60px;
+      height: 40px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .color-input-group input[type="text"] {
+      flex: 1;
+      font-family: monospace;
+    }
+    
+    #valid-pages-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    
+    .page-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: #f0f0f0;
+      border-radius: 16px;
+      font-size: 0.9rem;
+    }
+    
+    .page-tag .remove-page {
+      cursor: pointer;
+      color: #999;
+      font-weight: bold;
+      margin-left: 4px;
+    }
+    
+    .page-tag .remove-page:hover {
+      color: #d32f2f;
+    }
+    
+    .add-page-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    
     /* Deployment Progress Modal Styles */
     .deployment-modal {
       z-index: 10000;
@@ -241,6 +316,7 @@
         <button class="tab-btn" data-tab="banner">Banner</button>
         <button class="tab-btn" data-tab="petitions">Petitions</button>
         <button class="tab-btn" data-tab="admins">Admin Users</button>
+        <button class="tab-btn" data-tab="branding">Branding</button>
         <button class="tab-btn" data-tab="site-editor">Site Editor</button>
       </nav>
 
@@ -828,6 +904,126 @@
                   <!-- Populated by JavaScript -->
                 </tbody>
               </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Branding Tab -->
+        <div id="tab-branding" class="tab-content" style="display: none;">
+          <div class="branding-section">
+            <div class="section-header">
+              <h2>Site Branding</h2>
+              <button id="auto-scan-brand-btn" class="btn btn-secondary">Auto-Scan Site</button>
+            </div>
+
+            <div class="card">
+              <form id="branding-form">
+                <!-- Colors Section -->
+                <details class="branding-section" open>
+                  <summary><h3>Colors</h3></summary>
+                  <div class="section-content">
+                    <div class="color-grid">
+                      <div class="form-group">
+                        <label for="brand-color-primary">Primary Color</label>
+                        <div class="color-input-group">
+                          <input type="color" id="brand-color-primary" value="#1B3A5C">
+                          <input type="text" id="brand-color-primary-hex" value="#1B3A5C" pattern="^#[0-9A-Fa-f]{6}$">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="brand-color-secondary">Secondary Color</label>
+                        <div class="color-input-group">
+                          <input type="color" id="brand-color-secondary" value="#2C5F8A">
+                          <input type="text" id="brand-color-secondary-hex" value="#2C5F8A" pattern="^#[0-9A-Fa-f]{6}$">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="brand-color-accent">Accent Color</label>
+                        <div class="color-input-group">
+                          <input type="color" id="brand-color-accent" value="#F6BF58">
+                          <input type="text" id="brand-color-accent-hex" value="#F6BF58" pattern="^#[0-9A-Fa-f]{6}$">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="brand-color-text">Text Color</label>
+                        <div class="color-input-group">
+                          <input type="color" id="brand-color-text" value="#333333">
+                          <input type="text" id="brand-color-text-hex" value="#333333" pattern="^#[0-9A-Fa-f]{6}$">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="brand-color-background">Background Color</label>
+                        <div class="color-input-group">
+                          <input type="color" id="brand-color-background" value="#FFFFFF">
+                          <input type="text" id="brand-color-background-hex" value="#FFFFFF" pattern="^#[0-9A-Fa-f]{6}$">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </details>
+
+                <!-- Fonts Section -->
+                <details class="branding-section" open>
+                  <summary><h3>Typography</h3></summary>
+                  <div class="section-content">
+                    <div class="form-group">
+                      <label for="brand-font-heading">Heading Font</label>
+                      <input type="text" id="brand-font-heading" placeholder="Montserrat, sans-serif">
+                      <small>CSS font-family value (e.g., "Montserrat, sans-serif")</small>
+                    </div>
+                    <div class="form-group">
+                      <label for="brand-font-body">Body Font</label>
+                      <input type="text" id="brand-font-body" placeholder="Open Sans, sans-serif">
+                      <small>CSS font-family value (e.g., "Open Sans, sans-serif")</small>
+                    </div>
+                  </div>
+                </details>
+
+                <!-- Button Style Section -->
+                <details class="branding-section" open>
+                  <summary><h3>Button Style</h3></summary>
+                  <div class="section-content">
+                    <div class="form-group">
+                      <label for="brand-button-style">Button Styling Pattern</label>
+                      <textarea id="brand-button-style" rows="3" placeholder="Describe button styling patterns (e.g., rounded corners, accent color for primary CTAs)"></textarea>
+                    </div>
+                  </div>
+                </details>
+
+                <!-- Layout Notes Section -->
+                <details class="branding-section" open>
+                  <summary><h3>Layout Notes</h3></summary>
+                  <div class="section-content">
+                    <div class="form-group">
+                      <label for="brand-layout-notes">Layout Patterns & CSS Conventions</label>
+                      <textarea id="brand-layout-notes" rows="4" placeholder="Key layout patterns and CSS class conventions (e.g., Elementor-based layout, fixed navigation)"></textarea>
+                    </div>
+                  </div>
+                </details>
+
+                <!-- Valid Pages Section -->
+                <details class="branding-section" open>
+                  <summary><h3>Valid Pages</h3></summary>
+                  <div class="section-content">
+                    <div class="form-group">
+                      <label>Site Pages (for link verification)</label>
+                      <div id="valid-pages-list" style="margin-bottom: 10px;">
+                        <!-- Pages will be listed here dynamically -->
+                      </div>
+                      <div class="add-page-row">
+                        <input type="text" id="new-page-path" placeholder="/new-page/" style="flex: 1;">
+                        <button type="button" id="add-page-btn" class="btn btn-secondary btn-small">Add Page</button>
+                      </div>
+                    </div>
+                  </div>
+                </details>
+
+                <div id="branding-form-message" style="display: none;"></div>
+
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary">Save Branding</button>
+                </div>
+              </form>
             </div>
           </div>
         </div>

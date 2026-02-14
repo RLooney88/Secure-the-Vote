@@ -906,6 +906,14 @@
         const formData = new FormData();
         formData.append('file', selectedFile);
         
+        // Feature 3: Add context parameter
+        // Uploads in the chat interface are "chat" context (temporary reference photos)
+        // They don't get committed to GitHub, just stored temporarily
+        formData.append('context', 'chat');
+        
+        // Optional: include session ID if we want to track which session uploaded what
+        // For now, we'll leave it as undefined (backend can handle it)
+        
         const res = await fetch(`${API_URL}/sites/${SITE_ID}/upload`, {
           method: 'POST',
           body: formData
@@ -920,10 +928,14 @@
         // Success!
         closeUploadDialog();
         
-        // Add success message
-        addMessage('assistant', `✅ Image uploaded successfully!\n\n📁 Path: \`${data.url}\`\n\nCopy this path when asking the AI to include this image in your site.`);
+        // Different message based on context
+        if (data.context === 'chat') {
+          addMessage('assistant', `✅ Reference image uploaded!\n\n📁 Temporary URL: \`${data.referenceUrl}\`\n\n💡 This image is stored temporarily (30 days) for you to reference in our conversation. Ask me to use it in your site design!`);
+        } else {
+          addMessage('assistant', `✅ Image uploaded successfully!\n\n📁 Path: \`${data.url}\`\n\nCopy this path when asking the AI to include this image in your site.`);
+        }
         
-        // Refresh gallery
+        // Refresh gallery (only media context files will appear)
         loadUploads();
         showGallery();
         

@@ -109,7 +109,29 @@
     progressList: document.getElementById('progress-list'),
     deploymentCancel: document.getElementById('deployment-cancel'),
     deploymentManual: document.getElementById('deployment-manual'),
-    deploymentFinal: document.getElementById('deployment-final')
+    deploymentFinal: document.getElementById('deployment-final'),
+    
+    // Branding Tab
+    brandingForm: document.getElementById('branding-form'),
+    autoScanBrandBtn: document.getElementById('auto-scan-brand-btn'),
+    brandColorPrimary: document.getElementById('brand-color-primary'),
+    brandColorPrimaryHex: document.getElementById('brand-color-primary-hex'),
+    brandColorSecondary: document.getElementById('brand-color-secondary'),
+    brandColorSecondaryHex: document.getElementById('brand-color-secondary-hex'),
+    brandColorAccent: document.getElementById('brand-color-accent'),
+    brandColorAccentHex: document.getElementById('brand-color-accent-hex'),
+    brandColorText: document.getElementById('brand-color-text'),
+    brandColorTextHex: document.getElementById('brand-color-text-hex'),
+    brandColorBackground: document.getElementById('brand-color-background'),
+    brandColorBackgroundHex: document.getElementById('brand-color-background-hex'),
+    brandFontHeading: document.getElementById('brand-font-heading'),
+    brandFontBody: document.getElementById('brand-font-body'),
+    brandButtonStyle: document.getElementById('brand-button-style'),
+    brandLayoutNotes: document.getElementById('brand-layout-notes'),
+    validPagesList: document.getElementById('valid-pages-list'),
+    newPagePath: document.getElementById('new-page-path'),
+    addPageBtn: document.getElementById('add-page-btn'),
+    brandingFormMessage: document.getElementById('branding-form-message')
   };
 
   // API helper
@@ -1199,7 +1221,219 @@
       loadBanner();
     } else if (tabName === 'petitions' && state.petitions.length === 0) {
       loadPetitionsList();
+    } else if (tabName === 'branding' && validPages.length === 0) {
+      loadBrandGuide();
     }
+  }
+
+  // === BRANDING TAB FUNCTIONALITY ===
+
+  let validPages = [];
+
+  // Load brand guide from API
+  async function loadBrandGuide() {
+    try {
+      setLoading(true);
+      const API_URL = 'https://site-builder-ai-production.up.railway.app';
+      const SITE_ID = 'securethevotemd';
+      
+      const response = await fetch(`${API_URL}/sites/${SITE_ID}/brand`);
+      if (!response.ok) throw new Error('Failed to load brand guide');
+      
+      const brandGuide = await response.json();
+      
+      // Populate colors
+      if (brandGuide.colors) {
+        if (brandGuide.colors.primary) {
+          elements.brandColorPrimary.value = brandGuide.colors.primary;
+          elements.brandColorPrimaryHex.value = brandGuide.colors.primary;
+        }
+        if (brandGuide.colors.secondary) {
+          elements.brandColorSecondary.value = brandGuide.colors.secondary;
+          elements.brandColorSecondaryHex.value = brandGuide.colors.secondary;
+        }
+        if (brandGuide.colors.accent) {
+          elements.brandColorAccent.value = brandGuide.colors.accent;
+          elements.brandColorAccentHex.value = brandGuide.colors.accent;
+        }
+        if (brandGuide.colors.text) {
+          elements.brandColorText.value = brandGuide.colors.text;
+          elements.brandColorTextHex.value = brandGuide.colors.text;
+        }
+        if (brandGuide.colors.background) {
+          elements.brandColorBackground.value = brandGuide.colors.background;
+          elements.brandColorBackgroundHex.value = brandGuide.colors.background;
+        }
+      }
+      
+      // Populate fonts
+      if (brandGuide.fonts) {
+        elements.brandFontHeading.value = brandGuide.fonts.heading || '';
+        elements.brandFontBody.value = brandGuide.fonts.body || '';
+      }
+      
+      // Populate button style and layout notes
+      elements.brandButtonStyle.value = brandGuide.button_style || '';
+      elements.brandLayoutNotes.value = brandGuide.layout_notes || '';
+      
+      // Populate valid pages
+      validPages = brandGuide.valid_pages || [];
+      renderValidPages();
+      
+    } catch (error) {
+      console.error('Load brand guide error:', error);
+      showError(error.message, elements.brandingFormMessage);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // Render valid pages list
+  function renderValidPages() {
+    if (validPages.length === 0) {
+      elements.validPagesList.innerHTML = '<p style="color: #999; font-style: italic;">No pages defined yet</p>';
+      return;
+    }
+    
+    elements.validPagesList.innerHTML = validPages.map(page => `
+      <span class="page-tag">
+        ${escapeHtml(page)}
+        <span class="remove-page" data-page="${escapeHtml(page)}">&times;</span>
+      </span>
+    `).join('');
+    
+    // Add event listeners to remove buttons
+    elements.validPagesList.querySelectorAll('.remove-page').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const page = e.target.dataset.page;
+        validPages = validPages.filter(p => p !== page);
+        renderValidPages();
+      });
+    });
+  }
+
+  // Add page to valid pages
+  function addValidPage() {
+    const newPage = elements.newPagePath.value.trim();
+    if (!newPage) return;
+    
+    // Ensure it starts with / and ends with /
+    let normalized = newPage;
+    if (!normalized.startsWith('/')) normalized = '/' + normalized;
+    if (!normalized.endsWith('/') && normalized !== '/') normalized += '/';
+    
+    // Check if already exists
+    if (validPages.includes(normalized)) {
+      alert('This page is already in the list');
+      return;
+    }
+    
+    validPages.push(normalized);
+    validPages.sort();
+    renderValidPages();
+    elements.newPagePath.value = '';
+  }
+
+  // Save brand guide
+  async function saveBrandGuide(e) {
+    e.preventDefault();
+    
+    try {
+      setLoading(true);
+      hideError(elements.brandingFormMessage);
+      
+      const API_URL = 'https://site-builder-ai-production.up.railway.app';
+      const SITE_ID = 'securethevotemd';
+      
+      const brandGuide = {
+        colors: {
+          primary: elements.brandColorPrimaryHex.value,
+          secondary: elements.brandColorSecondaryHex.value,
+          accent: elements.brandColorAccentHex.value,
+          text: elements.brandColorTextHex.value,
+          background: elements.brandColorBackgroundHex.value
+        },
+        fonts: {
+          heading: elements.brandFontHeading.value,
+          body: elements.brandFontBody.value
+        },
+        button_style: elements.brandButtonStyle.value,
+        layout_notes: elements.brandLayoutNotes.value,
+        valid_pages: validPages
+      };
+      
+      const response = await fetch(`${API_URL}/sites/${SITE_ID}/brand`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(brandGuide)
+      });
+      
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to save brand guide');
+      }
+      
+      showSuccess('Brand guide saved successfully!', elements.brandingFormMessage);
+      setTimeout(() => hideError(elements.brandingFormMessage), 3000);
+      
+    } catch (error) {
+      console.error('Save brand guide error:', error);
+      showError(error.message, elements.brandingFormMessage);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // Auto-scan site for branding
+  async function autoScanBrand() {
+    if (!confirm('This will scan your site\'s CSS and HTML to auto-detect branding. Continue?')) {
+      return;
+    }
+    
+    try {
+      setLoading(true);
+      hideError(elements.brandingFormMessage);
+      
+      const API_URL = 'https://site-builder-ai-production.up.railway.app';
+      const SITE_ID = 'securethevotemd';
+      
+      const response = await fetch(`${API_URL}/sites/${SITE_ID}/brand/scan`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to scan site');
+      }
+      
+      showSuccess('Site scanned successfully! Reload the tab to see results.', elements.brandingFormMessage);
+      
+      // Reload the brand guide
+      setTimeout(() => {
+        loadBrandGuide();
+      }, 1000);
+      
+    } catch (error) {
+      console.error('Auto-scan error:', error);
+      showError(error.message, elements.brandingFormMessage);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // Sync color picker with text input
+  function syncColorInputs(colorPicker, textInput) {
+    colorPicker.addEventListener('input', (e) => {
+      textInput.value = e.target.value.toUpperCase();
+    });
+    
+    textInput.addEventListener('input', (e) => {
+      const value = e.target.value;
+      if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+        colorPicker.value = value;
+      }
+    });
   }
 
   // Initialize
@@ -1313,6 +1547,24 @@
     // Deployment modal event listeners
     elements.deploymentCancel.addEventListener('click', handleDeploymentCancel);
     elements.deploymentManual.addEventListener('click', handleDeploymentManual);
+
+    // Branding tab event listeners
+    elements.brandingForm.addEventListener('submit', saveBrandGuide);
+    elements.autoScanBrandBtn.addEventListener('click', autoScanBrand);
+    elements.addPageBtn.addEventListener('click', addValidPage);
+    elements.newPagePath.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addValidPage();
+      }
+    });
+    
+    // Sync color pickers with text inputs
+    syncColorInputs(elements.brandColorPrimary, elements.brandColorPrimaryHex);
+    syncColorInputs(elements.brandColorSecondary, elements.brandColorSecondaryHex);
+    syncColorInputs(elements.brandColorAccent, elements.brandColorAccentHex);
+    syncColorInputs(elements.brandColorText, elements.brandColorTextHex);
+    syncColorInputs(elements.brandColorBackground, elements.brandColorBackgroundHex);
 
     // Listen for messages from site-editor iframe
     window.addEventListener('message', (event) => {
