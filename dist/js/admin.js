@@ -1392,7 +1392,7 @@
       alert(`Publish error: ${error.message}`);
     } finally {
       elements.publishProductionBtn.disabled = false;
-      elements.publishProductionBtn.textContent = 'Publish to Production';
+      elements.publishProductionBtn.textContent = 'Publish Edits';
     }
   }
 
