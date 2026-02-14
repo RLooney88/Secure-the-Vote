@@ -25,7 +25,7 @@ async function sendEmail(to, subject, htmlContent, cc = null, bcc = null) {
       },
       body: JSON.stringify({
         personalizations,
-        from: { email: 'noreply@securethevotemd.com', name: 'SecureTheVoteMD' },
+        from: { email: 'noreply@securethevotemd.com', name: 'Secure The Vote MD' },
         subject,
         content: [{ type: 'text/html', value: htmlContent }]
       })
