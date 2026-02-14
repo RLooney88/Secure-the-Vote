@@ -1304,31 +1304,10 @@
     elements.publishProductionBtn.addEventListener('click', publishToProduction);
   }
 
-  // Preview staging deployment
-  async function previewStaging() {
-    const API_URL = 'https://site-builder-ai-production.up.railway.app';
-    const SITE_ID = 'securethevotemd';
-    
-    try {
-      const res = await fetch(`${API_URL}/sites/${SITE_ID}/preview`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
-      });
-      
-      const data = await res.json();
-      
-      if (!res.ok) {
-        throw new Error(data.error || 'Preview failed');
-      }
-      
-      // Open staging preview in new tab
-      window.open(data.previewUrl, '_blank');
-      alert('Staging preview opened in new tab!\n\nReview your changes before publishing to production.');
-      
-    } catch (error) {
-      console.error('Preview error:', error);
-      alert(`Preview error: ${error.message}`);
-    }
+  // Preview staging deployment - just opens the Vercel staging URL directly
+  function previewStaging() {
+    const STAGING_URL = 'https://secure-the-vote-git-staging-rcl-integrated.vercel.app';
+    window.open(STAGING_URL, '_blank');
   }
 
   // Publish staging to production
