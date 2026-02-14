@@ -1,0 +1,27 @@
+/* Prevent flash on page navigation */
+html {
+  background-color: #FFFFFF;
+}
+
+body {
+  background-color: #FFFFFF;
+  animation: fadeIn 0.15s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0.98;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Smooth link clicks */
+a {
+  transition: opacity 0.1s ease-out;
+}
+
+a:active {
+  opacity: 0.8;
+}
