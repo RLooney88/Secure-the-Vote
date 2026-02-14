@@ -1,6 +1,44 @@
-// API endpoint for banner settings (simple text/link/toggle - Fix 2)
 const { Pool } = require('pg');
 const { requireAuth } = require('./_auth.js');
+
+// GitHub API helper to update a file
+async function updateGitHubFile(path, contentUpdater) {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) return { updated: false, reason: 'No GITHUB_TOKEN configured' };
+
+  const repo = 'RLooney88/Secure-the-Vote';
+  const apiBase = `https://api.github.com/repos/${repo}/contents/${path}`;
+  const headers = {
+    'Authorization': `token ${token}`,
+    'Accept': 'application/vnd.github.v3+json',
+    'User-Agent': 'SecureTheVote-Admin'
+  };
+
+  // Get current file
+  const getResp = await fetch(apiBase, { headers });
+  if (!getResp.ok) return { updated: false, reason: `Failed to read ${path}: ${getResp.status}` };
+  const fileData = await getResp.json();
+
+  // Decode content
+  const currentContent = Buffer.from(fileData.content, 'base64').toString('utf8');
+  const newContent = contentUpdater(currentContent);
+
+  if (newContent === currentContent) return { updated: false, reason: 'No changes needed' };
+
+  // Update file
+  const putResp = await fetch(apiBase, {
+    method: 'PUT',
+    headers: { ...headers, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      message: 'Update banner via admin dashboard',
+      content: Buffer.from(newContent).toString('base64'),
+      sha: fileData.sha
+    })
+  });
+
+  if (!putResp.ok) return { updated: false, reason: `Failed to update: ${putResp.status}` };
+  return { updated: true };
+}
 
 module.exports = async function handler(req, res) {
   const pool = new Pool({
@@ -10,19 +48,14 @@ module.exports = async function handler(req, res) {
   });
 
   try {
-    const admin = requireAuth(req);
+    requireAuth(req);
 
     if (req.method === 'GET') {
-      // Load banner settings
       const result = await pool.query(
-        `SELECT key, value FROM site_settings 
-         WHERE key IN ('banner_text', 'banner_link', 'banner_enabled')`
+        "SELECT key, value FROM site_settings WHERE key IN ('banner_text', 'banner_link', 'banner_enabled')"
       );
-
       const settings = {};
-      result.rows.forEach(row => {
-        settings[row.key] = row.value;
-      });
+      result.rows.forEach(row => { settings[row.key] = row.value; });
 
       return res.status(200).json({
         success: true,
@@ -34,39 +67,60 @@ module.exports = async function handler(req, res) {
       });
 
     } else if (req.method === 'PUT') {
-      // Save banner settings
       const { banner_text, banner_link, banner_enabled } = req.body;
 
-      if (banner_text !== undefined) {
-        await pool.query(
-          `INSERT INTO site_settings (key, value, updated_at)
-           VALUES ('banner_text', $1, CURRENT_TIMESTAMP)
-           ON CONFLICT (key) DO UPDATE SET value = $1, updated_at = CURRENT_TIMESTAMP`,
-          [banner_text]
-        );
+      // Save to database
+      const updates = { banner_text, banner_link, banner_enabled };
+      for (const [key, value] of Object.entries(updates)) {
+        if (value !== undefined) {
+          await pool.query(
+            `INSERT INTO site_settings (key, value, updated_at)
+             VALUES ($1, $2, CURRENT_TIMESTAMP)
+             ON CONFLICT (key) DO UPDATE SET value = $2, updated_at = CURRENT_TIMESTAMP`,
+            [key, value]
+          );
+        }
       }
 
-      if (banner_link !== undefined) {
-        await pool.query(
-          `INSERT INTO site_settings (key, value, updated_at)
-           VALUES ('banner_link', $1, CURRENT_TIMESTAMP)
-           ON CONFLICT (key) DO UPDATE SET value = $1, updated_at = CURRENT_TIMESTAMP`,
-          [banner_link]
-        );
+      // Read back current settings
+      const result = await pool.query(
+        "SELECT key, value FROM site_settings WHERE key IN ('banner_text', 'banner_link', 'banner_enabled')"
+      );
+      const settings = {};
+      result.rows.forEach(row => { settings[row.key] = row.value; });
+
+      const text = settings.banner_text || '';
+      const link = settings.banner_link || '';
+      const enabled = settings.banner_enabled === 'true';
+
+      // Generate new marquee HTML
+      let newMarquee;
+      if (enabled && text) {
+        const linkHtml = link
+          ? `<a href="${link}">${text}</a>`
+          : text;
+        newMarquee = `<marquee scrolldelay="10" height="35px" vspace="1%" hspace="1%" scrollamount="5" behavior="scroll" direction="left">\n    ${linkHtml} \n</marquee>`;
+      } else {
+        newMarquee = '<!-- banner disabled -->';
       }
 
-      if (banner_enabled !== undefined) {
-        await pool.query(
-          `INSERT INTO site_settings (key, value, updated_at)
-           VALUES ('banner_enabled', $1, CURRENT_TIMESTAMP)
-           ON CONFLICT (key) DO UPDATE SET value = $1, updated_at = CURRENT_TIMESTAMP`,
-          [banner_enabled]
+      // Update index.html via GitHub API
+      const deployResult = await updateGitHubFile('dist/index.html', (html) => {
+        // Replace the marquee and its container
+        return html.replace(
+          /<marquee[^>]*>[\s\S]*?<\/marquee>/i,
+          newMarquee
+        ).replace(
+          /<!-- banner disabled -->/,
+          newMarquee === '<!-- banner disabled -->' ? newMarquee : newMarquee
         );
-      }
+      });
 
       return res.status(200).json({
         success: true,
-        message: 'Banner settings updated successfully'
+        message: 'Banner settings updated successfully',
+        deployed: deployResult.updated,
+        deployMessage: deployResult.reason || 'Auto-deployed to Vercel'
       });
 
     } else {
@@ -75,9 +129,7 @@ module.exports = async function handler(req, res) {
 
   } catch (error) {
     console.error('Banner settings error:', error);
-    if (error.message === 'Unauthorized') {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
+    if (error.message === 'Unauthorized') return res.status(401).json({ error: 'Unauthorized' });
     return res.status(500).json({ error: 'Internal server error' });
   } finally {
     await pool.end().catch(() => {});
