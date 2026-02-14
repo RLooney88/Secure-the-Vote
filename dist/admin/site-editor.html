@@ -674,8 +674,17 @@
             if (line.startsWith('data: ')) {
               try {
                 const event = JSON.parse(line.slice(6));
-                if (event.type === 'status' && statusEl) {
-                  statusEl.textContent = event.status;
+                if (event.type === 'status') {
+                  // Tool activity — show as spinner status
+                  const el = document.getElementById(statusId);
+                  if (el) el.textContent = event.status;
+                } else if (event.type === 'progress') {
+                  // AI's intermediate text — show as status (first ~80 chars)
+                  const el = document.getElementById(statusId);
+                  if (el) {
+                    const short = event.text.length > 80 ? event.text.slice(0, 80) + '...' : event.text;
+                    el.textContent = short;
+                  }
                 } else if (event.type === 'done') {
                   finalMessage = event.message;
                 }
