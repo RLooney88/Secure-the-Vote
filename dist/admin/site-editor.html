@@ -640,7 +640,7 @@
       
       // Add a status message that we'll update in real-time
       const statusId = 'status-' + Date.now();
-      addMessage('assistant', '<span class="ai-status" id="' + statusId + '">Thinking...</span>');
+      addMessage('assistant', '<span class="ai-status" id="' + statusId + '">Thinking...</span>', true);
       const statusEl = document.getElementById(statusId);
       
       try {
@@ -711,7 +711,7 @@
       }
     }
     
-    function addMessage(role, content) {
+    function addMessage(role, content, useHTML = false) {
       const messages = document.getElementById('messages');
       
       const message = document.createElement('div');
@@ -723,7 +723,11 @@
       
       const messageContent = document.createElement('div');
       messageContent.className = 'message-content';
-      messageContent.textContent = content;
+      if (useHTML) {
+        messageContent.innerHTML = content;
+      } else {
+        messageContent.textContent = content;
+      }
       
       message.appendChild(avatar);
       message.appendChild(messageContent);
