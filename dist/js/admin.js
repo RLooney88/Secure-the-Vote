@@ -1383,7 +1383,7 @@
   // Vercel configuration
   const VERCEL_CONFIG = {
     projectId: 'prj_ToDYtaNFY2C3qT8vWrDPvoxIebn5',
-    stagingUrl: 'https://secure-the-vote-git-staging-rlooney88s-projects.vercel.app',
+    stagingUrl: 'https://secure-the-vote-git-staging-rcl-integrated.vercel.app',
     productionUrl: 'https://securethevotemd.com'
   };
 
