@@ -125,17 +125,26 @@ module.exports = async function handler(req, res) {
     const day = String(publishDate.getDate()).padStart(2, '0');
     const filePath = `dist/${year}/${month}/${day}/${post.slug}/index.html`;
 
-    // Buffer the post HTML as a pending edit
+    // Buffer the post HTML as a pending edit (write to site-builder DB which has pending_edits)
     let buffered = false;
     try {
-      await pool.query(
-        `INSERT INTO pending_edits (id, site_id, file_path, content, change_description, status, created_at)
-         VALUES (gen_random_uuid(), 'securethevotemd', $1, $2, $3, 'pending', NOW())
-         ON CONFLICT (site_id, file_path, status) WHERE status = 'pending'
-         DO UPDATE SET content = $2, change_description = $3, created_at = NOW()`,
-        [filePath, html, `Publish post: ${post.title.substring(0, 60)}`]
-      );
-      buffered = true;
+      const siteBuilderPool = new Pool({
+        connectionString: process.env.SITE_BUILDER_DATABASE_URL || process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false },
+        max: 1
+      });
+      try {
+        await siteBuilderPool.query(
+          `INSERT INTO pending_edits (id, site_id, file_path, content, change_description, status, created_at)
+           VALUES (gen_random_uuid(), 'securethevotemd', $1, $2, $3, 'pending', NOW())
+           ON CONFLICT (site_id, file_path, status) WHERE status = 'pending'
+           DO UPDATE SET content = $2, change_description = $3, created_at = NOW()`,
+          [filePath, html, `Publish post: ${post.title.substring(0, 60)}`]
+        );
+        buffered = true;
+      } finally {
+        await siteBuilderPool.end().catch(() => {});
+      }
     } catch (bufferErr) {
       console.error('Failed to buffer post:', bufferErr.message);
     }
