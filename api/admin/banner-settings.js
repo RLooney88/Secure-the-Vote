@@ -105,23 +105,67 @@ module.exports = async function handler(req, res) {
         newMarquee = '<!-- banner disabled -->';
       }
 
-      // Update index.html via GitHub API
-      const deployResult = await updateGitHubFile('dist/index.html', (html) => {
-        // Replace the marquee and its container
-        return html.replace(
-          /<marquee[^>]*>[\s\S]*?<\/marquee>/i,
-          newMarquee
-        ).replace(
-          /<!-- banner disabled -->/,
-          newMarquee === '<!-- banner disabled -->' ? newMarquee : newMarquee
-        );
-      });
+      // Read current index.html from GitHub (main branch = production)
+      const token = process.env.GITHUB_TOKEN;
+      const repo = 'RLooney88/Secure-the-Vote';
+      const filePath = 'dist/index.html';
+      const headers = {
+        'Authorization': `token ${token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'User-Agent': 'SecureTheVote-Admin'
+      };
+
+      let buffered = false;
+      if (token) {
+        try {
+          // Check if there's already a pending edit for this file
+          const existingEdit = await pool.query(
+            "SELECT content FROM pending_edits WHERE site_id = 'securethevotemd' AND file_path = $1 AND status = 'pending'",
+            [filePath]
+          );
+
+          let currentHtml;
+          if (existingEdit.rows.length > 0) {
+            // Use the pending version (so we stack edits)
+            currentHtml = existingEdit.rows[0].content;
+          } else {
+            // Read from GitHub main branch
+            const getResp = await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}?ref=main`, { headers });
+            if (getResp.ok) {
+              const fileData = await getResp.json();
+              currentHtml = Buffer.from(fileData.content, 'base64').toString('utf8');
+            }
+          }
+
+          if (currentHtml) {
+            const updatedHtml = currentHtml.replace(
+              /<marquee[^>]*>[\s\S]*?<\/marquee>/i,
+              newMarquee
+            ).replace(
+              /<!-- banner disabled -->/,
+              newMarquee === '<!-- banner disabled -->' ? newMarquee : newMarquee
+            );
+
+            // Write to pending_edits buffer
+            await pool.query(
+              `INSERT INTO pending_edits (id, site_id, file_path, content, change_description, status, created_at)
+               VALUES (gen_random_uuid(), 'securethevotemd', $1, $2, $3, 'pending', NOW())
+               ON CONFLICT (site_id, file_path, status) WHERE status = 'pending'
+               DO UPDATE SET content = $2, change_description = $3, created_at = NOW()`,
+              [filePath, updatedHtml, `Banner update: ${enabled ? text.substring(0, 50) : 'disabled'}`]
+            );
+            buffered = true;
+          }
+        } catch (bufferErr) {
+          console.error('Failed to buffer banner edit:', bufferErr.message);
+        }
+      }
 
       return res.status(200).json({
         success: true,
         message: 'Banner settings updated successfully',
-        deployed: deployResult.updated,
-        deployMessage: deployResult.reason || 'Auto-deployed to Vercel'
+        buffered,
+        pendingPreview: buffered ? 'Click "Preview Edits" to see changes' : 'Could not buffer edit'
       });
 
     } else {
