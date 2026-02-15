@@ -1472,7 +1472,10 @@
         elements.dashboardView.style.display = 'none';
       });
       
-      // Update pending edits badge on load and poll every 30 seconds (sync only on login)
+      // Sync staging on page load/refresh (resets to production baseline)
+      syncStagingToMain();
+      
+      // Update pending edits badge on load and poll every 30 seconds
       updatePendingEditsBadge();
       setInterval(updatePendingEditsBadge, 30000);
     } else {
@@ -1884,7 +1887,7 @@
         if (data.count > 0) {
           elements.previewStagingBtn.textContent = `Preview Edits (${data.count})`;
         } else {
-          elements.previewStagingBtn.textContent = 'Preview Staging';
+          elements.previewStagingBtn.textContent = 'Preview Edits';
         }
       }
     } catch (error) {
