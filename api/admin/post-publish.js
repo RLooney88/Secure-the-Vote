@@ -125,38 +125,30 @@ module.exports = async function handler(req, res) {
     const day = String(publishDate.getDate()).padStart(2, '0');
     const filePath = `dist/${year}/${month}/${day}/${post.slug}/index.html`;
 
-    // If GITHUB_TOKEN is available, commit to GitHub
-    if (process.env.GITHUB_TOKEN) {
-      try {
-        // GitHub API integration would go here
-        // For now, return the HTML for manual deployment
-        return res.status(200).json({
-          success: true,
-          message: 'Post published! Auto-deploy to GitHub pending.',
-          html,
-          filePath,
-          post: { ...post, status: 'published', published_at: publishDate }
-        });
-      } catch (githubError) {
-        console.error('GitHub commit error:', githubError);
-        return res.status(200).json({
-          success: true,
-          message: 'Post published! GitHub commit failed - download HTML manually.',
-          html,
-          filePath,
-          post: { ...post, status: 'published', published_at: publishDate }
-        });
-      }
-    } else {
-      // No GitHub token - return HTML for download
-      return res.status(200).json({
-        success: true,
-        message: 'Post published! Download HTML and deploy manually.',
-        html,
-        filePath,
-        post: { ...post, status: 'published', published_at: publishDate }
-      });
+    // Buffer the post HTML as a pending edit
+    let buffered = false;
+    try {
+      await pool.query(
+        `INSERT INTO pending_edits (id, site_id, file_path, content, change_description, status, created_at)
+         VALUES (gen_random_uuid(), 'securethevotemd', $1, $2, $3, 'pending', NOW())
+         ON CONFLICT (site_id, file_path, status) WHERE status = 'pending'
+         DO UPDATE SET content = $2, change_description = $3, created_at = NOW()`,
+        [filePath, html, `Publish post: ${post.title.substring(0, 60)}`]
+      );
+      buffered = true;
+    } catch (bufferErr) {
+      console.error('Failed to buffer post:', bufferErr.message);
     }
+
+    return res.status(200).json({
+      success: true,
+      message: buffered
+        ? 'Post published! Click "Preview Edits" to see it on the staging site.'
+        : 'Post published to database. Preview buffering failed.',
+      buffered,
+      filePath,
+      post: { ...post, status: 'published', published_at: publishDate }
+    });
 
   } catch (error) {
     console.error('Publish error:', error);
