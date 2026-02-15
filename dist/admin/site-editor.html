@@ -702,6 +702,7 @@
         </button>
         <input type="file" id="chatFileInput" accept="image/*" hidden>
         <button id="send" onclick="sendMessage()">Send</button>
+        <button id="stop-btn" onclick="stopAgent()" style="display:none; background:#dc3545; color:#fff; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:600;">Stop</button>
       </div>
     </div>
   </div>
@@ -711,6 +712,13 @@
     const SITE_ID = 'securethevotemd';
 
     let isLoading = false;
+    let abortController = null;
+    
+    function stopAgent() {
+      if (abortController) {
+        abortController.abort();
+      }
+    }
     let selectedFile = null;
     let uploadedFiles = [];
     let chatAttachments = []; // Images attached to current message
@@ -883,8 +891,9 @@
 
       // Show loading with status indicator
       isLoading = true;
-      document.getElementById('send').disabled = true;
-      document.getElementById('send').innerHTML = '<span class="loading"></span>';
+      abortController = new AbortController();
+      document.getElementById('send').style.display = 'none';
+      document.getElementById('stop-btn').style.display = 'inline-block';
 
       // Add a live message bubble that we'll build up incrementally
       const msgId = 'live-msg-' + Date.now();
@@ -902,7 +911,8 @@
           body: JSON.stringify({
             message,
             images: imageUrls.length > 0 ? imageUrls : undefined
-          })
+          }),
+          signal: abortController.signal
         });
 
         if (!res.ok) {
@@ -974,14 +984,24 @@
         }
         
       } catch (error) {
-        console.error('Error:', error);
-        const parentMsg = liveEl?.closest('.message');
-        if (parentMsg) parentMsg.remove();
-        addMessage('assistant', `Error: ${error.message}`);
+        if (error.name === 'AbortError') {
+          // User stopped the agent
+          const parentMsg = liveEl?.closest('.message');
+          if (parentMsg) parentMsg.remove();
+          if (segments.length === 0) {
+            addMessage('assistant', 'Stopped.');
+          }
+        } else {
+          console.error('Error:', error);
+          const parentMsg = liveEl?.closest('.message');
+          if (parentMsg) parentMsg.remove();
+          addMessage('assistant', `Error: ${error.message}`);
+        }
       } finally {
         isLoading = false;
-        document.getElementById('send').disabled = false;
-        document.getElementById('send').textContent = 'Send';
+        abortController = null;
+        document.getElementById('send').style.display = 'inline-block';
+        document.getElementById('stop-btn').style.display = 'none';
       }
     }
     
