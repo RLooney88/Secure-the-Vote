@@ -1051,6 +1051,10 @@
         loadSignatures(),
         loadPetitionsFilter()
       ]);
+
+      // Sync staging to production on fresh login only
+      syncStagingToMain();
+      updatePendingEditsBadge();
     } catch (error) {
       showError(error.message);
     } finally {
@@ -1224,8 +1228,7 @@
     } else if (tabName === 'branding' && validPages.length === 0) {
       loadBrandGuide();
     } else if (tabName === 'site-editor') {
-      // Sync staging to match production before editing
-      syncStagingToMain();
+      // No longer syncing here — sync only happens on login
     }
   }
 
@@ -1469,10 +1472,7 @@
         elements.dashboardView.style.display = 'none';
       });
       
-      // Sync staging to main on every page load/refresh
-      syncStagingToMain();
-      
-      // Update pending edits badge on load and poll every 30 seconds
+      // Update pending edits badge on load and poll every 30 seconds (sync only on login)
       updatePendingEditsBadge();
       setInterval(updatePendingEditsBadge, 30000);
     } else {
