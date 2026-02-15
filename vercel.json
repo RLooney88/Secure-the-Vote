@@ -37,18 +37,10 @@
       ]
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1",
-      "status": 404
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
     }
   ]
 }
