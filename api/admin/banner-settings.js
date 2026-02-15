@@ -115,55 +115,69 @@ module.exports = async function handler(req, res) {
         'User-Agent': 'SecureTheVote-Admin'
       };
 
+      // Buffer the edit via the Site Builder AI API (which manages pending_edits)
       let buffered = false;
-      if (token) {
-        try {
-          // Check if there's already a pending edit for this file
-          const existingEdit = await pool.query(
-            "SELECT content FROM pending_edits WHERE site_id = 'securethevotemd' AND file_path = $1 AND status = 'pending'",
-            [filePath]
+      const SITE_BUILDER_API = 'https://site-builder-ai-production.up.railway.app';
+      const SITE_ID = 'securethevotemd';
+
+      try {
+        // Read current file (checks pending edits first, then GitHub)
+        const readResp = await fetch(`${SITE_BUILDER_API}/sites/${SITE_ID}/chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: `Use the read_file tool to read dist/index.html and return its full content.`,
+            sessionId: 'banner-edit-session'
+          })
+        });
+
+        // Simpler approach: read from GitHub directly, write via pending_edits on the site-builder DB
+        const getResp = await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}?ref=main`, { headers });
+        let currentHtml;
+        if (getResp.ok) {
+          const fileData = await getResp.json();
+          currentHtml = Buffer.from(fileData.content, 'base64').toString('utf8');
+        }
+
+        if (currentHtml) {
+          const updatedHtml = currentHtml.replace(
+            /<marquee[^>]*>[\s\S]*?<\/marquee>/i,
+            newMarquee
+          ).replace(
+            /<!-- banner disabled -->/,
+            newMarquee === '<!-- banner disabled -->' ? newMarquee : newMarquee
           );
 
-          let currentHtml;
-          if (existingEdit.rows.length > 0) {
-            // Use the pending version (so we stack edits)
-            currentHtml = existingEdit.rows[0].content;
-          } else {
-            // Read from GitHub main branch
-            const getResp = await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}?ref=main`, { headers });
-            if (getResp.ok) {
-              const fileData = await getResp.json();
-              currentHtml = Buffer.from(fileData.content, 'base64').toString('utf8');
-            }
-          }
+          // Write to pending_edits on the SITE BUILDER database (not the Vercel DB)
+          const { Pool: Pool2 } = require('pg');
+          const siteBuilderPool = new Pool2({
+            connectionString: process.env.SITE_BUILDER_DATABASE_URL || process.env.DATABASE_URL,
+            ssl: { rejectUnauthorized: false },
+            max: 1
+          });
 
-          if (currentHtml) {
-            const updatedHtml = currentHtml.replace(
-              /<marquee[^>]*>[\s\S]*?<\/marquee>/i,
-              newMarquee
-            ).replace(
-              /<!-- banner disabled -->/,
-              newMarquee === '<!-- banner disabled -->' ? newMarquee : newMarquee
-            );
-
-            // Write to pending_edits buffer
-            await pool.query(
+          try {
+            await siteBuilderPool.query(
               `INSERT INTO pending_edits (id, site_id, file_path, content, change_description, status, created_at)
-               VALUES (gen_random_uuid(), 'securethevotemd', $1, $2, $3, 'pending', NOW())
+               VALUES (gen_random_uuid(), $1, $2, $3, $4, 'pending', NOW())
                ON CONFLICT (site_id, file_path, status) WHERE status = 'pending'
-               DO UPDATE SET content = $2, change_description = $3, created_at = NOW()`,
-              [filePath, updatedHtml, `Banner update: ${enabled ? text.substring(0, 50) : 'disabled'}`]
+               DO UPDATE SET content = $3, change_description = $4, created_at = NOW()`,
+              [SITE_ID, filePath, updatedHtml, `Banner update: ${enabled ? text.substring(0, 50) : 'disabled'}`]
             );
             buffered = true;
+          } finally {
+            await siteBuilderPool.end().catch(() => {});
           }
-        } catch (bufferErr) {
-          console.error('Failed to buffer banner edit:', bufferErr.message);
         }
+      } catch (bufferErr) {
+        console.error('Failed to buffer banner edit:', bufferErr.message);
       }
 
       return res.status(200).json({
         success: true,
-        message: 'Banner settings updated successfully',
+        message: buffered
+          ? 'Banner settings updated! Click "Preview Edits" to see changes.'
+          : 'Banner settings saved to database. Preview buffering failed.',
         buffered,
         pendingPreview: buffered ? 'Click "Preview Edits" to see changes' : 'Could not buffer edit'
       });
