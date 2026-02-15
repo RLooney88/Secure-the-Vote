@@ -1223,6 +1223,26 @@
       loadPetitionsList();
     } else if (tabName === 'branding' && validPages.length === 0) {
       loadBrandGuide();
+    } else if (tabName === 'site-editor') {
+      // Sync staging to match production before editing
+      syncStagingToMain();
+    }
+  }
+
+  // Sync staging branch to match main (production) before editing
+  async function syncStagingToMain() {
+    const API_URL = 'https://site-builder-ai-production.up.railway.app';
+    const SITE_ID = 'securethevotemd';
+    try {
+      console.log('Syncing staging to production...');
+      const resp = await fetch(`${API_URL}/sites/${SITE_ID}/sync-staging`, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+      if (resp.ok) {
+        const data = await resp.json();
+        console.log('Staging synced:', data.sha?.slice(0, 7));
+        updatePendingEditsBadge();
+      }
+    } catch (e) {
+      console.log('Staging sync failed (non-critical):', e.message);
     }
   }
 
@@ -1448,6 +1468,13 @@
         elements.loginView.style.display = 'flex';
         elements.dashboardView.style.display = 'none';
       });
+      
+      // Sync staging to main on every page load/refresh
+      syncStagingToMain();
+      
+      // Update pending edits badge on load and poll every 30 seconds
+      updatePendingEditsBadge();
+      setInterval(updatePendingEditsBadge, 30000);
     } else {
       elements.loginView.style.display = 'flex';
       elements.dashboardView.style.display = 'none';
@@ -1845,8 +1872,59 @@
     deploymentState.stageTimeoutId = setTimeout(advanceToNextStage, 2500);
   }
 
+  // Update preview button with pending edit count
+  async function updatePendingEditsBadge() {
+    const API_URL = 'https://site-builder-ai-production.up.railway.app';
+    const SITE_ID = 'securethevotemd';
+    
+    try {
+      const res = await fetch(`${API_URL}/sites/${SITE_ID}/pending-edits`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.count > 0) {
+          elements.previewStagingBtn.textContent = `Preview Edits (${data.count})`;
+        } else {
+          elements.previewStagingBtn.textContent = 'Preview Staging';
+        }
+      }
+    } catch (error) {
+      console.log('Could not fetch pending edits count:', error);
+    }
+  }
+
   // Preview staging deployment with modal
-  function previewStaging() {
+  async function previewStaging() {
+    const API_URL = 'https://site-builder-ai-production.up.railway.app';
+    const SITE_ID = 'securethevotemd';
+    
+    // IMPORTANT: Push pending edits to staging BEFORE starting the preview modal
+    try {
+      const pushRes = await fetch(`${API_URL}/sites/${SITE_ID}/push-to-staging`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      
+      if (pushRes.ok) {
+        const pushData = await pushRes.json();
+        if (pushData.pushed === 0) {
+          // No changes to preview — show message and skip modal
+          alert('No pending changes to preview. The staging site is up to date.');
+          return;
+        }
+        console.log(`Pushed ${pushData.pushed} pending edits to staging`);
+        // Update badge after pushing
+        updatePendingEditsBadge();
+      } else {
+        const pushErr = await pushRes.json();
+        console.error('Failed to push pending edits:', pushErr.error);
+        // Continue anyway — maybe there are changes already on staging
+      }
+    } catch (pushError) {
+      console.error('Error pushing to staging:', pushError);
+      // Continue anyway
+    }
+    
+    // Now start the deployment modal to poll Vercel
     startDeploymentModal('preview');
   }
 
