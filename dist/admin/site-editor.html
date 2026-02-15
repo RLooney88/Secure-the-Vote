@@ -935,18 +935,12 @@
                     statusEl.style.display = 'block';
                   }
                 } else if (event.type === 'progress') {
-                  // AI's intermediate text — append as a new paragraph
-                  if (liveEl && event.text.trim()) {
-                    const p = document.createElement('p');
-                    p.textContent = event.text;
-                    p.style.margin = '8px 0';
-                    p.style.opacity = '0';
-                    p.style.transition = 'opacity 0.3s ease';
-                    liveEl.appendChild(p);
-                    // Fade in
-                    requestAnimationFrame(() => p.style.opacity = '1');
-                    // Hide status while showing text
+                  // AI's intermediate text — create a new message bubble for each segment
+                  if (event.text.trim()) {
+                    // Hide the status indicator in the original bubble
                     if (statusEl) statusEl.style.display = 'none';
+                    // Add as a new assistant message bubble
+                    addMessage('assistant', event.text);
                     // Auto-scroll
                     const chatMessages = document.getElementById('chat-messages');
                     if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -960,19 +954,13 @@
           }
         }
         
-        // Replace the live message with the final polished response
+        // Remove the original status bubble (segments are already in their own bubbles)
         const parentMsg = liveEl?.closest('.message');
-        if (parentMsg) {
-          const contentEl = parentMsg.querySelector('.message-content');
-          if (contentEl && finalMessage) {
-            // Use the final message (which may have markdown/formatting)
-            contentEl.innerHTML = finalMessage;
-          } else if (contentEl && segments.length > 0) {
-            // No final message — keep the streamed segments
-            contentEl.innerHTML = segments.map(s => '<p style="margin:8px 0">' + s + '</p>').join('');
-          }
-          // Remove status indicator
-          if (statusEl) statusEl.remove();
+        if (parentMsg) parentMsg.remove();
+        
+        // If there's a final message that differs from streamed segments, add it
+        if (finalMessage && finalMessage !== segments.join('')) {
+          addMessage('assistant', finalMessage);
         }
         
         const fullText = finalMessage || segments.join(' ');
