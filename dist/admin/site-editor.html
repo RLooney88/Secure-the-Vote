@@ -886,10 +886,13 @@
       document.getElementById('send').disabled = true;
       document.getElementById('send').innerHTML = '<span class="loading"></span>';
 
-      // Add a status message that we'll update in real-time
+      // Add a live message bubble that we'll build up incrementally
+      const msgId = 'live-msg-' + Date.now();
       const statusId = 'status-' + Date.now();
-      addMessage('assistant', '<span class="ai-status" id="' + statusId + '">Thinking...</span>', true);
+      addMessage('assistant', '<div id="' + msgId + '"></div><div class="ai-status" id="' + statusId + '">Thinking...</div>', true);
+      const liveEl = document.getElementById(msgId);
       const statusEl = document.getElementById(statusId);
+      let segments = []; // Array of text segments from progress events
 
       try {
         // Use SSE streaming for live status updates
@@ -926,15 +929,28 @@
               try {
                 const event = JSON.parse(line.slice(6));
                 if (event.type === 'status') {
-                  // Tool activity — show as spinner status
-                  const el = document.getElementById(statusId);
-                  if (el) el.textContent = event.status;
+                  // Tool activity — show as inline status
+                  if (statusEl) {
+                    statusEl.textContent = event.status;
+                    statusEl.style.display = 'block';
+                  }
                 } else if (event.type === 'progress') {
-                  // AI's intermediate text — show as status (first ~80 chars)
-                  const el = document.getElementById(statusId);
-                  if (el) {
-                    const short = event.text.length > 80 ? event.text.slice(0, 80) + '...' : event.text;
-                    el.textContent = short;
+                  // AI's intermediate text — append as a new paragraph
+                  if (liveEl && event.text.trim()) {
+                    const p = document.createElement('p');
+                    p.textContent = event.text;
+                    p.style.margin = '8px 0';
+                    p.style.opacity = '0';
+                    p.style.transition = 'opacity 0.3s ease';
+                    liveEl.appendChild(p);
+                    // Fade in
+                    requestAnimationFrame(() => p.style.opacity = '1');
+                    // Hide status while showing text
+                    if (statusEl) statusEl.style.display = 'none';
+                    // Auto-scroll
+                    const chatMessages = document.getElementById('chat-messages');
+                    if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
+                    segments.push(event.text);
                   }
                 } else if (event.type === 'done') {
                   finalMessage = event.message;
@@ -944,25 +960,35 @@
           }
         }
         
-        // Replace status message with final response
-        const statusMsg = statusEl?.closest('.message');
-        if (statusMsg) statusMsg.remove();
+        // Replace the live message with the final polished response
+        const parentMsg = liveEl?.closest('.message');
+        if (parentMsg) {
+          const contentEl = parentMsg.querySelector('.message-content');
+          if (contentEl && finalMessage) {
+            // Use the final message (which may have markdown/formatting)
+            contentEl.innerHTML = finalMessage;
+          } else if (contentEl && segments.length > 0) {
+            // No final message — keep the streamed segments
+            contentEl.innerHTML = segments.map(s => '<p style="margin:8px 0">' + s + '</p>').join('');
+          }
+          // Remove status indicator
+          if (statusEl) statusEl.remove();
+        }
         
-        if (finalMessage) {
-          addMessage('assistant', finalMessage);
-          
+        const fullText = finalMessage || segments.join(' ');
+        if (fullText) {
           // Check if this was an edit action - show preview/approve buttons
-          if (finalMessage.includes('Preview') || finalMessage.includes('updated') || finalMessage.includes('changed')) {
+          if (fullText.includes('Preview') || fullText.includes('updated') || fullText.includes('changed')) {
             addActions();
           }
-        } else {
+        } else if (segments.length === 0) {
           addMessage('assistant', 'Something went wrong — no response received. Try again?');
         }
         
       } catch (error) {
         console.error('Error:', error);
-        const statusMsg = statusEl?.closest('.message');
-        if (statusMsg) statusMsg.remove();
+        const parentMsg = liveEl?.closest('.message');
+        if (parentMsg) parentMsg.remove();
         addMessage('assistant', `Error: ${error.message}`);
       } finally {
         isLoading = false;
