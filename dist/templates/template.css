@@ -547,6 +547,16 @@ html, body {
 
 /* Mobile (< 768px) */
 @media (max-width: 767px) {
+  
+  .main-nav-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .site-logo { order: 1; }
+  .hamburger-menu { order: 3; }
+  .primary-nav { order: 2; }
+  .donate-btn { order: 4; }
   /* Show hamburger menu */
   .hamburger-menu {
     display: flex;
