@@ -270,7 +270,7 @@ Promise.all([
   fetch('/templates/template.css').then(r => r.text()),
   fetch('/templates/mobile-menu.js').then(r => r.text()).catch(() => '')
 ]).then(([headerHtml, footerHtml, css, menuJs]) => {
-  const varFix = \`<style>
+  const varFix = `<style>
     :host { display: block; width: 100%; }
     :host * { box-sizing: border-box; }
     :root, :host {
@@ -290,6 +290,35 @@ Promise.all([
       --top-bar-height: 40px;
       --banner-height: 48px;
     }
-  </style>\
+  </style>`;
+  
+  // Header shadow DOM
+  const headerHost = document.getElementById('site-header');
+  const headerShadow = headerHost.attachShadow({ mode: 'open' });
+  headerShadow.innerHTML = faLink + varFix + '<style>' + css + '</style>' + headerHtml;
+  if (menuJs) {
+    const s2 = document.createElement('script');
+    s2.textContent = menuJs;
+    headerShadow.appendChild(s2);
+  }
+
+  // Footer shadow DOM
+  const footerHost = document.getElementById('site-footer');
+  const footerShadow = footerHost.attachShadow({ mode: 'open' });
+  footerShadow.innerHTML = faLink + varFix + '<style>' + css + '</style>' + footerHtml;
+  
+  // Scroll-up animation: IntersectionObserver watches the footer host from the main document
+  // (Shadow DOM elements aren't directly observable from outside, but the host element is)
+  const logoBox = footerShadow.querySelector('.footer-logo-box');
+  if (logoBox) {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { logoBox.classList.add('visible'); obs.unobserve(e.target); }});
+    }, { root: null, threshold: 0.15 });
+    // Observe the host element (visible in main DOM) as a proxy for the shadow content
+    obs.observe(footerHost);
+  }
+});
+</script>
+<!-- TEMPLATE INJECTION END -->
 </body>
 </html>
