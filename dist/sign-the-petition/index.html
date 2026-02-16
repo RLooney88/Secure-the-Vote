@@ -173,7 +173,7 @@
 <div class="petition-info">
   <h2 id="petition-title">Loading petition...</h2>
   <p class="petition-desc" id="petition-desc"></p>
-  <div class="petition-stats-bar">
+  <div class="petition-stats">
     <span class="stat-number" id="signature-count">...</span>
     <span class="stat-label" id="stat-label">signatures and counting</span>
   </div>
@@ -421,49 +421,6 @@ fetch('https://site-builder-ai-production.up.railway.app/sites/securethevotemd/t
 <!-- TEMPLATE INJECTION END -->
 <script src="/js/mobile-menu.js"></script>
 
-<script>
-(function() {
-  // Fetch petition data
-  fetch('/api/petition/list')
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      if (data && data.length > 0) {
-        var petition = data[0]; // First active petition
-        var titleEl = document.getElementById('petition-title');
-        var descEl = document.getElementById('petition-desc');
-        if (titleEl && petition.title) titleEl.textContent = petition.title;
-        if (descEl && petition.description) descEl.textContent = petition.description;
-      }
-    })
-    .catch(function() {
-      var titleEl = document.getElementById('petition-title');
-      if (titleEl) titleEl.textContent = 'Sign Our Petition';
-    });
 
-  // Fetch signature count
-  fetch('/api/admin/signatures?count=true')
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      var countEl = document.getElementById('signature-count');
-      if (countEl) {
-        var count = data.total || data.count || 0;
-        countEl.textContent = count.toLocaleString();
-      }
-    })
-    .catch(function() {
-      // Try alternate endpoint
-      fetch('/api/petition/submit?count=true')
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
-          var countEl = document.getElementById('signature-count');
-          if (countEl) countEl.textContent = (data.total || data.count || 0).toLocaleString();
-        })
-        .catch(function() {
-          var countEl = document.getElementById('signature-count');
-          if (countEl) countEl.textContent = '91';
-        });
-    });
-})();
-</script>
 </body>
 </html>
