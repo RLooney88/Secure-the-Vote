@@ -5,271 +5,86 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign the Petition - Secure the Vote Maryland</title>
   <meta name="description" content="Join thousands of Marylanders demanding election integrity. Sign our petition for voter ID, signature verification, and transparent elections.">
-  
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="/images/favicon.png">
-  
-  <!-- Styles -->
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Questrial&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      margin: 0;
-      padding: 0;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Questrial', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; color: #333; }
     
     .petition-hero {
       background: linear-gradient(135deg, #9B1E37 0%, #7a1829 100%);
-      color: white;
-      padding: 80px 20px;
-      text-align: center;
+      color: white; padding: 70px 20px; text-align: center;
     }
-    
-    .petition-hero h1 {
-      font-size: 3em;
-      margin: 0 0 20px 0;
-      font-weight: 700;
-    }
-    
-    .petition-hero p {
-      font-size: 1.3em;
-      max-width: 800px;
-      margin: 0 auto 30px auto;
-      opacity: 0.95;
-    }
-    
+    .petition-hero h1 { font-family: 'Poppins', sans-serif; font-size: 2.6em; margin-bottom: 16px; font-weight: 700; }
+    .petition-hero p { font-size: 1.2em; max-width: 700px; margin: 0 auto 24px; opacity: 0.95; }
     .petition-stats {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 20px;
-      border-radius: 10px;
-      display: inline-block;
-      margin-top: 20px;
+      background: rgba(255,255,255,0.12); padding: 16px 28px; border-radius: 10px;
+      display: inline-block; margin-top: 10px;
     }
+    .petition-stats .stat-number { font-size: 2.4em; font-weight: bold; display: block; }
+    .petition-stats .stat-label { font-size: 1em; opacity: 0.9; }
     
-    .petition-stats .stat-number {
-      font-size: 2.5em;
-      font-weight: bold;
-      display: block;
-    }
+    .petition-content { max-width: 1100px; margin: 0 auto; padding: 50px 20px; }
+    .petition-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: start; }
+    @media (max-width: 900px) { .petition-grid { grid-template-columns: 1fr; gap: 30px; } }
     
-    .petition-stats .stat-label {
-      font-size: 1em;
-      opacity: 0.9;
-    }
+    .petition-info h2 { font-family: 'Poppins', sans-serif; color: #9B1E37; font-size: 1.8em; margin-bottom: 16px; }
+    .petition-info h3 { font-family: 'Poppins', sans-serif; color: #9B1E37; font-size: 1.3em; margin-top: 28px; margin-bottom: 12px; }
+    .petition-info p { margin-bottom: 12px; font-size: 1.05em; }
+    .petition-info ul { list-style: none; padding: 0; }
+    .petition-info ul li { padding: 10px 0 10px 28px; position: relative; font-size: 1.02em; }
+    .petition-info ul li:before { content: "\2713"; position: absolute; left: 0; color: #9B1E37; font-weight: bold; font-size: 1.2em; }
     
-    .petition-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 60px 20px;
+    .petition-message {
+      background: #f8f9fa; border-left: 4px solid #9B1E37; padding: 20px 24px;
+      margin: 24px 0; border-radius: 0 8px 8px 0; font-size: 0.95em; line-height: 1.7;
+      max-height: 300px; overflow-y: auto;
     }
-    
-    .petition-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 60px;
-      align-items: start;
-    }
-    
-    @media (max-width: 968px) {
-      .petition-grid {
-        grid-template-columns: 1fr;
-        gap: 40px;
-      }
-    }
-    
-    .petition-info h2 {
-      color: #9B1E37;
-      font-size: 2em;
-      margin-bottom: 20px;
-    }
-    
-    .petition-info h3 {
-      color: #9B1E37;
-      font-size: 1.5em;
-      margin-top: 30px;
-      margin-bottom: 15px;
-    }
-    
-    .petition-info ul {
-      list-style: none;
-      padding: 0;
-    }
-    
-    .petition-info ul li {
-      padding: 12px 0;
-      padding-left: 30px;
-      position: relative;
-    }
-    
-    .petition-info ul li:before {
-      content: "✓";
-      position: absolute;
-      left: 0;
-      color: #9B1E37;
-      font-weight: bold;
-      font-size: 1.3em;
-    }
+    .petition-message h3 { font-family: 'Poppins', sans-serif; color: #9B1E37; margin: 0 0 12px 0; font-size: 1.2em; }
+    .petition-message p { margin-bottom: 8px; }
     
     .petition-form-container {
-      background: #f8f9fa;
-      padding: 40px;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      background: #f8f9fa; padding: 32px; border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08); position: sticky; top: 20px;
     }
-    
-    .petition-form-container h2 {
-      color: #9B1E37;
-      margin-top: 0;
-      margin-bottom: 25px;
-      font-size: 1.8em;
+    .petition-form-container h2 { font-family: 'Poppins', sans-serif; color: #9B1E37; margin: 0 0 20px 0; font-size: 1.6em; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; margin-bottom: 6px; font-weight: 600; color: #333; font-size: 0.95em; }
+    .form-group input, .form-group textarea {
+      width: 100%; padding: 10px 12px; border: 2px solid #ddd; border-radius: 5px;
+      font-size: 1em; font-family: inherit; transition: border-color 0.3s;
     }
-    
-    .form-group {
-      margin-bottom: 20px;
-    }
-    
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: #333;
-    }
-    
-    .form-group input,
-    .form-group textarea {
-      width: 100%;
-      padding: 12px;
-      border: 2px solid #ddd;
-      border-radius: 5px;
-      font-size: 1em;
-      transition: border-color 0.3s;
-      box-sizing: border-box;
-    }
-    
-    .form-group input:focus,
-    .form-group textarea:focus {
-      outline: none;
-      border-color: #9B1E37;
-    }
-    
-    .form-group textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-    
-    .form-group.checkbox {
-      display: flex;
-      align-items: start;
-      gap: 10px;
-    }
-    
-    .form-group.checkbox input[type="checkbox"] {
-      width: auto;
-      margin-top: 4px;
-    }
-    
-    .form-group.checkbox label {
-      margin: 0;
-      font-weight: normal;
-    }
+    .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #9B1E37; }
+    .form-group textarea { min-height: 80px; resize: vertical; }
+    .form-group.checkbox { display: flex; align-items: start; gap: 8px; }
+    .form-group.checkbox input[type="checkbox"] { width: auto; margin-top: 4px; }
+    .form-group.checkbox label { margin: 0; font-weight: normal; font-size: 0.9em; }
     
     .submit-button {
-      background: #9B1E37;
-      color: white;
-      border: none;
-      padding: 15px 40px;
-      font-size: 1.1em;
-      font-weight: 600;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background 0.3s;
-      width: 100%;
+      background: #9B1E37; color: white; border: none; padding: 14px; font-size: 1.1em;
+      font-weight: 600; border-radius: 5px; cursor: pointer; width: 100%;
+      font-family: 'Poppins', sans-serif; transition: background 0.3s;
     }
+    .submit-button:hover { background: #7a1829; }
+    .submit-button:disabled { background: #ccc; cursor: not-allowed; }
     
-    .submit-button:hover {
-      background: #7a1829;
-    }
+    .success-message { display:none; background:#d4edda; border:2px solid #c3e6cb; color:#155724; padding:16px; border-radius:5px; margin-top:16px; }
+    .error-message { display:none; background:#f8d7da; border:2px solid #f5c6cb; color:#721c24; padding:16px; border-radius:5px; margin-top:16px; }
     
-    .submit-button:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-    }
-    
-    .success-message {
-      display: none;
-      background: #d4edda;
-      border: 2px solid #c3e6cb;
-      color: #155724;
-      padding: 20px;
-      border-radius: 5px;
-      margin-top: 20px;
-    }
-    
-    .error-message {
-      display: none;
-      background: #f8d7da;
-      border: 2px solid #f5c6cb;
-      color: #721c24;
-      padding: 20px;
-      border-radius: 5px;
-      margin-top: 20px;
-    }
-    
-    .share-section {
-      background: #f8f9fa;
-      padding: 40px 20px;
-      text-align: center;
-      margin-top: 40px;
-      border-radius: 10px;
-    }
-    
-    .share-section h3 {
-      color: #9B1E37;
-      margin-bottom: 20px;
-    }
-    
-    .share-buttons {
-      display: flex;
-      gap: 15px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    
-    .share-button {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 24px;
-      border-radius: 5px;
-      text-decoration: none;
-      color: white;
-      font-weight: 600;
-      transition: transform 0.2s;
-    }
-    
-    .share-button:hover {
-      transform: translateY(-2px);
-    }
-    
-    .share-button.facebook {
-      background: #1877f2;
-    }
-    
-    .share-button.twitter {
-      background: #1da1f2;
-    }
-    
-    .share-button.email {
-      background: #666;
-    }
+    .share-section { background:#f8f9fa; padding:30px 20px; text-align:center; margin-top:30px; border-radius:10px; }
+    .share-section h3 { font-family:'Poppins',sans-serif; color:#9B1E37; margin-bottom:16px; }
+    .share-buttons { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+    .share-button { display:inline-flex; align-items:center; gap:8px; padding:10px 20px; border-radius:5px; text-decoration:none; color:white; font-weight:600; transition:transform 0.2s; font-size:0.95em; }
+    .share-button:hover { transform:translateY(-2px); }
+    .share-button.facebook { background:#1877f2; }
+    .share-button.twitter { background:#1da1f2; }
+    .share-button.email { background:#666; }
   </style>
 </head>
 <body>
-<!-- TEMPLATE INJECTION START -->
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
   .ekit-template-content-header { display: none !important; }
@@ -277,27 +92,24 @@
   #site-header, #site-footer { width: 100%; }
 </style>
 <div id="site-header"></div>
-<!-- TEMPLATE INJECTION END -->
 
 
-
-
-<!-- Petition Hero -->
 <section class="petition-hero">
-  <h1>Demand Election Integrity in Maryland</h1>
-  <p>Join thousands of Marylanders calling for transparent, secure elections. Your signature makes a difference.</p>
+  <h1 id="petition-title">Sign the Petition</h1>
+  <p id="petition-desc">Loading petition details...</p>
   <div class="petition-stats">
-    <span class="stat-number" id="signature-count">Loading...</span>
-    <span class="stat-label">signatures and counting</span>
+    <span class="stat-number" id="signature-count">...</span>
+    <span class="stat-label" id="stat-label">signatures and counting</span>
   </div>
 </section>
 
-<!-- Main Content -->
 <main class="petition-content">
   <div class="petition-grid">
     <div class="petition-info">
       <h2>Why This Petition Matters</h2>
       <p>Maryland's elections must be transparent, secure, and trustworthy. We're calling on our state legislature and election officials to implement common-sense reforms that will restore confidence in our democratic process.</p>
+      
+      <div id="petition-message-container"></div>
       
       <h3>What We're Fighting For:</h3>
       <ul>
@@ -315,15 +127,9 @@
       <div class="share-section">
         <h3>Share This Petition</h3>
         <div class="share-buttons">
-          <a href="https://www.facebook.com/sharer/sharer.php?u=https://securethevotemd.com/petition/" target="_blank" class="share-button facebook">
-            <i class="fab fa-facebook-f"></i> Share on Facebook
-          </a>
-          <a href="https://twitter.com/intent/tweet?text=Join%20me%20in%20demanding%20election%20integrity%20in%20Maryland!&url=https://securethevotemd.com/petition/" target="_blank" class="share-button twitter">
-            <i class="fab fa-twitter"></i> Share on Twitter
-          </a>
-          <a href="mailto:?subject=Sign%20the%20Election%20Integrity%20Petition&body=I%20just%20signed%20a%20petition%20for%20election%20integrity%20in%20Maryland.%20Join%20me:%20https://securethevotemd.com/petition/" class="share-button email">
-            <i class="fas fa-envelope"></i> Share via Email
-          </a>
+          <a href="https://www.facebook.com/sharer/sharer.php?u=https://securethevotemd.com/sign-the-petition/" target="_blank" class="share-button facebook"><i class="fab fa-facebook-f"></i> Facebook</a>
+          <a href="https://twitter.com/intent/tweet?text=Join%20me%20in%20demanding%20election%20integrity%20in%20Maryland!&url=https://securethevotemd.com/sign-the-petition/" target="_blank" class="share-button twitter"><i class="fab fa-x-twitter"></i> Share</a>
+          <a href="mailto:?subject=Sign%20the%20Election%20Integrity%20Petition&body=I%20just%20signed%20a%20petition%20for%20election%20integrity%20in%20Maryland.%20Join%20me:%20https://securethevotemd.com/sign-the-petition/" class="share-button email"><i class="fas fa-envelope"></i> Email</a>
         </div>
       </div>
     </div>
@@ -335,118 +141,81 @@
           <label for="firstName">First Name *</label>
           <input type="text" id="firstName" name="firstName" required>
         </div>
-        
         <div class="form-group">
           <label for="lastName">Last Name *</label>
           <input type="text" id="lastName" name="lastName" required>
         </div>
-        
         <div class="form-group">
           <label for="email">Email Address *</label>
           <input type="email" id="email" name="email" required>
         </div>
-        
         <div class="form-group">
           <label for="zipCode">ZIP Code *</label>
           <input type="text" id="zipCode" name="zipCode" pattern="[0-9]{5}" required>
         </div>
-        
         <div class="form-group">
           <label for="phone">Phone Number (optional)</label>
           <input type="tel" id="phone" name="phone">
         </div>
-        
         <div class="form-group">
           <label for="comments">Comments (optional)</label>
           <textarea id="comments" name="comments"></textarea>
         </div>
-        
         <div class="form-group checkbox">
           <input type="checkbox" id="updates" name="updates" checked>
           <label for="updates">Keep me updated on election integrity efforts in Maryland</label>
         </div>
-        
         <button type="submit" class="submit-button">Sign the Petition</button>
-        
-        <div class="success-message" id="success-message">
-          <strong>Thank you!</strong> Your signature has been added. Share this petition to amplify your voice!
-        </div>
-        
-        <div class="error-message" id="error-message">
-          <strong>Oops!</strong> Something went wrong. Please try again.
-        </div>
+        <div class="success-message" id="success-message"><strong>Thank you!</strong> Your signature has been added. Share this petition to amplify your voice!</div>
+        <div class="error-message" id="error-message"><strong>Oops!</strong> Something went wrong. Please try again.</div>
       </form>
     </div>
   </div>
 </main>
 
-
-
-<!-- Scripts -->
 <script>
-// Dynamic petition page - pulls data from API
 (async function() {
   var petitionName = 'secure-your-vote-2026';
-  var countEl = document.getElementById('signature-count');
-  var heroDesc = document.querySelector('.petition-hero p');
-  var heroTitle = document.querySelector('.petition-hero h1');
-  var statsDiv = document.querySelector('.petition-stats');
-  
   try {
     var res = await fetch('/api/petition/view?name=' + encodeURIComponent(petitionName));
-    if (!res.ok) throw new Error('API error ' + res.status);
+    if (!res.ok) throw new Error('API ' + res.status);
     var data = await res.json();
     var p = data.petition;
     
-    // Update signature count
-    countEl.textContent = (data.signature_count || 0).toLocaleString();
+    document.getElementById('signature-count').textContent = (data.signature_count || 0).toLocaleString();
+    if (p.title) document.getElementById('petition-title').textContent = p.title;
+    if (p.description) document.getElementById('petition-desc').textContent = p.description;
     
-    // Update title and description from DB
-    if (p.title) heroTitle.textContent = p.title;
-    if (p.description) heroDesc.textContent = p.description;
-    
-    // Show goal progress if set
     if (p.goal) {
       var pct = Math.min(100, Math.round((data.signature_count / p.goal) * 100));
-      statsDiv.innerHTML = 
-        '<span class="stat-number">' + (data.signature_count || 0).toLocaleString() + '</span>' +
-        '<span class="stat-label">of ' + p.goal.toLocaleString() + ' goal (' + pct + '%)</span>' +
-        '<div style="background:rgba(255,255,255,0.2);border-radius:10px;height:8px;margin-top:12px;width:200px">' +
-        '<div style="background:#F6BF58;border-radius:10px;height:100%;width:' + pct + '%;transition:width 0.5s"></div></div>';
+      document.getElementById('stat-label').textContent = 'of ' + p.goal.toLocaleString() + ' goal (' + pct + '%)';
+      var bar = document.createElement('div');
+      bar.style.cssText = 'background:rgba(255,255,255,0.2);border-radius:10px;height:8px;margin-top:12px;width:200px;display:inline-block';
+      bar.innerHTML = '<div style="background:#F6BF58;border-radius:10px;height:100%;width:'+pct+'%;transition:width 0.5s"></div>';
+      document.querySelector('.petition-stats').appendChild(bar);
     }
     
-    // Show petition message if exists
     if (p.message) {
-      var msgDiv = document.createElement('div');
-      msgDiv.className = 'petition-message';
-      msgDiv.style.cssText = 'background:#f8f9fa;border-left:4px solid #9B1E37;padding:24px;margin:30px 0;border-radius:0 8px 8px 0;';
-      msgDiv.innerHTML = '<h3 style="color:#9B1E37;margin-top:0;">Our Message</h3>' + p.message;
-      var infoDiv = document.querySelector('.petition-info');
-      var firstH3 = infoDiv.querySelector('h3');
-      if (firstH3) infoDiv.insertBefore(msgDiv, firstH3);
-      else infoDiv.appendChild(msgDiv);
+      var container = document.getElementById('petition-message-container');
+      container.innerHTML = '<div class="petition-message"><h3>Our Message</h3>' + p.message + '</div>';
     }
   } catch(e) {
     console.error('Petition load error:', e);
-    countEl.textContent = '\u2014';
+    document.getElementById('signature-count').textContent = '\u2014';
+    document.getElementById('petition-desc').textContent = 'Join thousands of Marylanders demanding election integrity.';
   }
 })();
 
-// Handle petition form submission
 document.getElementById('petition-form').addEventListener('submit', async function(e) {
   e.preventDefault();
   var btn = this.querySelector('.submit-button');
-  var successMsg = document.getElementById('success-message');
-  var errorMsg = document.getElementById('error-message');
-  btn.disabled = true;
-  btn.textContent = 'Submitting...';
-  successMsg.style.display = 'none';
-  errorMsg.style.display = 'none';
-
+  var ok = document.getElementById('success-message');
+  var err = document.getElementById('error-message');
+  btn.disabled = true; btn.textContent = 'Submitting...';
+  ok.style.display = 'none'; err.style.display = 'none';
   try {
     var res = await fetch('/api/petition/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'POST', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
         petition_name: 'secure-your-vote-2026',
         full_name: document.getElementById('firstName').value + ' ' + document.getElementById('lastName').value,
@@ -457,22 +226,14 @@ document.getElementById('petition-form').addEventListener('submit', async functi
         optin: document.getElementById('updates').checked
       })
     });
-
     if (res.ok) {
       var data = await res.json();
-      successMsg.style.display = 'block';
-      if (data.signature_count) {
-        document.getElementById('signature-count').textContent = data.signature_count.toLocaleString();
-      }
+      ok.style.display = 'block';
+      if (data.signature_count) document.getElementById('signature-count').textContent = data.signature_count.toLocaleString();
       this.reset();
-    } else {
-      errorMsg.style.display = 'block';
-    }
-  } catch(e) {
-    errorMsg.style.display = 'block';
-  }
-  btn.disabled = false;
-  btn.textContent = 'Sign the Petition';
+    } else { err.style.display = 'block'; }
+  } catch(ex) { err.style.display = 'block'; }
+  btn.disabled = false; btn.textContent = 'Sign the Petition';
 });
 </script>
 
@@ -509,7 +270,7 @@ Promise.all([
   fetch('/templates/template.css').then(r => r.text()),
   fetch('/templates/mobile-menu.js').then(r => r.text()).catch(() => '')
 ]).then(([headerHtml, footerHtml, css, menuJs]) => {
-  const varFix = `<style>
+  const varFix = \`<style>
     :host { display: block; width: 100%; }
     :host * { box-sizing: border-box; }
     :root, :host {
@@ -529,35 +290,6 @@ Promise.all([
       --top-bar-height: 40px;
       --banner-height: 48px;
     }
-  </style>`;
-  
-  // Header shadow DOM
-  const headerHost = document.getElementById('site-header');
-  const headerShadow = headerHost.attachShadow({ mode: 'open' });
-  headerShadow.innerHTML = faLink + varFix + '<style>' + css + '</style>' + headerHtml;
-  if (menuJs) {
-    const s2 = document.createElement('script');
-    s2.textContent = menuJs;
-    headerShadow.appendChild(s2);
-  }
-
-  // Footer shadow DOM
-  const footerHost = document.getElementById('site-footer');
-  const footerShadow = footerHost.attachShadow({ mode: 'open' });
-  footerShadow.innerHTML = faLink + varFix + '<style>' + css + '</style>' + footerHtml;
-  
-  // Scroll-up animation: IntersectionObserver watches the footer host from the main document
-  // (Shadow DOM elements aren't directly observable from outside, but the host element is)
-  const logoBox = footerShadow.querySelector('.footer-logo-box');
-  if (logoBox) {
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if (e.isIntersecting) { logoBox.classList.add('visible'); obs.unobserve(e.target); }});
-    }, { root: null, threshold: 0.15 });
-    // Observe the host element (visible in main DOM) as a proxy for the shadow content
-    obs.observe(footerHost);
-  }
-});
-</script>
-<!-- TEMPLATE INJECTION END -->
+  </style>\
 </body>
 </html>
