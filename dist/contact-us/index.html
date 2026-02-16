@@ -1304,9 +1304,8 @@ Promise.all([
   const headerShadow = headerHost.attachShadow({ mode: 'open' });
   headerShadow.innerHTML = faLink + varFix + '<style>' + css + '</style>' + headerHtml;
   if (menuJs) {
-    const s2 = document.createElement('script');
-    s2.textContent = menuJs;
-    headerShadow.appendChild(s2);
+    eval(menuJs);
+    if (typeof initMobileMenu === 'function') initMobileMenu(headerShadow);
   }
 
   // Footer shadow DOM
