@@ -44,7 +44,7 @@
         
         /* Header Spacer */
         .header-spacer {
-            height: 120px;
+            height: 140px;
         }
         
         /* Hero Section */
@@ -273,10 +273,12 @@
 <body>
     <div class="header-spacer"></div>
     
-    <section class="hero">
-        <div class="container">
-            <h1>Press Releases & News</h1>
-            <p>Latest updates on Maryland election integrity and security</p>
+    <section class="stv-hero-banner" style="position:relative;width:100%;min-height:260px;background:url('/images/political-leaders-at-conference.jpg') center/cover no-repeat fixed;display:flex;align-items:center;justify-content:center;">
+        <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(at top left, #000000CC 0%, #9B1E37 85%);opacity:0.6;"></div>
+        <div style="position:relative;z-index:2;text-align:center;padding:60px 20px;">
+            <h1 style="font-family:'Questrial',sans-serif;font-size:60px;color:#fff;font-weight:400;margin:0 0 10px;">Press Releases & News</h1>
+            <div style="width:80px;height:5px;background:#fff;margin:0 auto 15px;"></div>
+            <p style="color:rgba(255,255,255,0.9);font-size:1.1rem;">Latest updates on Maryland election integrity and security</p>
         </div>
     </section>
     
@@ -344,7 +346,7 @@
             
             const imageHtml = post.featured_image
                 ? `<img src="${post.featured_image}" alt="${post.title}" loading="lazy">`
-                : `<div class="placeholder">STV</div>`;
+                : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg, #9B1E37 0%, #F6BF58 100%);color:#fff;font-size:3rem;font-weight:700;">STV</div>`;
             
             return `
                 <article class="blog-card">
