@@ -1,0 +1,302 @@
+// Generate styled HTML page for a blog post
+// Matches existing blog post structure exactly
+
+function generatePostHTML(post) {
+  const publishDate = post.published_at ? new Date(post.published_at) : new Date();
+  const dateStr = publishDate.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+
+  // Escape HTML special characters
+  const escapeHtml = (text) => {
+    if (!text) return '';
+    return String(text)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  };
+
+  // Strip HTML tags to generate clean text for meta description
+  const stripHtml = (html) => {
+    if (!html) return '';
+    return html.replace(/<[^>]*>/g, '').trim();
+  };
+
+  // Generate meta description from first 155 chars of content
+  const metaDescription = stripHtml(post.seo_description || post.excerpt || post.content || '')
+    .substring(0, 155)
+    .replace(/\n/g, ' ')
+    .replace(/\s+/g, ' ');
+
+  // Build canonical URL
+  const year = publishDate.getFullYear();
+  const month = String(publishDate.getMonth() + 1).padStart(2, '0');
+  const day = String(publishDate.getDate()).padStart(2, '0');
+  const canonicalUrl = `https://securethevotemd.com/${year}/${month}/${day}/${post.slug}/`;
+
+  // Get OG image (default to site logo)
+  const ogImage = post.og_image || 'https://securethevotemd.com/images/2024/04/LOGOsecurethevote_yellowMD.png';
+
+  // Build JSON-LD Article schema
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: post.seo_title || post.title,
+    description: metaDescription,
+    image: ogImage,
+    datePublished: publishDate.toISOString(),
+    dateModified: publishDate.toISOString(),
+    author: {
+      '@type': 'Organization',
+      name: 'Secure The Vote Maryland'
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Secure The Vote Maryland',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://securethevotemd.com/images/2024/04/LOGOsecurethevote_yellowMD.png'
+      }
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': canonicalUrl
+    }
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${escapeHtml(post.seo_title || post.title)} - Secure The Vote MD</title>
+  
+  <!-- Meta Tags -->
+  <meta name="description" content="${escapeHtml(metaDescription)}">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="${canonicalUrl}">
+  
+  <!-- Open Graph Tags -->
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="${escapeHtml(post.seo_title || post.title)}" />
+  <meta property="og:description" content="${escapeHtml(metaDescription)}" />
+  <meta property="og:url" content="${canonicalUrl}" />
+  <meta property="og:image" content="${escapeHtml(ogImage)}" />
+  <meta property="og:site_name" content="Secure The Vote Maryland" />
+  <meta property="article:published_time" content="${publishDate.toISOString()}" />
+  <meta property="article:modified_time" content="${publishDate.toISOString()}" />
+  
+  <!-- Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="${escapeHtml(post.seo_title || post.title)}" />
+  <meta name="twitter:description" content="${escapeHtml(metaDescription)}" />
+  <meta name="twitter:image" content="${escapeHtml(ogImage)}" />
+  
+  <!-- Article Schema (JSON-LD) -->
+  <script type="application/ld+json">
+  ${JSON.stringify(articleSchema)}
+  </script>
+  
+  <link rel="stylesheet" id="embed-pdf-viewer-css" href="/wp-content/plugins/embed-pdf-viewer/css/embed-pdf-viewer.css?ver=2.4.7" media="screen">
+  <link rel="stylesheet" id="elementor-frontend-css" href="/wp-content/plugins/elementor/assets/css/frontend.min.css?ver=3.35.4" media="all">
+  <link rel="stylesheet" id="embedpress-css-css" href="/wp-content/plugins/embedpress/assets/css/embedpress.css?ver=1769615293" media="all">
+  <link rel="stylesheet" id="embedpress-blocks-style-css" href="/wp-content/plugins/embedpress/assets/css/blocks.build.css?ver=1769615293" media="all">
+  <link rel="stylesheet" id="embedpress-lazy-load-css-css" href="/wp-content/plugins/embedpress/assets/css/lazy-load.css?ver=1769615293" media="all">
+  <link rel="stylesheet" id="wp-block-library-css" href="/wp-includes/css/dist/block-library/style.min.css?ver=6.9.1" media="all">
+  <link rel="stylesheet" id="contact-form-7-css" href="/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=6.1.5" media="all">
+  <link rel="stylesheet" id="hello-elementor-css" href="/wp-content/themes/hello-elementor/assets/css/reset.css?ver=3.4.6" media="all">
+  <link rel="stylesheet" id="hello-elementor-theme-style-css" href="/wp-content/themes/hello-elementor/assets/css/theme.css?ver=3.4.6" media="all">
+  <link rel="stylesheet" id="hello-elementor-header-footer-css" href="/wp-content/themes/hello-elementor/assets/css/header-footer.css?ver=3.4.6" media="all">
+  <link rel="stylesheet" id="hello-elementor-child-style-css" href="/wp-content/themes/hello-theme-child-master/style.css?ver=2.0.0" media="all">
+  <link rel="stylesheet" id="font-awesome-5-all-css" href="/wp-content/plugins/elementor/assets/lib/font-awesome/css/all.min.css?ver=3.35.4" media="all">
+  <link rel="stylesheet" id="font-awesome-4-shim-css" href="/wp-content/plugins/elementor/assets/lib/font-awesome/css/v4-shims.min.css?ver=3.35.4" media="all">
+  <link rel="stylesheet" id="ekit-widget-styles-css" href="/wp-content/plugins/elementskit-lite/widgets/init/assets/css/widget-styles.css?ver=3.7.9" media="all">
+  <link rel="stylesheet" id="ekit-responsive-css" href="/wp-content/plugins/elementskit-lite/widgets/init/assets/css/responsive.css?ver=3.7.9" media="all">
+  <link rel="stylesheet" id="eael-general-css" href="/wp-content/plugins/essential-addons-for-elementor-lite/assets/front-end/css/view/general.min.css?ver=6.5.11" media="all">
+  <link rel="stylesheet" id="widget-icon-list-css" href="/wp-content/plugins/elementor/assets/css/widget-icon-list.min.css?ver=3.35.4" media="all">
+  <link rel="stylesheet" id="widget-heading-css" href="/wp-content/plugins/elementor/assets/css/widget-heading.min.css?ver=3.35.4" media="all">
+  <link rel="stylesheet" id="widget-image-css" href="/wp-content/plugins/elementor/assets/css/widget-image.min.css?ver=3.35.4" media="all">
+  <link rel="stylesheet" href="/templates/template.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style id="wp-custom-css">
+    /* global */
+    p { margin: 0; }
+
+    /* post */
+    .single-post #content, .archive #content {
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .single-post .page-header, .archive .page-header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      padding: 40px;
+      min-height: 50vh;
+      background: #9B1E37;
+      color: white;
+    }
+
+    .single-post .wp-post-image, .archive .wp-post-image {
+      margin-bottom: 20px;
+    }
+
+    .single-post .page-header .entry-title, .archive .page-header .entry-title {
+      padding: 0;
+      text-align: center;
+      margin: 0;
+    }
+
+    .single-post .page-content .entry-title, .archive .page-content .entry-title {
+      margin-bottom: 30px;
+    }
+
+    .single-post .page-content, .archive .page-content {
+      font-size: 18px;
+      max-width: 1200px;
+      padding-top: 65px;
+      text-align-last: left;
+    }
+
+    .archive .page-content .post {
+      margin-bottom: 30px;
+    }
+
+    .archive .page-content {
+      padding-bottom: 100px;
+    }
+
+    .single-post .page-content h2, .archive .page-content h2 {
+      text-align: left;
+    }
+
+    .single-post .title-comments, .single-post .comment-list {
+      display: none;
+    }
+
+    .single-post #comments {
+      width: 1200px;
+      padding: 40px 0px 130px;
+    }
+
+    .single-post .submit {
+      background-color: #9B1E37;
+      color: white;
+      padding: 10px 30px;
+      border-radius: 0;
+      border: none !important;
+      margin-top: 30px;
+    }
+
+    .single-post .submit:hover {
+      background-color: #F6BF58;
+    }
+
+    .single-post #respond {
+      padding: 30px;
+      background: #f1f1f1;
+      margin-top: 20px;
+    }
+
+    .single-post #content, .archive #content {
+      padding: 0 !important;
+    }
+
+    @media (max-width: 1200px) {
+      .single-post .page-content {
+        padding: 55px 30px 0;
+      }
+
+      .archive .page-content {
+        padding: 55px 30px 100px;
+      }
+
+      .single-post #comments {
+        width: inherit;
+        padding: 40px 30px 130px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="site-header"></div>
+  
+  <main>
+    <main id="content" class="site-main post-auto single-post type-post status-publish format-standard hentry">
+
+      <div class="page-header">
+        <h1 class="entry-title">${escapeHtml(post.title)}</h1>
+      </div>
+      
+      <div class="page-content">
+        <div class="post-meta">
+          <span class="post-date"><time datetime="${publishDate.toISOString()}">${dateStr}</time></span>
+          ${post.category ? `<span class="post-category">${escapeHtml(post.category)}</span>` : ''}
+        </div>
+
+        <div class="elementor elementor-auto" data-elementor-type="wp-post">
+          <div class="elementor-element elementor-widget elementor-widget-text-editor">
+            <div class="elementor-widget-container">
+              ${post.content || ''}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section id="comments" class="comments-area">
+        <div id="respond" class="comment-respond">
+          <h2 id="reply-title" class="comment-reply-title">Leave a Reply</h2>
+          <form action="/wp-comments-post.php" method="post" id="commentform" class="comment-form">
+            <p class="comment-notes"><span id="email-notes">Your email address will not be published.</span> <span class="required-field-message">Required fields are marked <span class="required">*</span></span></p>
+            <p class="comment-form-comment"><label for="comment">Comment <span class="required">*</span></label> <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525" required=""></textarea></p>
+            <p class="comment-form-author"><label for="author">Name <span class="required">*</span></label> <input id="author" name="author" type="text" value="" size="30" maxlength="245" autocomplete="name" required=""></p>
+            <p class="comment-form-email"><label for="email">Email <span class="required">*</span></label> <input id="email" name="email" type="email" value="" size="30" maxlength="100" aria-describedby="email-notes" autocomplete="email" required=""></p>
+            <p class="comment-form-url"><label for="url">Website</label> <input id="url" name="url" type="url" value="" size="30" maxlength="200" autocomplete="url"></p>
+            <p class="comment-form-cookies-consent"><input id="wp-comment-cookies-consent" name="wp-comment-cookies-consent" type="checkbox" value="yes"> <label for="wp-comment-cookies-consent">Save my name, email, and website in this browser for the next time I comment.</label></p>
+            <p class="form-submit"><input name="submit" type="submit" id="submit" class="submit" value="Post Comment"> <input type="hidden" name="comment_post_ID" value="0" id="comment_post_ID"></p>
+          </form>
+        </div>
+      </section>
+
+    </main>
+  </main>
+  
+  <div id="site-footer"></div>
+  
+  <script>
+    // Load shared header/footer
+    fetch('/templates/header.html').then(r=>r.text()).then(h=>{document.getElementById('site-header').innerHTML=h;});
+    fetch('/templates/footer.html').then(r=>r.text()).then(f=>{document.getElementById('site-footer').innerHTML=f;});
+  </script>
+  <script src="/templates/mobile-menu.js"></script>
+  <script type="module">
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'GT-NCHVR2P4');
+  </script>
+  <script src="/wp-includes/js/jquery/jquery.min.js?ver=3.7.1"></script>
+  <script src="/wp-content/plugins/elementor/assets/js/webpack.runtime.min.js?ver=3.35.4"></script>
+  <script src="/wp-content/plugins/elementor/assets/js/frontend-modules.min.js?ver=3.35.4"></script>
+  <script src="/wp-content/plugins/elementor/assets/js/frontend.min.js?ver=3.35.4"></script>
+  <script src="/wp-content/plugins/elementor-pro/assets/js/frontend.min.js?ver=3.35.1"></script>
+  <script src="/wp-content/plugins/essential-addons-for-elementor-lite/assets/front-end/js/view/general.min.js?ver=6.5.11"></script>
+  <script src="/js/comments.js"></script>
+</body>
+</html>`;
+}
+
+module.exports = { generatePostHTML, stripHtml: (html) => {
+  if (!html) return '';
+  return html.replace(/<[^>]*>/g, '').trim();
+} };
