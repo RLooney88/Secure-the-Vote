@@ -1236,7 +1236,7 @@
       ]);
 
       // Sync staging to production on fresh login only
-      // syncStagingToMain(); // DISABLED - auto-sync was overwriting staging work
+      syncStagingToMain();
       updatePendingEditsBadge();
     } catch (error) {
       showError(error.message);
@@ -1658,7 +1658,7 @@
       });
       
       // Sync staging on page load/refresh (resets to production baseline)
-      // syncStagingToMain(); // DISABLED - auto-sync was overwriting staging work
+      syncStagingToMain();
       
       // Update pending edits badge on load and poll every 30 seconds
       updatePendingEditsBadge();
