@@ -641,10 +641,6 @@ fetch('https://site-builder-ai-production.up.railway.app/sites/securethevotemd/t
       });
     });
   }
-  if (menuJs) {
-    eval(menuJs);
-    if (typeof initMobileMenu === 'function') initMobileMenu(headerShadow);
-  }
 
   // Footer shadow DOM
   const footerHost = document.getElementById('site-footer');
