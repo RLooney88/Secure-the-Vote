@@ -79,6 +79,24 @@
     verifyEmail: document.getElementById('verify-email'),
     verifyError: document.getElementById('verify-error'),
     resendCodeBtn: document.getElementById('resend-code-btn'),
+    
+    // Forgot password elements
+    forgotPasswordLink: document.getElementById('forgot-password-link'),
+    forgotView: document.getElementById('forgot-view'),
+    forgotForm: document.getElementById('forgot-form'),
+    forgotEmail: document.getElementById('forgot-email'),
+    forgotError: document.getElementById('forgot-error'),
+    forgotMessage: document.getElementById('forgot-message'),
+    
+    // Reset password elements
+    resetView: document.getElementById('reset-view'),
+    resetForm: document.getElementById('reset-form'),
+    resetEmail: document.getElementById('reset-email'),
+    resetToken: document.getElementById('reset-token'),
+    resetPassword: document.getElementById('reset-password'),
+    resetPasswordConfirm: document.getElementById('reset-password-confirm'),
+    resetError: document.getElementById('reset-error'),
+    resetMessage: document.getElementById('reset-message'),
     signaturesBody: document.getElementById('signatures-body'),
     adminsBody: document.getElementById('admins-body'),
     totalSignatures: document.getElementById('total-signatures'),
@@ -1372,6 +1390,120 @@
     }
   }
 
+  // Forgot password handler - show forgot form
+  function handleForgotPasswordClick(event) {
+    event.preventDefault();
+    elements.loginView.style.display = 'none';
+    elements.forgotView.style.display = 'flex';
+    elements.forgotEmail.value = document.getElementById('email').value;
+    elements.forgotError.style.display = 'none';
+    elements.forgotMessage.style.display = 'none';
+    elements.forgotEmail.focus();
+  }
+
+  // Forgot password submit handler
+  async function handleForgotPassword(event) {
+    event.preventDefault();
+    setLoading(true);
+    hideError(elements.forgotError);
+    elements.forgotMessage.style.display = 'none';
+
+    try {
+      const email = elements.forgotEmail.value.trim();
+      
+      const data = await api('admin/forgot-password', {
+        method: 'POST',
+        body: JSON.stringify({ email })
+      });
+
+      // Always show success message (even if email doesn't exist)
+      elements.forgotMessage.innerHTML = `
+        <strong>Check your email</strong><br>
+        If an account exists with that email address, you will receive a password reset link shortly.
+      `;
+      elements.forgotMessage.style.display = 'block';
+      elements.forgotForm.reset();
+      
+    } catch (error) {
+      showError(error.message, elements.forgotError);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // Check for reset token on page load
+  function checkResetToken() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const resetToken = urlParams.get('reset');
+    const resetEmail = urlParams.get('email');
+
+    if (resetToken && resetEmail) {
+      // Show reset view
+      elements.loginView.style.display = 'none';
+      elements.forgotView.style.display = 'none';
+      elements.resetView.style.display = 'flex';
+      
+      // Store token and email
+      elements.resetToken.value = resetToken;
+      elements.resetEmail.value = decodeURIComponent(resetEmail);
+      
+      elements.resetPassword.focus();
+    }
+  }
+
+  // Reset password submit handler
+  async function handleResetPassword(event) {
+    event.preventDefault();
+    setLoading(true);
+    hideError(elements.resetError);
+    elements.resetMessage.style.display = 'none';
+
+    const newPassword = elements.resetPassword.value;
+    const confirmPassword = elements.resetPasswordConfirm.value;
+
+    // Validate password
+    if (newPassword.length < 8) {
+      showError('Password must be at least 8 characters long', elements.resetError);
+      setLoading(false);
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      showError('Passwords do not match', elements.resetError);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const data = await api('admin/reset-password', {
+        method: 'POST',
+        body: JSON.stringify({
+          email: elements.resetEmail.value,
+          token: elements.resetToken.value,
+          newPassword: newPassword
+        })
+      });
+
+      // Show success message
+      elements.resetMessage.innerHTML = `
+        <strong>Password reset successful!</strong><br>
+        Your password has been updated. You can now log in with your new password.
+      `;
+      elements.resetMessage.style.display = 'block';
+      elements.resetForm.reset();
+
+      // Clear URL params and redirect to login after 2 seconds
+      setTimeout(() => {
+        window.location.href = window.location.pathname;
+      }, 3000);
+
+    } catch (error) {
+      showError(error.message, elements.resetError);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   // Logout handler
   function handleLogout() {
     state.token = null;
@@ -1805,6 +1937,20 @@
     if (elements.resendCodeBtn) {
       elements.resendCodeBtn.addEventListener('click', handleResendCode);
     }
+    
+    // Forgot password event listeners
+    if (elements.forgotPasswordLink) {
+      elements.forgotPasswordLink.addEventListener('click', handleForgotPasswordClick);
+    }
+    if (elements.forgotForm) {
+      elements.forgotForm.addEventListener('submit', handleForgotPassword);
+    }
+    if (elements.resetForm) {
+      elements.resetForm.addEventListener('submit', handleResetPassword);
+    }
+    
+    // Check for reset token on page load
+    checkResetToken();
     
     elements.logoutBtn.addEventListener('click', handleLogout);
     elements.addAdminForm.addEventListener('submit', handleAddAdmin);

@@ -292,7 +292,66 @@
           </div>
           <div id="login-error" class="error-message" style="display: none;"></div>
           <button type="submit" class="btn btn-primary">Sign In</button>
+          <div style="text-align: center; margin-top: 16px;">
+            <a href="#" id="forgot-password-link" style="color: #888; font-size: 0.9rem; text-decoration: none;">Forgot password?</a>
+          </div>
         </form>
+
+        <!-- Forgot Password View -->
+        <div id="forgot-view" class="view" style="display: none;">
+          <div class="login-container">
+            <div class="login-header">
+              <img src="/images/logo.png" alt="Secure the Vote MD" class="login-logo">
+              <p>Reset Password</p>
+            </div>
+            <div id="forgot-message" class="success-message" style="display: none; margin-bottom: 16px;"></div>
+            <p style="text-align: center; color: #666; margin-bottom: 20px;">
+              Enter your email address and we'll send you a link to reset your password.
+            </p>
+            <form id="forgot-form">
+              <div class="form-group">
+                <label for="forgot-email">Email Address</label>
+                <input type="email" id="forgot-email" name="forgot-email" required autocomplete="email" placeholder="your.email@example.com">
+              </div>
+              <div id="forgot-error" class="error-message" style="display: none;"></div>
+              <button type="submit" class="btn btn-primary">Send Reset Link</button>
+            </form>
+            <div style="text-align: center; margin-top: 16px;">
+              <a href="#" onclick="document.getElementById('forgot-view').style.display='none'; document.getElementById('login-view').style.display='flex'; return false;" style="color: #888; font-size: 0.9rem;">Back to login</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reset Password View -->
+        <div id="reset-view" class="view" style="display: none;">
+          <div class="login-container">
+            <div class="login-header">
+              <img src="/images/logo.png" alt="Secure the Vote MD" class="login-logo">
+              <p>Create New Password</p>
+            </div>
+            <div id="reset-message" class="success-message" style="display: none; margin-bottom: 16px;"></div>
+            <p style="text-align: center; color: #666; margin-bottom: 20px;">
+              Enter your new password below. It must be at least 8 characters.
+            </p>
+            <form id="reset-form">
+              <input type="hidden" id="reset-email">
+              <input type="hidden" id="reset-token">
+              <div class="form-group">
+                <label for="reset-password">New Password</label>
+                <input type="password" id="reset-password" name="reset-password" required autocomplete="new-password" placeholder="At least 8 characters">
+              </div>
+              <div class="form-group">
+                <label for="reset-password-confirm">Confirm Password</label>
+                <input type="password" id="reset-password-confirm" name="reset-password-confirm" required autocomplete="new-password" placeholder="Confirm your password">
+              </div>
+              <div id="reset-error" class="error-message" style="display: none;"></div>
+              <button type="submit" class="btn btn-primary">Reset Password</button>
+            </form>
+            <div style="text-align: center; margin-top: 16px;">
+              <a href="#" onclick="window.location.href = window.location.pathname; return false;" style="color: #888; font-size: 0.9rem;">Back to login</a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
