@@ -5,37 +5,6 @@
   // State
   const state = {
     token: localStorage.getItem('admin_token'),
-    signatures: [],
-    admins: [],
-    posts: [],
-    petitions: [],
-    petitionsList: [],
-    comments: [],
-    currentAdminId: null,
-    currentPostId: null,
-    currentPetitionId: null,
-    quillEditor: null,
-    pagination: {
-      page: 1,
-      limit: 50,
-      total: 0
-    },
-    commentsPagination: {
-      page: 1,
-      limit: 20,
-      total: 0
-    },
-    filter: {
-      petition: '',
-      search: '',
-      commentStatus: 'pending'
-    },
-    deleteTargetId: null
-  };
-
-  // State - add verification state
-  const state = {
-    token: localStorage.getItem('admin_token'),
     pendingEmail: null, // Email waiting for verification
     signatures: [],
     admins: [],
