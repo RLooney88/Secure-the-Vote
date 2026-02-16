@@ -347,6 +347,16 @@ a {
 		<script src="/wp-includes/js/wp-emoji-release.min.js?ver=6.9.1" defer=""></script></head>
 
 <body class="wp-singular post-template-default single single-post postid-2229 single-format-standard wp-embed-responsive wp-theme-hello-elementor wp-child-theme-hello-theme-child-master hello-elementor-default elementor-default elementor-kit-6 e--ua-blink e--ua-chrome e--ua-webkit" data-elementor-device-mode="tablet">
+<!-- TEMPLATE INJECTION START -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  .ekit-template-content-header { display: none !important; }
+  .ekit-template-content-footer { display: none !important; }
+  #site-header, #site-footer { width: 100%; }
+</style>
+<div id="site-header"></div>
+<!-- TEMPLATE INJECTION END -->
+
 
 	
 			<a class="skip-link screen-reader-text" href="#content">
@@ -1081,4 +1091,87 @@ const a=JSON.parse(document.getElementById("wp-emoji-settings").textContent),o=(
 
 
 
+
+<!-- TEMPLATE INJECTION START -->
+<div id="site-footer"></div>
+<script>
+// Use Shadow DOM to isolate templates from Elementor CSS
+async function loadTemplate(hostId, htmlUrl, cssUrl, jsUrl) {
+  const host = document.getElementById(hostId);
+  const shadow = host.attachShadow({ mode: 'open' });
+  
+  const [htmlRes, cssRes] = await Promise.all([
+    fetch(htmlUrl).then(r => r.text()),
+    fetch(cssUrl).then(r => r.text())
+  ]);
+  
+  shadow.innerHTML = '<style>' + cssRes + '</style>' + htmlRes;
+  
+  if (jsUrl) {
+    const jsRes = await fetch(jsUrl).then(r => r.text());
+    const script = document.createElement('script');
+    script.textContent = jsRes;
+    shadow.appendChild(script);
+  }
+}
+
+// Load Font Awesome inside shadow DOMs
+const faLink = '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">';
+
+Promise.all([
+  fetch('/templates/header.html').then(r => r.text()),
+  fetch('/templates/footer.html').then(r => r.text()),
+  fetch('/templates/template.css').then(r => r.text()),
+  fetch('/templates/mobile-menu.js').then(r => r.text()).catch(() => '')
+]).then(([headerHtml, footerHtml, css, menuJs]) => {
+  const varFix = `<style>
+    :host { display: block; width: 100%; }
+    :host * { box-sizing: border-box; }
+    :root, :host {
+      --color-maroon: #8B1A1A;
+      --color-maroon-dark: #5d1111;
+      --color-red: #C41E3A;
+      --color-gold: #F6BF58;
+      --color-gold-dark: #d9a03f;
+      --color-white: #ffffff;
+      --color-black: #000000;
+      --color-gray-light: #f5f5f5;
+      --color-gray-medium: #666666;
+      --color-gray-dark: #333333;
+      --font-primary: 'Poppins', sans-serif;
+      --font-secondary: 'Questrial', sans-serif;
+      --nav-height: 80px;
+      --top-bar-height: 40px;
+      --banner-height: 48px;
+    }
+  </style>`;
+  
+  // Header shadow DOM
+  const headerHost = document.getElementById('site-header');
+  const headerShadow = headerHost.attachShadow({ mode: 'open' });
+  headerShadow.innerHTML = faLink + varFix + '<style>' + css + '</style>' + headerHtml;
+  if (menuJs) {
+    const s2 = document.createElement('script');
+    s2.textContent = menuJs;
+    headerShadow.appendChild(s2);
+  }
+
+  // Footer shadow DOM
+  const footerHost = document.getElementById('site-footer');
+  const footerShadow = footerHost.attachShadow({ mode: 'open' });
+  footerShadow.innerHTML = faLink + varFix + '<style>' + css + '</style>' + footerHtml;
+  
+  // Scroll-up animation: IntersectionObserver watches the footer host from the main document
+  // (Shadow DOM elements aren't directly observable from outside, but the host element is)
+  const logoBox = footerShadow.querySelector('.footer-logo-box');
+  if (logoBox) {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { logoBox.classList.add('visible'); obs.unobserve(e.target); }});
+    }, { root: null, threshold: 0.15 });
+    // Observe the host element (visible in main DOM) as a proxy for the shadow content
+    obs.observe(footerHost);
+  }
+});
+</script>
+<!-- TEMPLATE INJECTION END -->
 </body></html>
