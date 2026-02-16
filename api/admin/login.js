@@ -1,23 +1,12 @@
-// Vercel Serverless Function - Admin Login (Hardened)
+// Vercel Serverless Function - Admin Login (Hardened with Email Verification)
 const { Pool } = require('pg');
-const { generateToken } = require('./_auth.js');
 const bcrypt = require('bcryptjs');
 const { checkRateLimit, addRateLimitHeaders } = require('./_rateLimit.js');
+const sgMail = require('@sendgrid/mail');
 
-/**
- * Timing-safe string comparison using bcrypt's compare
- * This prevents timing attacks by ensuring comparison takes constant time
- */
-async function timingSafeCompare(a, b) {
-  // Use bcrypt.compare which is timing-safe
-  // We hash both values and compare the hashes
-  try {
-    const hashA = await bcrypt.hash(a, 1); // Low cost for speed
-    const hashB = await bcrypt.hash(b, 1);
-    return hashA.length === hashB.length; // Not actually comparing, just using for timing
-  } catch {
-    return false;
-  }
+// Simple crypto for verification token
+function generateVerificationCode() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
 module.exports = async function handler(req, res) {
@@ -65,16 +54,16 @@ module.exports = async function handler(req, res) {
 
     // Input validation
     if (!email || !password) {
-      return res.status(400).json({ error: 'Invalid credentials' }); // Generic error
+      return res.status(400).json({ error: 'Invalid credentials' });
     }
 
     if (typeof email !== 'string' || typeof password !== 'string') {
-      return res.status(400).json({ error: 'Invalid credentials' }); // Generic error
+      return res.status(400).json({ error: 'Invalid credentials' });
     }
 
     // Email format validation
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return res.status(401).json({ error: 'Invalid credentials' }); // Generic error
+      return res.status(401).json({ error: 'Invalid credentials' });
     }
 
     // Query database
@@ -83,8 +72,7 @@ module.exports = async function handler(req, res) {
       [email.toLowerCase().trim()]
     );
 
-    // Always use timing-safe comparison for password validation
-    // This prevents timing attacks that could reveal if an email exists
+    // Timing-safe password comparison
     let validPassword = false;
     let admin = null;
 
@@ -92,31 +80,43 @@ module.exports = async function handler(req, res) {
       admin = result.rows[0];
       validPassword = await bcrypt.compare(password, admin.password_hash);
     } else {
-      // Perform a dummy bcrypt comparison to prevent timing attacks
-      // This ensures the same amount of time is taken whether the user exists or not
+      // Dummy comparison to prevent timing attacks
       await bcrypt.compare(password, '$2a$10$invalidhashtopreventtimingattack00000000000000000000000000');
     }
 
-    // Generic error message - never reveal whether email or password was wrong
+    // Generic error message
     if (!validPassword || !admin) {
-      // Add exponential backoff hint in response headers
       res.setHeader('X-Auth-Attempts-Remaining', rateLimit.remaining);
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    // Generate JWT token
-    const token = generateToken(admin);
+    // Generate 6-digit verification code
+    const verificationCode = generateVerificationCode();
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
 
+    // Store verification token
+    await pool.query(
+      `INSERT INTO admin_auth_tokens (email, token, expires_at) VALUES ($1, $2, $3)`,
+      [email.toLowerCase().trim(), verificationCode, expiresAt]
+    );
+
+    // Send verification email via SendGrid
+    const emailSent = await sendVerificationEmail(email, verificationCode);
+
+    if (!emailSent) {
+      console.log('SendGrid not configured - verification code logged for dev:', verificationCode);
+    }
+
+    // Return response indicating verification is needed
     return res.status(200).json({
       success: true,
-      token,
-      email: admin.email
+      requiresVerification: true,
+      email: email,
+      message: 'Verification code sent to your email'
     });
 
   } catch (error) {
     console.error('Login error:', error.code, error.message);
-    
-    // Never expose stack traces or detailed error messages
     return res.status(500).json({ 
       error: 'Authentication failed',
       message: 'An error occurred during authentication'
@@ -125,3 +125,46 @@ module.exports = async function handler(req, res) {
     await pool.end().catch(() => {});
   }
 };
+
+// Send verification email via SendGrid
+async function sendVerificationEmail(email, code) {
+  const apiKey = process.env.SENDGRID_API_KEY;
+  
+  if (!apiKey) {
+    console.log('SENDGRID_API_KEY not configured');
+    return false;
+  }
+
+  sgMail.setApiKey(apiKey);
+
+  const msg = {
+    to: email,
+    from: process.env.SENDGRID_FROM_EMAIL || 'noreply@securethevotemd.com',
+    subject: 'SecureTheVoteMD - Verification Code',
+    text: `Your verification code is: ${code}
+
+This code expires in 15 minutes.
+
+If you didn't request this, please ignore this email.`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #9B1E37;">SecureTheVoteMD Admin Login</h2>
+        <p>Your verification code is:</p>
+        <div style="background: #f5f5f5; padding: 20px; text-align: center; font-size: 32px; letter-spacing: 8px; font-weight: bold; margin: 20px 0;">
+          ${code}
+        </div>
+        <p style="color: #666; font-size: 14px;">This code expires in 15 minutes.</p>
+        <p style="color: #999; font-size: 12px;">If you didn't request this, please ignore this email.</p>
+      </div>
+    `
+  };
+
+  try {
+    await sgMail.send(msg);
+    console.log('Verification email sent to:', email);
+    return true;
+  } catch (error) {
+    console.error('SendGrid error:', error.response?.body?.errors || error.message);
+    return false;
+  }
+}

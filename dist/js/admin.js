@@ -33,6 +33,38 @@
     deleteTargetId: null
   };
 
+  // State - add verification state
+  const state = {
+    token: localStorage.getItem('admin_token'),
+    pendingEmail: null, // Email waiting for verification
+    signatures: [],
+    admins: [],
+    posts: [],
+    petitions: [],
+    petitionsList: [],
+    comments: [],
+    currentAdminId: null,
+    currentPostId: null,
+    currentPetitionId: null,
+    quillEditor: null,
+    pagination: {
+      page: 1,
+      limit: 50,
+      total: 0
+    },
+    commentsPagination: {
+      page: 1,
+      limit: 20,
+      total: 0
+    },
+    filter: {
+      petition: '',
+      search: '',
+      commentStatus: 'pending'
+    },
+    deleteTargetId: null
+  };
+
   // DOM Elements - existing + new
   const elements = {
     // Existing elements
@@ -40,6 +72,13 @@
     dashboardView: document.getElementById('dashboard-view'),
     loginForm: document.getElementById('login-form'),
     loginError: document.getElementById('login-error'),
+    
+    // Verification elements
+    verifyForm: document.getElementById('verify-form'),
+    verifyCode: document.getElementById('verify-code'),
+    verifyEmail: document.getElementById('verify-email'),
+    verifyError: document.getElementById('verify-error'),
+    resendCodeBtn: document.getElementById('resend-code-btn'),
     signaturesBody: document.getElementById('signatures-body'),
     adminsBody: document.getElementById('admins-body'),
     totalSignatures: document.getElementById('total-signatures'),
@@ -1210,7 +1249,7 @@
 
   // === EVENT HANDLERS ===
 
-  // Login handler
+  // Login handler - modified for email verification flow
   async function handleLogin(event) {
     event.preventDefault();
     setLoading(true);
@@ -1224,10 +1263,73 @@
         body: JSON.stringify({ email: emailVal, password: passVal })
       });
 
+      // Check if verification is required
+      if (data.requiresVerification) {
+        // Store pending email and show verification form
+        state.pendingEmail = data.email;
+        
+        // Hide login form, show verification form
+        elements.loginForm.style.display = 'none';
+        document.getElementById('verify-view').style.display = 'flex';
+        elements.verifyEmail.textContent = data.email;
+        elements.verifyCode.value = '';
+        elements.verifyCode.focus();
+        
+        showSuccess(data.message || 'Verification code sent to your email', document.getElementById('verify-message'));
+        setTimeout(() => hideError(document.getElementById('verify-message')), 5000);
+      } else {
+        // No verification required (legacy flow)
+        state.token = data.token;
+        localStorage.setItem('admin_token', data.token);
+
+        elements.loginView.style.display = 'none';
+        elements.dashboardView.style.display = 'block';
+
+        await Promise.all([
+          loadSignatures(),
+          loadPetitionsFilter()
+        ]);
+
+        syncStagingToMain();
+        updatePendingEditsBadge();
+      }
+    } catch (error) {
+      showError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // Verification handler
+  async function handleVerify(event) {
+    event.preventDefault();
+    setLoading(true);
+    hideError(document.getElementById('verify-error'));
+
+    try {
+      const codeVal = elements.verifyCode.value.trim();
+      
+      if (!codeVal) {
+        showError('Please enter the verification code', document.getElementById('verify-error'));
+        setLoading(false);
+        return;
+      }
+
+      const data = await api('admin/verify', {
+        method: 'POST',
+        body: JSON.stringify({ 
+          email: state.pendingEmail, 
+          code: codeVal 
+        })
+      });
+
+      // Verification successful - store token and proceed to dashboard
       state.token = data.token;
       localStorage.setItem('admin_token', data.token);
+      state.pendingEmail = null;
 
-      elements.loginView.style.display = 'none';
+      // Hide verification form, show dashboard
+      document.getElementById('verify-view').style.display = 'none';
       elements.dashboardView.style.display = 'block';
 
       await Promise.all([
@@ -1235,11 +1337,36 @@
         loadPetitionsFilter()
       ]);
 
-      // Sync staging to production on fresh login only
       syncStagingToMain();
       updatePendingEditsBadge();
     } catch (error) {
-      showError(error.message);
+      showError(error.message, document.getElementById('verify-error'));
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // Resend verification code (calls login again)
+  async function handleResendCode() {
+    setLoading(true);
+    hideError(document.getElementById('verify-error'));
+
+    try {
+      // Re-send verification by calling login again
+      const emailVal = document.getElementById('email').value.trim();
+      const passVal = document.getElementById('password').value;
+      
+      const data = await api('admin/login', {
+        method: 'POST',
+        body: JSON.stringify({ email: emailVal, password: passVal })
+      });
+
+      if (data.requiresVerification) {
+        state.pendingEmail = data.email;
+        showSuccess('New verification code sent', document.getElementById('verify-message'));
+      }
+    } catch (error) {
+      showError(error.message, document.getElementById('verify-error'));
     } finally {
       setLoading(false);
     }
@@ -1670,6 +1797,15 @@
 
     // Existing event listeners
     elements.loginForm.addEventListener('submit', handleLogin);
+    
+    // Verification event listeners
+    if (elements.verifyForm) {
+      elements.verifyForm.addEventListener('submit', handleVerify);
+    }
+    if (elements.resendCodeBtn) {
+      elements.resendCodeBtn.addEventListener('click', handleResendCode);
+    }
+    
     elements.logoutBtn.addEventListener('click', handleLogout);
     elements.addAdminForm.addEventListener('submit', handleAddAdmin);
     elements.prevPage.addEventListener('click', handlePrevPage);

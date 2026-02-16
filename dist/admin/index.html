@@ -296,6 +296,35 @@
       </div>
     </div>
 
+    <!-- Verification View -->
+    <div id="verify-view" class="view" style="display: none;">
+      <div class="login-container">
+        <div class="login-header">
+          <img src="/images/logo.png" alt="Secure the Vote MD" class="login-logo">
+          <p>Enter Verification Code</p>
+        </div>
+        <div id="verify-message" class="success-message" style="display: none; margin-bottom: 16px;"></div>
+        <p style="text-align: center; color: #666; margin-bottom: 20px;">
+          A verification code has been sent to<br>
+          <strong id="verify-email"></strong>
+        </p>
+        <form id="verify-form">
+          <div class="form-group">
+            <label for="verify-code">Verification Code</label>
+            <input type="text" id="verify-code" name="code" required autocomplete="one-time-code" placeholder="Enter 6-digit code" maxlength="6" pattern="[0-9]{6}">
+          </div>
+          <div id="verify-error" class="error-message" style="display: none;"></div>
+          <button type="submit" class="btn btn-primary">Verify & Login</button>
+        </form>
+        <div style="text-align: center; margin-top: 16px;">
+          <button type="button" id="resend-code-btn" class="btn btn-outline btn-small">Didn't receive it? Resend</button>
+        </div>
+        <div style="text-align: center; margin-top: 12px;">
+          <a href="#" onclick="document.getElementById('verify-view').style.display='none'; document.getElementById('login-view').style.display='flex'; return false;" style="color: #888; font-size: 0.9rem;">Back to login</a>
+        </div>
+      </div>
+    </div>
+
     <!-- Dashboard View -->
     <div id="dashboard-view" class="view" style="display: none;">
       <header class="dashboard-header">
@@ -1113,6 +1142,5 @@
 
   <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
   <script src="/js/admin.js"></script>
-<script src="/js/mobile-menu.js"></script>
 </body>
 </html>
