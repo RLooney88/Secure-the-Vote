@@ -333,6 +333,8 @@ fetch('https://site-builder-ai-production.up.railway.app/sites/securethevotemd/t
     // Observe the host element (visible in main DOM) as a proxy for the shadow content
     obs.observe(footerHost);
   }
+
+  var ls = document.getElementById('template-loading'); if (ls) ls.remove();
 });
 </script>
 <!-- TEMPLATE INJECTION END -->

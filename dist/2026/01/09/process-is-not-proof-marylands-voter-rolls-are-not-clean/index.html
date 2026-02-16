@@ -311,6 +311,10 @@ a {
 </head>
 <body>
 <!-- TEMPLATE INJECTION START -->
+<style id="template-loading">
+  body > *:not(#site-header):not(#site-footer):not(script):not(style):not(link) { opacity: 0; transition: opacity 0.2s; }
+  #site-header:empty, #site-footer:empty { min-height: 0; }
+</style>
 <link rel="icon" type="image/png" href="/images/2024/04/LOGOsecurethevote_yellowMD.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <div id="site-header"></div>
@@ -778,6 +782,8 @@ fetch('https://site-builder-ai-production.up.railway.app/sites/securethevotemd/t
     // Observe the host element (visible in main DOM) as a proxy for the shadow content
     obs.observe(footerHost);
   }
+
+  var ls = document.getElementById('template-loading'); if (ls) ls.remove();
 });
 </script>
 <!-- TEMPLATE INJECTION END -->
