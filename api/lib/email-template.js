@@ -145,9 +145,9 @@ function wrapEmail(options) {
         <!-- Main email container -->
         <table role="presentation" cellspacing="0" cellpadding="0" border="0" class="email-container" style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
           
-          <!-- HEADER: Maroon background with logo -->
+          <!-- HEADER: White background with logo -->
           <tr>
-            <td align="center" style="background-color: #9B1E37; padding: 30px 20px;">
+            <td align="center" style="background-color: #FFFFFF; padding: 30px 20px;">
               <table role="presentation" cellspacing="0" cellpadding="0" border="0">
                 <tr>
                   <td align="center">

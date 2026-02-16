@@ -1038,6 +1038,90 @@
     return customFields;
   }
 
+  // Target emails management functions
+  function renderTargetEmails(emails = []) {
+    const container = document.getElementById('target-emails-container');
+    container.innerHTML = emails.map((email, index) => `
+      <span class="email-tag" data-index="${index}" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; background: #e8f4f8; border-radius: 16px; font-size: 0.9rem;">
+        ${escapeHtml(email)}
+        <span class="remove-email" style="cursor: pointer; color: #999; font-weight: bold; margin-left: 2px;" data-email="${escapeHtml(email)}">&times;</span>
+      </span>
+    `).join('');
+  }
+
+  function getTargetEmails() {
+    const emailTags = document.querySelectorAll('#target-emails-container .email-tag');
+    const emails = Array.from(emailTags).map(tag => {
+      const text = tag.textContent.trim();
+      return text.substring(0, text.length - 1).trim(); // Remove the × character
+    });
+    return emails;
+  }
+
+  function addTargetEmail() {
+    const input = document.getElementById('petition-target-email-input');
+    const email = input.value.trim();
+    
+    if (!email) return;
+    
+    // Basic email validation
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      alert('Please enter a valid email address');
+      return;
+    }
+    
+    const currentEmails = getTargetEmails();
+    
+    // Check for duplicates
+    if (currentEmails.includes(email)) {
+      alert('This email is already in the list');
+      return;
+    }
+    
+    currentEmails.push(email);
+    renderTargetEmails(currentEmails);
+    input.value = '';
+    attachTargetEmailListeners();
+  }
+
+  function removeTargetEmail(email) {
+    const currentEmails = getTargetEmails();
+    const filteredEmails = currentEmails.filter(e => e !== email);
+    renderTargetEmails(filteredEmails);
+    attachTargetEmailListeners();
+  }
+
+  function attachTargetEmailListeners() {
+    // Add button
+    const addBtn = document.getElementById('add-target-email-btn');
+    if (addBtn) {
+      addBtn.removeEventListener('click', addTargetEmail);
+      addBtn.addEventListener('click', addTargetEmail);
+    }
+    
+    // Enter key on input
+    const input = document.getElementById('petition-target-email-input');
+    if (input) {
+      input.removeEventListener('keypress', handleTargetEmailKeypress);
+      input.addEventListener('keypress', handleTargetEmailKeypress);
+    }
+    
+    // Remove buttons
+    document.querySelectorAll('.remove-email').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const email = e.target.dataset.email;
+        removeTargetEmail(email);
+      });
+    });
+  }
+
+  function handleTargetEmailKeypress(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addTargetEmail();
+    }
+  }
+
   function showPetitionEditor(petition = null) {
     elements.petitionsListView.style.display = 'none';
     elements.petitionEditorView.style.display = 'block';
@@ -1054,10 +1138,12 @@
       document.getElementById('petition-active').checked = petition.active !== false;
 
       // Email settings
-      document.getElementById('petition-target-email').value = petition.target_email || '';
+      const targetEmails = petition.target_emails ? JSON.parse(petition.target_emails) : [];
+      renderTargetEmails(targetEmails);
       document.getElementById('petition-target-email-cc').value = petition.target_email_cc || '';
       document.getElementById('petition-email-subject').value = petition.email_subject || '';
       document.getElementById('petition-greeting').value = petition.greeting || '';
+      document.getElementById('petition-email-body').value = petition.email_body || '';
       document.getElementById('petition-sends-email').checked = petition.sends_email !== false;
       document.getElementById('petition-bcc-signer').checked = petition.bcc_signer || false;
 
@@ -1120,11 +1206,15 @@
       document.getElementById('petition-optin-label').value = 'Add me to your mailing list';
       petitionMessageQuill.root.innerHTML = '';
       renderCustomFields([]);
+      renderTargetEmails([]);
       
       document.querySelectorAll('.field-checkbox').forEach(cb => {
         cb.checked = ['full_name', 'email', 'zip_code'].includes(cb.value);
       });
     }
+
+    // Attach target emails event listeners
+    attachTargetEmailListeners();
   }
 
   function hidePetitionEditor() {
@@ -1169,10 +1259,11 @@
       fields,
 
       // Email settings
-      target_email: document.getElementById('petition-target-email').value || null,
+      target_emails: getTargetEmails(),
       target_email_cc: document.getElementById('petition-target-email-cc').value || null,
       email_subject: document.getElementById('petition-email-subject').value || null,
       greeting: document.getElementById('petition-greeting').value || null,
+      email_body: document.getElementById('petition-email-body').value || null,
       sends_email: document.getElementById('petition-sends-email').checked,
       bcc_signer: document.getElementById('petition-bcc-signer').checked,
 

@@ -248,15 +248,18 @@ module.exports = async function handler(req, res) {
       await sendEmail(sanitizedEmail, 'Please Confirm Your Petition Signature', confirmHtml);
     }
 
-    // Send petition email to target if enabled and confirmed (or confirmation not required)
+    // Send petition email to target(s) if enabled and confirmed (or confirmation not required)
     if (petition.sends_email && !petition.requires_confirmation) {
+      
+      // Use email_body if provided, otherwise fall back to petition_message
+      const emailBody = petition.email_body || sanitizedPetitionMessage.replace(/\n/g, '<br>');
       
       const petitionEmailHtml = `
         <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto;">
           <h2 style="color: #9B1E37;">${stripHtml(petition.email_subject || petition.title)}</h2>
           ${petition.greeting ? `<p>${stripHtml(petition.greeting)}</p>` : ''}
           <div style="background: #f5f5f5; padding: 20px; margin: 20px 0; border-left: 4px solid #9B1E37;">
-            ${sanitizedPetitionMessage.replace(/\n/g, '<br>')}
+            ${emailBody}
           </div>
           <h3>Signer Information:</h3>
           <p><strong>Name:</strong> ${sanitizedFullName}</p>
@@ -273,13 +276,29 @@ module.exports = async function handler(req, res) {
         </div>
       `;
 
-      await sendEmail(
-        petition.target_email,
-        petition.email_subject || `New Petition Signature: ${petition.title}`,
-        petitionEmailHtml,
-        petition.target_email_cc,
-        petition.bcc_signer ? sanitizedEmail : null
-      );
+      // Send to all target emails
+      const targetEmails = petition.target_emails ? JSON.parse(petition.target_emails) : [];
+      
+      if (targetEmails.length > 0) {
+        for (const targetEmail of targetEmails) {
+          await sendEmail(
+            targetEmail,
+            petition.email_subject || `New Petition Signature: ${petition.title}`,
+            petitionEmailHtml,
+            petition.target_email_cc,
+            petition.bcc_signer ? sanitizedEmail : null
+          );
+        }
+      } else if (petition.target_email) {
+        // Fallback to old single target_email field if target_emails is empty
+        await sendEmail(
+          petition.target_email,
+          petition.email_subject || `New Petition Signature: ${petition.title}`,
+          petitionEmailHtml,
+          petition.target_email_cc,
+          petition.bcc_signer ? sanitizedEmail : null
+        );
+      }
     }
 
     // Send thank you email if enabled

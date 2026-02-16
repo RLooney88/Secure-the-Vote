@@ -32,7 +32,7 @@ module.exports = async function handler(req, res) {
       // Create new petition
       const {
         name, title, description, active, fields,
-        target_email, target_email_cc, email_subject, greeting, petition_message,
+        target_emails, target_email_cc, email_subject, greeting, email_body, petition_message,
         goal, goal_auto_increase, goal_bump_percent, goal_trigger_percent,
         sends_email, requires_confirmation, display_message, message_editable,
         allow_anonymous, show_signature_list, signature_privacy, social_sharing,
@@ -58,20 +58,20 @@ module.exports = async function handler(req, res) {
       const result = await pool.query(
         `INSERT INTO petitions (
           name, title, description, active, fields,
-          target_email, target_email_cc, email_subject, greeting, petition_message,
+          target_emails, target_email_cc, email_subject, greeting, email_body, petition_message,
           goal, goal_auto_increase, goal_bump_percent, goal_trigger_percent,
           sends_email, requires_confirmation, display_message, message_editable,
           allow_anonymous, show_signature_list, signature_privacy, social_sharing,
           optin_enabled, optin_label, bcc_signer,
           thank_you_email, thank_you_subject, thank_you_content,
           redirect_url, expires, expiration_date, custom_fields, status
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, 'draft')
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, 'draft')
          RETURNING *`,
         [
           name, title, description, active !== false,
           JSON.stringify(fields || ['full_name', 'email', 'zip_code']),
-          target_email || null, target_email_cc || null, email_subject || null,
-          greeting || null, petition_message || null,
+          JSON.stringify(target_emails || []), target_email_cc || null, email_subject || null,
+          greeting || null, email_body || null, petition_message || null,
           goal || null, goal_auto_increase || false,
           goal_bump_percent || 25, goal_trigger_percent || 90,
           sends_email !== false, requires_confirmation || false,
@@ -101,7 +101,7 @@ module.exports = async function handler(req, res) {
 
       const {
         name, title, description, active, fields,
-        target_email, target_email_cc, email_subject, greeting, petition_message,
+        target_emails, target_email_cc, email_subject, greeting, email_body, petition_message,
         goal, goal_auto_increase, goal_bump_percent, goal_trigger_percent,
         sends_email, requires_confirmation, display_message, message_editable,
         allow_anonymous, show_signature_list, signature_privacy, social_sharing,
@@ -117,21 +117,21 @@ module.exports = async function handler(req, res) {
       const result = await pool.query(
         `UPDATE petitions SET
           name = $1, title = $2, description = $3, active = $4, fields = $5,
-          target_email = $6, target_email_cc = $7, email_subject = $8,
-          greeting = $9, petition_message = $10,
-          goal = $11, goal_auto_increase = $12, goal_bump_percent = $13,
-          goal_trigger_percent = $14, sends_email = $15, requires_confirmation = $16,
-          display_message = $17, message_editable = $18, allow_anonymous = $19,
-          show_signature_list = $20, signature_privacy = $21, social_sharing = $22,
-          optin_enabled = $23, optin_label = $24, bcc_signer = $25,
-          thank_you_email = $26, thank_you_subject = $27, thank_you_content = $28,
-          redirect_url = $29, expires = $30, expiration_date = $31, custom_fields = $32
-         WHERE id = $33
+          target_emails = $6, target_email_cc = $7, email_subject = $8,
+          greeting = $9, email_body = $10, petition_message = $11,
+          goal = $12, goal_auto_increase = $13, goal_bump_percent = $14,
+          goal_trigger_percent = $15, sends_email = $16, requires_confirmation = $17,
+          display_message = $18, message_editable = $19, allow_anonymous = $20,
+          show_signature_list = $21, signature_privacy = $22, social_sharing = $23,
+          optin_enabled = $24, optin_label = $25, bcc_signer = $26,
+          thank_you_email = $27, thank_you_subject = $28, thank_you_content = $29,
+          redirect_url = $30, expires = $31, expiration_date = $32, custom_fields = $33
+         WHERE id = $34
          RETURNING *`,
         [
           name, title, description, active,
           JSON.stringify(fields),
-          target_email, target_email_cc, email_subject, greeting, petition_message,
+          JSON.stringify(target_emails || []), target_email_cc, email_subject, greeting, email_body, petition_message,
           goal, goal_auto_increase, goal_bump_percent, goal_trigger_percent,
           sends_email, requires_confirmation, display_message, message_editable,
           allow_anonymous, show_signature_list, signature_privacy, social_sharing,
