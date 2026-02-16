@@ -1,0 +1,44 @@
+/* Mobile fixes — body content only, no header/footer changes */
+@media (max-width: 767px) {
+  body { overflow-x: hidden !important; }
+  .elementor-container { flex-wrap: wrap !important; max-width: 100vw !important; }
+  .elementor-column { width: 100% !important; max-width: 100% !important; }
+  .elementor-section, .elementor-widget-wrap { max-width: 100vw !important; overflow-x: hidden !important; }
+  img { max-width: 100% !important; height: auto !important; }
+  .elementor-section > .elementor-container { padding: 15px 10px !important; }
+  .elementor-widget-wrap { padding: 10px !important; }
+  h1 { font-size: 26px !important; line-height: 1.3 !important; }
+  h2 { font-size: 22px !important; line-height: 1.3 !important; }
+  h3 { font-size: 18px !important; line-height: 1.3 !important; }
+  p { font-size: 15px !important; line-height: 1.6 !important; }
+  .elementor-button { font-size: 14px !important; padding: 10px 20px !important; }
+  input, textarea, select { width: 100% !important; font-size: 16px !important; box-sizing: border-box !important; }
+  table { display: block !important; overflow-x: auto !important; max-width: 100% !important; }
+  iframe { max-width: 100% !important; }
+
+  /* Blog carousel — single row horizontal scroll */
+  .post-items.row {
+    display: flex !important; flex-wrap: nowrap !important; overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important; -webkit-overflow-scrolling: touch !important;
+    gap: 16px !important; padding: 10px 5px 20px !important; scrollbar-width: none !important;
+  }
+  .post-items.row::-webkit-scrollbar { display: none !important; }
+  .post-items.row > [class*="col-"] {
+    flex: 0 0 85% !important; max-width: 85% !important; scroll-snap-align: center !important;
+  }
+}
+@media (max-width: 479px) {
+  h1 { font-size: 22px !important; }
+  h2 { font-size: 19px !important; }
+  .elementor-section > .elementor-container { padding: 10px 8px !important; }
+}
+/* Desktop blog carousel */
+@media (min-width: 768px) {
+  .post-items.row {
+    display: flex !important; flex-wrap: nowrap !important; overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important; gap: 16px !important; padding: 10px 5px 20px !important;
+    scrollbar-width: none !important;
+  }
+  .post-items.row::-webkit-scrollbar { display: none !important; }
+  .post-items.row > [class*="col-"] { scroll-snap-align: center !important; }
+}
