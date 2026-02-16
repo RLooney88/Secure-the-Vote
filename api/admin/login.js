@@ -3,6 +3,7 @@ const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 const { checkRateLimit, addRateLimitHeaders } = require('./_rateLimit.js');
 const sgMail = require('@sendgrid/mail');
+const { wrapEmail } = require('../lib/email-template.js');
 
 // Simple crypto for verification token
 function generateVerificationCode() {
@@ -137,26 +138,36 @@ async function sendVerificationEmail(email, code) {
 
   sgMail.setApiKey(apiKey);
 
-  const msg = {
-    to: email,
-    from: process.env.SENDGRID_FROM_EMAIL || 'noreply@securethevotemd.com',
-    subject: 'SecureTheVoteMD - Verification Code',
-    text: `Your verification code is: ${code}
+  const recipientName = email.split('@')[0] || 'Admin';
+
+  // Generate branded HTML using the template system
+  const html = wrapEmail({
+    recipientName: recipientName,
+    subject: 'Your SecureTheVoteMD Verification Code',
+    headline: 'Verify Your Login',
+    body: `<p>Your verification code is:</p>
+<div style="background:#f5f5f5;padding:20px;text-align:center;font-size:32px;letter-spacing:8px;font-weight:bold;margin:20px 0;border-radius:8px;color:#333;">${code}</div>
+<p style="color:#666;font-size:14px;">This code expires in 15 minutes. If you didn't request this, please ignore this email.</p>`
+  });
+
+  const text = `SECURETHEVOTEMD - VERIFICATION CODE
+
+Hello ${recipientName},
+
+Your verification code is: ${code}
 
 This code expires in 15 minutes.
 
-If you didn't request this, please ignore this email.`,
-    html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #9B1E37;">SecureTheVoteMD Admin Login</h2>
-        <p>Your verification code is:</p>
-        <div style="background: #f5f5f5; padding: 20px; text-align: center; font-size: 32px; letter-spacing: 8px; font-weight: bold; margin: 20px 0;">
-          ${code}
-        </div>
-        <p style="color: #666; font-size: 14px;">This code expires in 15 minutes.</p>
-        <p style="color: #999; font-size: 12px;">If you didn't request this, please ignore this email.</p>
-      </div>
-    `
+If you didn't request this email, please ignore it.
+
+- The SecureTheVoteMD Team`;
+
+  const msg = {
+    to: email,
+    from: process.env.SENDGRID_FROM_EMAIL || 'noreply@securethevotemd.com',
+    subject: 'Your SecureTheVoteMD Verification Code',
+    html: html,
+    text: text
   };
 
   try {
