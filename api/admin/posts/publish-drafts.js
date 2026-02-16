@@ -2,6 +2,8 @@
 const { Pool } = require('pg');
 const { requireAuth } = require('../_auth.js');
 const { generatePostHTML } = require('./generate-page.js');
+const { generateSitemap } = require('./update-sitemap.js');
+const { findRelatedPosts, generateRelatedPostsHTML } = require('./internal-links.js');
 
 // Push files to GitHub using Trees API
 async function pushToGitHub(files) {
@@ -207,7 +209,19 @@ module.exports = async function handler(req, res) {
 
     for (const post of publishedPosts) {
       try {
-        const html = generatePostHTML(post);
+        let html = generatePostHTML(post);
+        
+        // Find and append related posts for internal linking
+        try {
+          const relatedPosts = await findRelatedPosts(post.title, post.content, post.id, 3);
+          if (relatedPosts.length > 0) {
+            const relatedPostsHtml = generateRelatedPostsHTML(relatedPosts);
+            // Insert before comments section
+            html = html.replace('</div>\n      </div>\n\n      <section id="comments"', `${relatedPostsHtml}\n      </div>\n\n      <section id="comments"`);
+          }
+        } catch (error) {
+          console.warn(`Failed to fetch related posts for ${post.id}:`, error.message);
+        }
         
         // Create file path (YYYY/MM/DD/slug/index.html)
         const publishDate = new Date(post.published_at || new Date());
@@ -232,6 +246,40 @@ module.exports = async function handler(req, res) {
         console.error(`Failed to generate HTML for post ${post.id}:`, error);
       }
     }
+
+    // Generate and include sitemap.xml
+    let sitemapXml = '';
+    try {
+      sitemapXml = await generateSitemap();
+      filesToPush.push({
+        path: 'dist/sitemap.xml',
+        content: sitemapXml,
+        postTitle: 'Sitemap'
+      });
+      filesToBuffer.push({
+        path: 'dist/sitemap.xml',
+        content: sitemapXml,
+        postTitle: 'Sitemap'
+      });
+    } catch (error) {
+      console.warn('Failed to generate sitemap:', error.message);
+    }
+
+    // Generate and include robots.txt
+    const robotsTxt = `User-agent: *
+Allow: /
+Sitemap: https://securethevotemd.com/sitemap.xml`;
+    
+    filesToPush.push({
+      path: 'dist/robots.txt',
+      content: robotsTxt,
+      postTitle: 'Robots.txt'
+    });
+    filesToBuffer.push({
+      path: 'dist/robots.txt',
+      content: robotsTxt,
+      postTitle: 'Robots.txt'
+    });
 
     // Push to GitHub
     let githubResult = { pushed: false };

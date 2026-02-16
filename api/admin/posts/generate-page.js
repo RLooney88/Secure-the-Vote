@@ -20,24 +20,87 @@ function generatePostHTML(post) {
       .replace(/'/g, '&#039;');
   };
 
+  // Strip HTML tags to generate clean text for meta description
+  const stripHtml = (html) => {
+    if (!html) return '';
+    return html.replace(/<[^>]*>/g, '').trim();
+  };
+
+  // Generate meta description from first 155 chars of content
+  const metaDescription = stripHtml(post.seo_description || post.excerpt || post.content || '')
+    .substring(0, 155)
+    .replace(/\n/g, ' ')
+    .replace(/\s+/g, ' ');
+
+  // Build canonical URL
+  const year = publishDate.getFullYear();
+  const month = String(publishDate.getMonth() + 1).padStart(2, '0');
+  const day = String(publishDate.getDate()).padStart(2, '0');
+  const canonicalUrl = `https://securethevotemd.com/${year}/${month}/${day}/${post.slug}/`;
+
+  // Get OG image (default to site logo)
+  const ogImage = post.og_image || 'https://securethevotemd.com/images/2024/04/LOGOsecurethevote_yellowMD.png';
+
+  // Build JSON-LD Article schema
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: post.seo_title || post.title,
+    description: metaDescription,
+    image: ogImage,
+    datePublished: publishDate.toISOString(),
+    dateModified: publishDate.toISOString(),
+    author: {
+      '@type': 'Organization',
+      name: 'Secure The Vote Maryland'
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Secure The Vote Maryland',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://securethevotemd.com/images/2024/04/LOGOsecurethevote_yellowMD.png'
+      }
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': canonicalUrl
+    }
+  };
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${escapeHtml(post.seo_title || post.title)} - Secure The Vote MD</title>
-  <meta name="description" content="${escapeHtml(post.seo_description || post.excerpt || '')}">
-  <link rel="canonical" href="/${post.slug}/">
   
+  <!-- Meta Tags -->
+  <meta name="description" content="${escapeHtml(metaDescription)}">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="${canonicalUrl}">
+  
+  <!-- Open Graph Tags -->
   <meta property="og:locale" content="en_US" />
   <meta property="og:type" content="article" />
   <meta property="og:title" content="${escapeHtml(post.seo_title || post.title)}" />
-  <meta property="og:description" content="${escapeHtml(post.seo_description || post.excerpt || '')}" />
-  <meta property="og:url" content="/${post.slug}/" />
-  <meta property="og:site_name" content="Secure The Vote MD" />
+  <meta property="og:description" content="${escapeHtml(metaDescription)}" />
+  <meta property="og:url" content="${canonicalUrl}" />
+  <meta property="og:image" content="${escapeHtml(ogImage)}" />
+  <meta property="og:site_name" content="Secure The Vote Maryland" />
   <meta property="article:published_time" content="${publishDate.toISOString()}" />
-  ${post.og_image ? `<meta property="og:image" content="${escapeHtml(post.og_image)}" />` : ''}
+  <meta property="article:modified_time" content="${publishDate.toISOString()}" />
+  
+  <!-- Twitter Card Tags -->
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="${escapeHtml(post.seo_title || post.title)}" />
+  <meta name="twitter:description" content="${escapeHtml(metaDescription)}" />
+  <meta name="twitter:image" content="${escapeHtml(ogImage)}" />
+  
+  <!-- Article Schema (JSON-LD) -->
+  <script type="application/ld+json">
+  ${JSON.stringify(articleSchema)}
+  </script>
   
   <link rel="stylesheet" id="embed-pdf-viewer-css" href="/wp-content/plugins/embed-pdf-viewer/css/embed-pdf-viewer.css?ver=2.4.7" media="screen">
   <link rel="stylesheet" id="elementor-frontend-css" href="/wp-content/plugins/elementor/assets/css/frontend.min.css?ver=3.35.4" media="all">
@@ -233,4 +296,7 @@ function generatePostHTML(post) {
 </html>`;
 }
 
-module.exports = { generatePostHTML };
+module.exports = { generatePostHTML, stripHtml: (html) => {
+  if (!html) return '';
+  return html.replace(/<[^>]*>/g, '').trim();
+} };
