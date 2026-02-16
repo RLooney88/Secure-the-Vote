@@ -458,7 +458,9 @@ html, body {
   margin: -50px auto 10px auto;
   padding: 2em;
   text-align: center;
-  color: var(--color-black);
+  color: #1a1a1a;
+  -webkit-user-select: none;
+  user-select: none;
   position: relative;
   z-index: 2;
   transform: translateY(40px);
@@ -481,7 +483,7 @@ html, body {
   font-family: var(--font-secondary);
   font-size: 18px;
   line-height: 28px;
-  color: var(--color-black);
+  color: #1a1a1a;
   margin-bottom: 12px;
 }
 
