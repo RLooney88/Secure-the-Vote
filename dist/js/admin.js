@@ -10,6 +10,7 @@
     posts: [],
     petitions: [],
     petitionsList: [],
+    comments: [],
     currentAdminId: null,
     currentPostId: null,
     currentPetitionId: null,
@@ -19,9 +20,15 @@
       limit: 50,
       total: 0
     },
+    commentsPagination: {
+      page: 1,
+      limit: 20,
+      total: 0
+    },
     filter: {
       petition: '',
-      search: ''
+      search: '',
+      commentStatus: 'pending'
     },
     deleteTargetId: null
   };
@@ -131,7 +138,14 @@
     validPagesList: document.getElementById('valid-pages-list'),
     newPagePath: document.getElementById('new-page-path'),
     addPageBtn: document.getElementById('add-page-btn'),
-    brandingFormMessage: document.getElementById('branding-form-message')
+    brandingFormMessage: document.getElementById('branding-form-message'),
+    
+    // Comments Tab
+    commentsList: document.getElementById('comments-list'),
+    commentsPageInfo: document.getElementById('comments-page-info'),
+    commentsPrevPage: document.getElementById('comments-prev-page'),
+    commentsNextPage: document.getElementById('comments-next-page'),
+    commentFilterBtns: document.querySelectorAll('.comment-filter-btn')
   };
 
   // API helper
@@ -678,6 +692,123 @@
     }
   }
 
+  // === COMMENTS FUNCTIONALITY ===
+
+  async function loadComments() {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams({
+        status: state.filter.commentStatus,
+        page: state.commentsPagination.page,
+        limit: state.commentsPagination.limit
+      });
+
+      const data = await api(`comments/admin-list?${params}`);
+      state.comments = data.comments || [];
+      state.commentsPagination = data.pagination || { page: 1, limit: 20, total: 0 };
+
+      renderComments();
+      updateCommentsPagination();
+    } catch (error) {
+      console.error('Failed to load comments:', error);
+      showError('Failed to load comments: ' + error.message, elements.commentsList);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function renderComments() {
+    if (state.comments.length === 0) {
+      elements.commentsList.innerHTML = `
+        <div style="padding: 40px 20px; text-align: center; color: var(--text-secondary); font-style: italic;">
+          No comments found
+        </div>
+      `;
+      return;
+    }
+
+    elements.commentsList.innerHTML = state.comments.map(comment => `
+      <div class="comment-item" data-comment-id="${comment.id}">
+        <div class="comment-header">
+          <div class="comment-author-info">
+            <div class="comment-author-name">${escapeHtml(comment.author_name)}</div>
+            <div class="comment-meta">
+              <div class="comment-meta-item">
+                <span class="comment-meta-label">Email:</span>
+                <span>${escapeHtml(comment.author_email)}</span>
+              </div>
+              <div class="comment-meta-item">
+                <span class="comment-meta-label">Date:</span>
+                <span>${formatDate(comment.created_at)}</span>
+              </div>
+              <div class="comment-meta-item">
+                <span class="comment-meta-label">Post:</span>
+                <a href="/${comment.post_slug}" target="_blank" class="comment-post-link">${escapeHtml(comment.post_slug)}</a>
+              </div>
+            </div>
+          </div>
+          <span class="comment-status-badge ${comment.status}">${comment.status}</span>
+        </div>
+        <div class="comment-content">${escapeHtml(comment.content).replace(/\n/g, '<br>')}</div>
+        <div class="comment-actions">
+          ${comment.status !== 'approved' ? `<button class="btn btn-success approve-comment-btn" data-comment-id="${comment.id}">Approve</button>` : ''}
+          ${comment.status !== 'rejected' ? `<button class="btn btn-warning reject-comment-btn" data-comment-id="${comment.id}">Reject</button>` : ''}
+          ${comment.status !== 'spam' ? `<button class="btn btn-warning spam-comment-btn" data-comment-id="${comment.id}">Mark as Spam</button>` : ''}
+          <button class="btn btn-danger delete-comment-btn" data-comment-id="${comment.id}">Delete</button>
+        </div>
+      </div>
+    `).join('');
+
+    // Attach event listeners
+    document.querySelectorAll('.approve-comment-btn').forEach(btn => {
+      btn.addEventListener('click', () => moderateComment(parseInt(btn.dataset.commentId), 'approve'));
+    });
+
+    document.querySelectorAll('.reject-comment-btn').forEach(btn => {
+      btn.addEventListener('click', () => moderateComment(parseInt(btn.dataset.commentId), 'reject'));
+    });
+
+    document.querySelectorAll('.spam-comment-btn').forEach(btn => {
+      btn.addEventListener('click', () => moderateComment(parseInt(btn.dataset.commentId), 'spam'));
+    });
+
+    document.querySelectorAll('.delete-comment-btn').forEach(btn => {
+      btn.addEventListener('click', () => moderateComment(parseInt(btn.dataset.commentId), 'delete'));
+    });
+  }
+
+  function updateCommentsPagination() {
+    const { page, total, limit } = state.commentsPagination;
+    const totalPages = Math.ceil(total / limit) || 1;
+    elements.commentsPageInfo.textContent = `Page ${page} of ${totalPages}`;
+    elements.commentsPrevPage.disabled = page <= 1;
+    elements.commentsNextPage.disabled = page >= totalPages;
+  }
+
+  async function moderateComment(commentId, action) {
+    if (!confirm(`Are you sure you want to ${action} this comment?`)) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await api('comments/moderate', {
+        method: 'PUT',
+        body: JSON.stringify({
+          comment_id: commentId,
+          action: action
+        })
+      });
+
+      await loadComments();
+    } catch (error) {
+      console.error('Failed to moderate comment:', error);
+      alert('Failed to moderate comment: ' + error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   // === PETITIONS FUNCTIONALITY ===
 
   let petitionMessageQuill = null;
@@ -1053,7 +1184,7 @@
       ]);
 
       // Sync staging to production on fresh login only
-      // syncStagingToMain(); // DISABLED - auto-sync was overwriting staging work
+      syncStagingToMain();
       updatePendingEditsBadge();
     } catch (error) {
       showError(error.message);
@@ -1225,6 +1356,8 @@
       loadBanner();
     } else if (tabName === 'petitions' && state.petitions.length === 0) {
       loadPetitionsList();
+    } else if (tabName === 'comments') {
+      loadComments();
     } else if (tabName === 'branding' && validPages.length === 0) {
       loadBrandGuide();
     } else if (tabName === 'site-editor') {
@@ -1473,7 +1606,7 @@
       });
       
       // Sync staging on page load/refresh (resets to production baseline)
-      // syncStagingToMain(); // DISABLED - auto-sync was overwriting staging work
+      syncStagingToMain();
       
       // Update pending edits badge on load and poll every 30 seconds
       updatePendingEditsBadge();
@@ -1552,6 +1685,32 @@
 
     // New event listeners - Banner
     elements.bannerForm.addEventListener('submit', saveBanner);
+
+    // New event listeners - Comments
+    elements.commentFilterBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        elements.commentFilterBtns.forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        state.filter.commentStatus = e.target.dataset.status;
+        state.commentsPagination.page = 1;
+        loadComments();
+      });
+    });
+
+    elements.commentsPrevPage.addEventListener('click', () => {
+      if (state.commentsPagination.page > 1) {
+        state.commentsPagination.page--;
+        loadComments();
+      }
+    });
+
+    elements.commentsNextPage.addEventListener('click', () => {
+      const totalPages = Math.ceil(state.commentsPagination.total / state.commentsPagination.limit);
+      if (state.commentsPagination.page < totalPages) {
+        state.commentsPagination.page++;
+        loadComments();
+      }
+    });
 
     // New event listeners - Petitions
     elements.newPetitionBtn.addEventListener('click', () => showPetitionEditor());
