@@ -564,12 +564,64 @@
   async function publishPost(postId) {
     setLoading(true);
     try {
+      // Show initial status message
+      const statusEl = document.createElement('div');
+      statusEl.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #ffffff;
+        border: 2px solid #9B1E37;
+        border-radius: 8px;
+        padding: 20px;
+        max-width: 400px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 10000;
+        font-family: Arial, sans-serif;
+      `;
+      statusEl.innerHTML = `
+        <div style="margin: 0;">
+          <strong style="color: #9B1E37; font-size: 16px;">Publishing post...</strong>
+          <div style="margin-top: 12px; color: #666; font-size: 14px;">
+            <div style="margin: 6px 0; padding-left: 20px;">✓ Generating HTML page...</div>
+            <div style="margin: 6px 0; padding-left: 20px; opacity: 0.5;">◌ Pushing to GitHub staging...</div>
+            <div style="margin: 6px 0; padding-left: 20px; opacity: 0.5;">◌ Finalizing...</div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(statusEl);
+
       const data = await api('admin/post-publish', {
         method: 'POST',
         body: JSON.stringify({ postId })
       });
 
-      alert(data.message);
+      // Update status with results
+      if (data.buffered) {
+        statusEl.innerHTML = `
+          <div style="margin: 0;">
+            <strong style="color: #27ae60; font-size: 16px;">✓ Post Published Successfully!</strong>
+            <p style="margin: 10px 0 8px 0; color: #666; font-size: 14px;">HTML page generated and queued for deployment.</p>
+            <p style="margin: 8px 0; color: #555; font-size: 13px;">${data.message}</p>
+            <p style="margin: 8px 0; color: #999; font-size: 11px; word-break: break-all;">${data.filePath || ''}</p>
+          </div>
+        `;
+        statusEl.style.borderColor = '#27ae60';
+      } else {
+        statusEl.innerHTML = `
+          <div style="margin: 0;">
+            <strong style="color: #9B1E37; font-size: 16px;">Post Published</strong>
+            <p style="margin: 10px 0; color: #666; font-size: 14px;">${data.message}</p>
+          </div>
+        `;
+      }
+
+      setTimeout(() => {
+        statusEl.style.opacity = '0';
+        statusEl.style.transition = 'opacity 0.3s ease-out';
+        setTimeout(() => statusEl.remove(), 300);
+      }, 4000);
+
       await loadPosts();
       hidePostEditor();
     } catch (error) {
