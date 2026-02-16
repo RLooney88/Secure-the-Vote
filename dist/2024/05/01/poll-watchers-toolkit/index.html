@@ -446,6 +446,71 @@ a {
   transform: scale(1.05);
 }
 </style>
+<style id="mobile-carousel-css">
+/* Mobile Carousel */
+@media(max-width:768px) {
+  .toolkit-cards {
+    display: flex !important;
+    grid-template-columns: unset !important;
+    scroll-snap-type: x mandatory;
+    transition: transform 0.4s ease;
+    gap: 0 !important;
+    max-width: 100vw;
+    position: relative;
+  }
+  .flip-card {
+    min-width: 100%;
+    scroll-snap-align: center;
+    flex-shrink: 0;
+    transition: transform 0.4s ease;
+  }
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .carousel-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ccc;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+    padding: 0;
+  }
+  .carousel-dot.active {
+    background: #9B1E37;
+    transform: scale(1.3);
+  }
+  .carousel-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 15px;
+  }
+  .carousel-arrow {
+    background: #9B1E37;
+    color: white;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+  .carousel-arrow:hover { background: #7a1529; }
+}
+@media(min-width:769px) {
+  .carousel-dots, .carousel-nav { display: none !important; }
+}
+</style>
 </head>
 <body>
 <!-- TEMPLATE INJECTION START -->
@@ -476,7 +541,7 @@ a {
 <div class="elementor-column elementor-col-33 elementor-top-column stv-banner-col-side"><div class="elementor-widget-wrap"></div></div>
 </div>
 </section>
-<main><article style="max-width:900px;margin:40px auto;padding:20px 30px;font-family:Arial,sans-serif;line-height:1.8;color:#333;"><p style="font-size:18px;margin-bottom:30px;">Citizens like you are required to keep our elections secure and accurate. You can help by being a poll worker. There are three types of poll workers.</p><div class="toolkit-cards">
+<main><article style="max-width:900px;margin:40px auto;padding:20px 30px;font-family:Arial,sans-serif;line-height:1.8;color:#333;"><p style="font-size:18px;margin-bottom:30px;">Citizens like you are required to keep our elections secure and accurate. You can help by being a poll worker. There are three types of poll workers.</p><div class="toolkit-viewport" style="overflow:hidden;"><div class="toolkit-cards">
   <div class="flip-card">
     <div class="flip-card-inner">
       <div class="flip-card-front">
@@ -516,7 +581,7 @@ a {
       </div>
     </div>
   </div>
-</div><h2 style="color:#9B1E37;margin-bottom:15px;">Challenger Certificate 2024 for Alex Pacheco</h2><p><a href="/wp-content/uploads/2024/04/Challenger-Certificate-2024-for-Alex-Pacheco.pdf" target="_blank" rel="noopener" style="color:#9B1E37;font-weight:bold;">📄 View Challenger Certificate (PDF)</a></p><div style="margin:30px 0;text-align:center;"><img src="/images/2024/04/MDGOP-Election-Hotline-2024-Primary.png" alt="MDGOP Election Hotline 2024 Primary" style="max-width:100%;height:auto;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);" onerror="this.src='/wp-content/uploads/2024/04/MDGOP-Election-Hotline-2024-Primary.png'"></div><h2 style="color:#9B1E37;margin-bottom:15px;">Observation Rights Letter</h2><p><a href="/wp-content/uploads/2024/04/Observation-Rights-Letter.pdf" target="_blank" rel="noopener" style="color:#9B1E37;font-weight:bold;">📄 View Observation Rights Letter (PDF)</a></p></article>>
+</div></div><h2 style="color:#9B1E37;margin-bottom:15px;">Challenger Certificate 2024 for Alex Pacheco</h2><p><a href="/wp-content/uploads/2024/04/Challenger-Certificate-2024-for-Alex-Pacheco.pdf" target="_blank" rel="noopener" style="color:#9B1E37;font-weight:bold;">📄 View Challenger Certificate (PDF)</a></p><div style="margin:30px 0;text-align:center;"><img src="/images/2024/04/MDGOP-Election-Hotline-2024-Primary.png" alt="MDGOP Election Hotline 2024 Primary" style="max-width:100%;height:auto;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);" onerror="this.src='/wp-content/uploads/2024/04/MDGOP-Election-Hotline-2024-Primary.png'"></div><h2 style="color:#9B1E37;margin-bottom:15px;">Observation Rights Letter</h2><p><a href="/wp-content/uploads/2024/04/Observation-Rights-Letter.pdf" target="_blank" rel="noopener" style="color:#9B1E37;font-weight:bold;">📄 View Observation Rights Letter (PDF)</a></p></article>>
   
   <div id="site-footer"></div>
   
