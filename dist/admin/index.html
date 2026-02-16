@@ -554,7 +554,11 @@
 
                   <div class="form-group">
                     <label for="post-featured-image">Featured Image URL</label>
-                    <input type="url" id="post-featured-image" placeholder="/images/blog/...">
+                    <div style="display: flex; gap: 8px; align-items: flex-start;">
+                      <input type="url" id="post-featured-image" placeholder="/images/blog/..." style="flex: 1;">
+                      <button type="button" id="upload-featured-btn" class="btn btn-secondary btn-small" style="white-space: nowrap;">📷 Upload</button>
+                    </div>
+                    <small style="color: #666; font-size: 0.85rem;">Paste a URL or upload an image file (jpg, png, gif, webp • max 5MB)</small>
                   </div>
 
                   <div class="seo-section">
@@ -571,8 +575,16 @@
                     </div>
                     <div class="form-group">
                       <label for="post-og-image">OG Image URL</label>
-                      <input type="url" id="post-og-image">
+                      <div style="display: flex; gap: 8px; align-items: flex-start;">
+                        <input type="url" id="post-og-image" style="flex: 1;">
+                        <button type="button" id="upload-og-btn" class="btn btn-secondary btn-small" style="white-space: nowrap;">📷 Upload</button>
+                      </div>
+                      <small style="color: #666; font-size: 0.85rem;">Paste a URL or upload an image file</small>
                     </div>
+                  </div>
+
+                  <div id="upload-progress" style="display: none; padding: 12px; background: #f0f7ff; border: 1px solid #90caf9; border-radius: 4px; color: #1565c0; text-align: center; margin: 16px 0;">
+                    <span>Uploading...</span>
                   </div>
 
                   <div id="post-form-message" style="display: none;"></div>
