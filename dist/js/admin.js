@@ -15,7 +15,7 @@
     currentAdminId: null,
     currentPostId: null,
     currentPetitionId: null,
-    quillEditor: null,
+    customEditor: null,
     pagination: {
       page: 1,
       limit: 50,
@@ -467,8 +467,8 @@
       elements.postSeoDescription.value = post.seo_description || '';
       elements.postOgImage.value = post.og_image || '';
       
-      if (state.quillEditor) {
-        state.quillEditor.root.innerHTML = post.content || '';
+      if (state.customEditor) {
+        state.customEditor.setHTML(post.content || '');
       }
 
       // Show external URL field if type is external-link
@@ -479,70 +479,15 @@
       // New post mode
       state.currentPostId = null;
       elements.postForm.reset();
-      if (state.quillEditor) {
-        state.quillEditor.setText('');
+      if (state.customEditor) {
+        state.customEditor.clear();
       }
       document.getElementById('external-url-group').style.display = 'none';
     }
 
-    // Initialize Quill if not already
-    if (!state.quillEditor) {
-      state.quillEditor = new Quill('#post-content-editor', {
-        theme: 'snow',
-        modules: {
-          toolbar: [
-            [{ 'header': [1, 2, 3, false] }],
-            ['bold', 'italic', 'underline', 'strike'],
-            ['link', 'image'],
-            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-            ['blockquote', 'code-block'],
-            ['clean']
-          ],
-          clipboard: {
-            matchVisual: false // Prevents Quill from preserving visual line breaks
-          }
-        }
-      });
-
-      // Custom paste handler to clean up text formatting
-      state.quillEditor.clipboard.addMatcher(Node.TEXT_NODE, function(node, delta) {
-        try {
-          // Get the text content
-          let text = node.textContent;
-          
-          if (!text) {
-            return delta; // Return original delta if no text
-          }
-          
-          // Normalize quotation marks (smart quotes → straight quotes)
-          text = text.replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, '"'); // Curly double quotes → "
-          text = text.replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'"); // Curly single quotes → '
-          
-          // Normalize other special characters
-          text = text.replace(/[\u2013\u2014]/g, '-'); // En/em dashes → hyphen
-          text = text.replace(/\u2026/g, '...'); // Ellipsis → three dots
-          
-          // Return cleaned text as delta ops
-          const ops = [];
-          delta.ops.forEach(op => {
-            if (typeof op.insert === 'string') {
-              let cleaned = op.insert;
-              cleaned = cleaned.replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, '"');
-              cleaned = cleaned.replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'");
-              cleaned = cleaned.replace(/[\u2013\u2014]/g, '-');
-              cleaned = cleaned.replace(/\u2026/g, '...');
-              ops.push({ insert: cleaned });
-            } else {
-              ops.push(op);
-            }
-          });
-          
-          return { ops: ops };
-        } catch (err) {
-          console.error('Paste handler error:', err);
-          return delta; // Fall back to original delta on error
-        }
-      });
+    // Initialize Custom Editor if not already
+    if (!state.customEditor) {
+      state.customEditor = new CustomEditor('#post-content-editor');
     }
 
     updateCharCounts();
@@ -589,7 +534,7 @@
     const postData = {
       title: elements.postTitle.value,
       slug: elements.postSlug.value,
-      content: state.quillEditor.root.innerHTML,
+      content: state.customEditor.getHTML(),
       excerpt: elements.postExcerpt.value,
       category: elements.postCategory.value,
       post_type: elements.postType.value,
@@ -704,7 +649,7 @@
   function previewPost() {
     const postData = {
       title: elements.postTitle.value,
-      content: state.quillEditor.root.innerHTML,
+      content: state.customEditor.getHTML(),
       category: elements.postCategory.value,
       featured_image: elements.postFeaturedImage.value
     };
@@ -736,7 +681,7 @@
   async function generateSEO() {
     const postData = {
       title: elements.postTitle.value,
-      content: state.quillEditor.root.innerHTML,
+      content: state.customEditor.getHTML(),
       category: elements.postCategory.value,
       excerpt: elements.postExcerpt.value,
       featured_image: elements.postFeaturedImage.value

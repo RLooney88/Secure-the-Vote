@@ -1,0 +1,161 @@
+/**
+ * Custom Rich Text Editor - replaces Quill
+ * Simple, reliable, does what you actually want
+ */
+
+class CustomEditor {
+  constructor(containerSelector) {
+    this.container = document.querySelector(containerSelector);
+    if (!this.container) {
+      throw new Error(`Editor container not found: ${containerSelector}`);
+    }
+    
+    this.init();
+  }
+  
+  init() {
+    // Create toolbar
+    this.toolbar = document.createElement('div');
+    this.toolbar.className = 'custom-editor-toolbar';
+    this.toolbar.innerHTML = `
+      <button type="button" data-command="bold" title="Bold"><b>B</b></button>
+      <button type="button" data-command="italic" title="Italic"><i>I</i></button>
+      <button type="button" data-command="underline" title="Underline"><u>U</u></button>
+      <button type="button" data-command="strikeThrough" title="Strikethrough"><s>S</s></button>
+      <span class="separator">|</span>
+      <button type="button" data-command="formatBlock" data-value="h2" title="Heading 2">H2</button>
+      <button type="button" data-command="formatBlock" data-value="h3" title="Heading 3">H3</button>
+      <button type="button" data-command="formatBlock" data-value="p" title="Paragraph">P</button>
+      <span class="separator">|</span>
+      <button type="button" data-command="insertUnorderedList" title="Bullet List">• List</button>
+      <button type="button" data-command="insertOrderedList" title="Numbered List">1. List</button>
+      <span class="separator">|</span>
+      <button type="button" data-command="createLink" title="Insert Link">🔗 Link</button>
+      <button type="button" data-command="insertImage" title="Insert Image">🖼️ Image</button>
+      <span class="separator">|</span>
+      <button type="button" data-command="formatBlock" data-value="blockquote" title="Quote">❝ Quote</button>
+      <button type="button" data-command="removeFormat" title="Clear Formatting">✕ Clear</button>
+    `;
+    
+    // Create editor area
+    this.editor = document.createElement('div');
+    this.editor.className = 'custom-editor-content';
+    this.editor.contentEditable = true;
+    this.editor.setAttribute('spellcheck', 'true');
+    
+    // Replace container content
+    this.container.innerHTML = '';
+    this.container.appendChild(this.toolbar);
+    this.container.appendChild(this.editor);
+    
+    // Bind events
+    this.toolbar.addEventListener('click', (e) => this.handleToolbarClick(e));
+    this.editor.addEventListener('paste', (e) => this.handlePaste(e));
+    this.editor.addEventListener('keydown', (e) => this.handleKeydown(e));
+  }
+  
+  handleToolbarClick(e) {
+    const button = e.target.closest('button');
+    if (!button) return;
+    
+    e.preventDefault();
+    
+    const command = button.dataset.command;
+    const value = button.dataset.value;
+    
+    if (command === 'createLink') {
+      const url = prompt('Enter URL:', 'https://');
+      if (url) {
+        document.execCommand('createLink', false, url);
+      }
+    } else if (command === 'insertImage') {
+      const url = prompt('Enter image URL:', '/images/');
+      if (url) {
+        document.execCommand('insertImage', false, url);
+      }
+    } else if (value) {
+      document.execCommand(command, false, value);
+    } else {
+      document.execCommand(command, false, null);
+    }
+    
+    this.editor.focus();
+  }
+  
+  handlePaste(e) {
+    e.preventDefault();
+    
+    // Get plain text from clipboard
+    const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+    
+    if (!text) return;
+    
+    // Clean the text
+    let cleaned = text;
+    
+    // Normalize quotation marks (smart quotes → straight quotes)
+    cleaned = cleaned.replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, '"');
+    cleaned = cleaned.replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'");
+    
+    // Normalize dashes
+    cleaned = cleaned.replace(/[\u2013\u2014]/g, '-');
+    
+    // Normalize ellipsis
+    cleaned = cleaned.replace(/\u2026/g, '...');
+    
+    // Convert to HTML with proper paragraphs
+    const paragraphs = cleaned.split(/\n\s*\n/); // Split on double line breaks
+    const html = paragraphs
+      .filter(p => p.trim())
+      .map(p => {
+        // Replace single line breaks within paragraph with <br>
+        const lines = p.split('\n').map(line => line.trim()).filter(line => line);
+        return '<p>' + lines.join('<br>') + '</p>';
+      })
+      .join('');
+    
+    // Insert HTML
+    document.execCommand('insertHTML', false, html);
+  }
+  
+  handleKeydown(e) {
+    // Handle Enter key to create new paragraphs
+    if (e.key === 'Enter' && !e.shiftKey) {
+      // Let default behavior handle it, but ensure we're in a paragraph
+      const selection = window.getSelection();
+      const node = selection.anchorNode;
+      
+      // If not in a block element, wrap in paragraph
+      if (node && node.nodeType === Node.TEXT_NODE && !node.parentElement.closest('p, h1, h2, h3, blockquote, li')) {
+        e.preventDefault();
+        document.execCommand('formatBlock', false, 'p');
+        document.execCommand('insertHTML', false, '<br>');
+      }
+    }
+  }
+  
+  // API methods
+  getHTML() {
+    return this.editor.innerHTML;
+  }
+  
+  setHTML(html) {
+    this.editor.innerHTML = html || '';
+  }
+  
+  getText() {
+    return this.editor.textContent;
+  }
+  
+  setText(text) {
+    this.editor.textContent = text || '';
+  }
+  
+  clear() {
+    this.editor.innerHTML = '';
+  }
+  
+  focus() {
+    this.editor.focus();
+  }
+}
