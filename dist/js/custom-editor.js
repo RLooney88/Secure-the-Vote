@@ -140,7 +140,28 @@ class CustomEditor {
   
   // API methods
   getHTML() {
-    return this.editor.innerHTML;
+    // Clean up invalid HTML nesting before returning
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = this.editor.innerHTML;
+    
+    // Fix: Remove <p> tags that contain block-level elements (invalid HTML)
+    const paragraphs = tempDiv.querySelectorAll('p');
+    paragraphs.forEach(p => {
+      const hasBlockChild = Array.from(p.childNodes).some(node => 
+        node.nodeType === Node.ELEMENT_NODE && 
+        ['DIV', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE', 'UL', 'OL', 'TABLE'].includes(node.tagName)
+      );
+      
+      if (hasBlockChild) {
+        // Replace <p> with just its children
+        while (p.firstChild) {
+          p.parentNode.insertBefore(p.firstChild, p);
+        }
+        p.remove();
+      }
+    });
+    
+    return tempDiv.innerHTML;
   }
   
   setHTML(html) {
