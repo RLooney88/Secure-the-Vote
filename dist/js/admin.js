@@ -506,57 +506,42 @@
 
       // Custom paste handler to clean up text formatting
       state.quillEditor.clipboard.addMatcher(Node.TEXT_NODE, function(node, delta) {
-        // Get the text content
-        let text = node.textContent;
-        
-        // Normalize quotation marks (smart quotes → straight quotes)
-        text = text.replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, '"'); // Curly double quotes → "
-        text = text.replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'"); // Curly single quotes → '
-        
-        // Normalize other special characters
-        text = text.replace(/[\u2013\u2014]/g, '-'); // En/em dashes → hyphen
-        text = text.replace(/\u2026/g, '...'); // Ellipsis → three dots
-        
-        // Remove soft line breaks (single \n in the middle of sentences)
-        // Keep paragraph breaks (double \n or \n before a capital letter/number)
-        const lines = text.split('\n');
-        const cleanedLines = [];
-        
-        for (let i = 0; i < lines.length; i++) {
-          const line = lines[i].trim();
-          if (!line) {
-            // Empty line = paragraph break, keep it
-            cleanedLines.push('');
-            continue;
+        try {
+          // Get the text content
+          let text = node.textContent;
+          
+          if (!text) {
+            return delta; // Return original delta if no text
           }
           
-          const nextLine = lines[i + 1] ? lines[i + 1].trim() : '';
+          // Normalize quotation marks (smart quotes → straight quotes)
+          text = text.replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, '"'); // Curly double quotes → "
+          text = text.replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'"); // Curly single quotes → '
           
-          // Keep the line break if:
-          // 1. Current line ends with punctuation (. ! ? :)
-          // 2. Next line starts with a capital letter or number
-          // 3. Next line is empty
-          const endsWithPunctuation = /[.!?:]$/.test(line);
-          const nextStartsWithCapital = /^[A-Z0-9]/.test(nextLine);
-          const nextIsEmpty = !nextLine;
+          // Normalize other special characters
+          text = text.replace(/[\u2013\u2014]/g, '-'); // En/em dashes → hyphen
+          text = text.replace(/\u2026/g, '...'); // Ellipsis → three dots
           
-          if (endsWithPunctuation || nextStartsWithCapital || nextIsEmpty) {
-            cleanedLines.push(line);
-          } else {
-            // Soft break in middle of sentence - merge with previous line
-            if (cleanedLines.length > 0) {
-              cleanedLines[cleanedLines.length - 1] += ' ' + line;
+          // Return cleaned text as delta ops
+          const ops = [];
+          delta.ops.forEach(op => {
+            if (typeof op.insert === 'string') {
+              let cleaned = op.insert;
+              cleaned = cleaned.replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, '"');
+              cleaned = cleaned.replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'");
+              cleaned = cleaned.replace(/[\u2013\u2014]/g, '-');
+              cleaned = cleaned.replace(/\u2026/g, '...');
+              ops.push({ insert: cleaned });
             } else {
-              cleanedLines.push(line);
+              ops.push(op);
             }
-          }
+          });
+          
+          return { ops: ops };
+        } catch (err) {
+          console.error('Paste handler error:', err);
+          return delta; // Fall back to original delta on error
         }
-        
-        // Rejoin with proper paragraph breaks
-        text = cleanedLines.join('\n');
-        
-        // Return cleaned text
-        return new Delta().insert(text);
       });
     }
 
