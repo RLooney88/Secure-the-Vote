@@ -91,11 +91,11 @@ module.exports = async (req, res) => {
     }
 
     try {
-      // Generate path: /images/blog/YYYY/MM/filename
+      // Generate path: /images/YYYY/MM/filename
       const now = new Date();
       const year = now.getFullYear();
       const month = String(now.getMonth() + 1).padStart(2, '0');
-      const path = `images/blog/${year}/${month}/${filename}`;
+      const path = `images/${year}/${month}/${filename}`;
 
       // Upload to GitHub using Contents API
       const uploadUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}`;
