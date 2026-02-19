@@ -5,7 +5,7 @@ const { requireAuth } = require('./_auth');
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const OWNER = 'RLooney88';
 const REPO = 'Secure-the-Vote';
-const BRANCH = 'development';
+const BRANCH = 'staging';
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
 const MAX_SIZE = 5 * 1024 * 1024; // 5MB
