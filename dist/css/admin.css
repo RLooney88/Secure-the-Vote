@@ -1084,3 +1084,23 @@ small {
   background: none;
   padding: 0;
 }
+
+/* Text alignment support */
+.custom-editor-content [style*="text-align: left"] {
+  text-align: left !important;
+}
+
+.custom-editor-content [style*="text-align: center"] {
+  text-align: center !important;
+}
+
+.custom-editor-content [style*="text-align: right"] {
+  text-align: right !important;
+}
+
+.custom-editor-content div[style*="text-align"],
+.custom-editor-content p[style*="text-align"],
+.custom-editor-content h2[style*="text-align"],
+.custom-editor-content h3[style*="text-align"] {
+  margin: 0.5em 0;
+}

@@ -30,6 +30,10 @@ class CustomEditor {
       <button type="button" data-command="insertUnorderedList" title="Bullet List">• List</button>
       <button type="button" data-command="insertOrderedList" title="Numbered List">1. List</button>
       <span class="separator">|</span>
+      <button type="button" data-command="justifyLeft" title="Align Left">⬅️</button>
+      <button type="button" data-command="justifyCenter" title="Align Center">↔️</button>
+      <button type="button" data-command="justifyRight" title="Align Right">➡️</button>
+      <span class="separator">|</span>
       <button type="button" data-command="createLink" title="Insert Link">🔗 Link</button>
       <button type="button" data-command="insertImage" title="Insert Image">🖼️ Image</button>
       <span class="separator">|</span>

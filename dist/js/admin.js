@@ -2061,6 +2061,65 @@
         e.target.value === 'external-link' ? 'block' : 'none';
     });
 
+    // Featured image upload handler
+    const uploadFeaturedImageBtn = document.getElementById('upload-featured-image-btn');
+    const featuredImageFileInput = document.getElementById('post-featured-image-file');
+    
+    if (uploadFeaturedImageBtn && featuredImageFileInput) {
+      uploadFeaturedImageBtn.addEventListener('click', () => {
+        featuredImageFileInput.click();
+      });
+
+      featuredImageFileInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+          alert('Please select an image file');
+          return;
+        }
+
+        // Show loading state
+        uploadFeaturedImageBtn.disabled = true;
+        uploadFeaturedImageBtn.textContent = '⏳ Uploading...';
+
+        try {
+          // Create FormData
+          const formData = new FormData();
+          formData.append('image', file);
+
+          // Upload to server
+          const response = await fetch('/api/admin/upload-image', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${state.token}`
+            },
+            body: formData
+          });
+
+          if (!response.ok) {
+            throw new Error('Upload failed');
+          }
+
+          const data = await response.json();
+          
+          // Set the URL in the input field
+          elements.postFeaturedImage.value = data.url;
+          
+          showMessage(elements.postFormMessage, 'Image uploaded successfully!', 'success');
+        } catch (error) {
+          console.error('Upload error:', error);
+          showMessage(elements.postFormMessage, 'Failed to upload image. Please try again.', 'error');
+        } finally {
+          // Reset button state
+          uploadFeaturedImageBtn.disabled = false;
+          uploadFeaturedImageBtn.textContent = '📁 Upload';
+          featuredImageFileInput.value = ''; // Clear file input
+        }
+      });
+    }
+
     // SEO character counters
     elements.postSeoTitle.addEventListener('input', updateCharCounts);
     elements.postSeoDescription.addEventListener('input', updateCharCounts);
