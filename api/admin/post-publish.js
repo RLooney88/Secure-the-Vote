@@ -299,10 +299,10 @@ module.exports = async function handler(req, res) {
     // Generate HTML
     const html = generatePostHTML({ ...post, published_at: publishDate });
 
-    // Create file path (YYYY/MM/DD/slug/)
-    const year = publishDate.getFullYear();
-    const month = String(publishDate.getMonth() + 1).padStart(2, '0');
-    const day = String(publishDate.getDate()).padStart(2, '0');
+    // Create file path (YYYY/MM/DD/slug/) - use UTC to match database timestamp
+    const year = publishDate.getUTCFullYear();
+    const month = String(publishDate.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(publishDate.getUTCDate()).padStart(2, '0');
     const filePath = `dist/${year}/${month}/${day}/${post.slug}/index.html`;
 
     // Buffer the post HTML as a pending edit (write to site-builder DB which has pending_edits)
