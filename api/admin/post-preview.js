@@ -9,6 +9,11 @@ function generatePreviewHTML(post) {
     day: 'numeric'
   });
 
+  // Make all relative image URLs absolute for preview
+  const baseUrl = 'https://www.securethevotemd.com';
+  let content = post.content || '<p>No content yet.</p>';
+  content = content.replace(/src="(\/[^"]+)"/g, `src="${baseUrl}$1"`);
+
   return `<!DOCTYPE html>
 <html lang="en-US">
 <head>
@@ -135,10 +140,10 @@ function generatePreviewHTML(post) {
         </div>
       </header>
 
-      ${post.featured_image ? `<div class="featured-image"><img src="${post.featured_image}" alt="${post.title}"></div>` : ''}
+      ${post.featured_image ? `<div class="featured-image"><img src="${post.featured_image.startsWith('http') ? post.featured_image : 'https://www.securethevotemd.com' + post.featured_image}" alt="${post.title}"></div>` : ''}
 
       <div class="post-body">
-        ${post.content || '<p>No content yet.</p>'}
+        ${content}
       </div>
     </article>
   </div>
