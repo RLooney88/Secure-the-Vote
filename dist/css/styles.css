@@ -176,15 +176,19 @@ form.submitting .wpcf7-spinner {
 }
 
 /* Blog Post Styles */
+.page-content p,
 .post-body p {
-  margin: 0 0 1.5em 0;
+  margin: 0 0 1.5em 0 !important;
   line-height: 1.8;
 }
 
+.page-content p:last-child,
 .post-body p:last-child {
   margin-bottom: 0;
 }
 
+.page-content h2,
+.page-content h3,
 .post-body h2,
 .post-body h3 {
   margin: 2em 0 1em 0;
@@ -192,11 +196,15 @@ form.submitting .wpcf7-spinner {
   line-height: 1.3;
 }
 
+.page-content h2:first-child,
+.page-content h3:first-child,
 .post-body h2:first-child,
 .post-body h3:first-child {
   margin-top: 0;
 }
 
+.page-content ul,
+.page-content ol,
 .post-body ul,
 .post-body ol {
   margin: 1.5em 0;
@@ -204,10 +212,12 @@ form.submitting .wpcf7-spinner {
   line-height: 1.8;
 }
 
+.page-content li,
 .post-body li {
   margin-bottom: 0.5em;
 }
 
+.page-content blockquote,
 .post-body blockquote {
   margin: 2em 0;
   padding: 1em 1.5em;
@@ -216,17 +226,20 @@ form.submitting .wpcf7-spinner {
   font-style: italic;
 }
 
+.page-content img,
 .post-body img {
   max-width: 100%;
   height: auto;
   margin: 1.5em 0;
 }
 
+.page-content a,
 .post-body a {
   color: #9B1E37;
   text-decoration: underline;
 }
 
+.page-content a:hover,
 .post-body a:hover {
   color: #7a1829;
 }

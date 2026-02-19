@@ -44,6 +44,7 @@ function generatePostHTML(post) {
   <link rel="stylesheet" id="eael-general-css" href="/wp-content/plugins/essential-addons-for-elementor-lite/assets/front-end/css/view/general.min.css?ver=6.5.11" media="all">
   <link rel="stylesheet" id="elementor-gf-local-questrial-css" href="/images/elementor/google-fonts/css/questrial.css?ver=1744833050" media="all">
   <link rel="stylesheet" id="elementor-icons-ekiticons-css" href="/wp-content/plugins/elementskit-lite/modules/elementskit-icon-pack/assets/css/ekiticons.css?ver=3.7.9" media="all">
+  <link rel="stylesheet" href="/css/styles.css" media="all">
   <style id="wp-img-auto-sizes-contain-inline-css">
 img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
 </style>
@@ -62,7 +63,7 @@ img.wp-smiley, img.emoji {
 </style>
   <style id="wp-custom-css">
 /* global */
-p{margin:0;}
+/* p{margin:0;} REMOVED - breaks paragraph spacing in blog posts */
 
 .single-post #content, .archive #content{
   max-width: 100%;
