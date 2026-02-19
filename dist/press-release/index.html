@@ -110,7 +110,8 @@
   }
 
   function card(p) {
-    var url = postUrl(p.published_at, p.slug);
+    // Use stored URL if available, otherwise reconstruct from date (for old posts)
+    var url = p.url || postUrl(p.published_at, p.slug);
     var exc = p.excerpt ? (p.excerpt.length > 150 ? p.excerpt.substring(0,150)+'...' : p.excerpt) : '';
     var cat = p.category || 'News';
     var img = p.featured_image

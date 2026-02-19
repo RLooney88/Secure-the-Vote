@@ -291,19 +291,22 @@ module.exports = async function handler(req, res) {
 
     // Update post status to published
     const publishDate = new Date();
-    await pool.query(
-      'UPDATE posts SET status = $1, published_at = $2 WHERE id = $3',
-      ['published', publishDate, postId]
-    );
-
-    // Generate HTML
-    const html = generatePostHTML({ ...post, published_at: publishDate });
-
+    
     // Create file path (YYYY/MM/DD/slug/) - use UTC to match database timestamp
     const year = publishDate.getUTCFullYear();
     const month = String(publishDate.getUTCMonth() + 1).padStart(2, '0');
     const day = String(publishDate.getUTCDate()).padStart(2, '0');
-    const filePath = `dist/${year}/${month}/${day}/${post.slug}/index.html`;
+    const url = `/${year}/${month}/${day}/${post.slug}/`;
+    const filePath = `dist${url}index.html`;
+    
+    // Update post with publish date and URL
+    await pool.query(
+      'UPDATE posts SET status = $1, published_at = $2, url = $3 WHERE id = $4',
+      ['published', publishDate, url, postId]
+    );
+
+    // Generate HTML
+    const html = generatePostHTML({ ...post, published_at: publishDate });
 
     // Buffer the post HTML as a pending edit (write to site-builder DB which has pending_edits)
     let buffered = false;

@@ -21,7 +21,7 @@ module.exports = async function handler(req, res) {
     const offsetNum = parseInt(offset, 10) || 0;
 
     const result = await pool.query(
-      `SELECT id, title, slug, excerpt, category, featured_image, published_at
+      `SELECT id, title, slug, excerpt, category, featured_image, published_at, url
        FROM posts
        WHERE status = 'published'
        ORDER BY published_at DESC
