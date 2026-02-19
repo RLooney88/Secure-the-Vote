@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "busboy": "^1.6.0",
     "jsonwebtoken": "^9.0.2",
     "markdown-it": "^14.0.0",
     "pg": "^8.18.0",
