@@ -318,10 +318,10 @@ module.exports = async function handler(req, res) {
       });
       try {
         await siteBuilderPool.query(
-          `INSERT INTO pending_edits (id, site_id, file_path, content, change_description, status, created_at)
-           VALUES (gen_random_uuid(), 'securethevotemd', $1, $2, $3, 'pending', NOW())
-           ON CONFLICT (site_id, file_path, status) WHERE status = 'pending'
-           DO UPDATE SET content = $2, change_description = $3, created_at = NOW()`,
+          `INSERT INTO pending_edits (id, site_id, file_path, content, change_description, status, created_at, updated_at)
+           VALUES (gen_random_uuid(), 'securethevotemd', $1, $2, $3, 'pending', NOW(), NOW())
+           ON CONFLICT (site_id, file_path, status)
+           DO UPDATE SET content = EXCLUDED.content, change_description = EXCLUDED.change_description, updated_at = NOW()`,
           [filePath, html, `Publish post: ${post.title.substring(0, 60)}`]
         );
         buffered = true;
