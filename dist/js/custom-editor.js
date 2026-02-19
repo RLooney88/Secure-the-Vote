@@ -140,9 +140,20 @@ class CustomEditor {
   
   // API methods
   getHTML() {
-    // Clean up invalid HTML nesting before returning
+    let html = this.editor.innerHTML;
+    
+    // Normalize: Convert <div> to <p> (browsers create <div> on Enter sometimes)
+    html = html.replace(/<div>/gi, '<p>').replace(/<\/div>/gi, '</p>');
+    
+    // Clean up: Remove empty paragraphs at start/end
+    html = html.replace(/^(<p>\s*<\/p>)+/, '').replace(/(<p>\s*<\/p>)+$/, '');
+    
+    // Fix double <p> wrapping (can happen with alignment)
+    html = html.replace(/<p[^>]*>\s*<p[^>]*>/gi, '<p>').replace(/<\/p>\s*<\/p>/gi, '</p>');
+    
+    // Clean up invalid HTML nesting
     const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = this.editor.innerHTML;
+    tempDiv.innerHTML = html;
     
     // Fix: Remove <p> tags that contain block-level elements (invalid HTML)
     const paragraphs = tempDiv.querySelectorAll('p');
