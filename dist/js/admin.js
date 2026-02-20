@@ -2623,7 +2623,7 @@
       // Refresh pending badge immediately and complete modal without hanging on Vercel polling
       await updatePendingEditsBadge();
       console.log('Publish API calls complete. Finalizing UI...');
-      completeDeployment();
+      onDeploymentReady();
       
     } catch (error) {
       console.error('Publish error:', error);
