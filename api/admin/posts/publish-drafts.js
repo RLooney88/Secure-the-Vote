@@ -151,10 +151,10 @@ async function bufferPendingEdits(files) {
   try {
     for (const file of files) {
       await pool.query(
-        `INSERT INTO pending_edits (id, site_id, file_path, content, change_description, status, created_at)
-         VALUES (gen_random_uuid(), 'securethevotemd', $1, $2, $3, 'pending', NOW())
-         ON CONFLICT (site_id, file_path, status) WHERE status = 'pending'
-         DO UPDATE SET content = $2, change_description = $3, created_at = NOW()`,
+        `INSERT INTO pending_edits (id, site_id, file_path, content, change_description, status, created_at, updated_at)
+         VALUES (gen_random_uuid(), 'securethevotemd', $1, $2, $3, 'pending', NOW(), NOW())
+         ON CONFLICT (site_id, file_path, status)
+         DO UPDATE SET content = EXCLUDED.content, change_description = EXCLUDED.change_description, updated_at = NOW()`,
         [file.path, file.content, `Auto-publish post: ${file.postTitle}`]
       );
     }
@@ -256,11 +256,7 @@ module.exports = async function handler(req, res) {
         content: sitemapXml,
         postTitle: 'Sitemap'
       });
-      filesToBuffer.push({
-        path: 'dist/sitemap.xml',
-        content: sitemapXml,
-        postTitle: 'Sitemap'
-      });
+      // Do not add sitemap.xml to pending preview queue (system file, not user-previewable)
     } catch (error) {
       console.warn('Failed to generate sitemap:', error.message);
     }
@@ -275,11 +271,7 @@ Sitemap: https://securethevotemd.com/sitemap.xml`;
       content: robotsTxt,
       postTitle: 'Robots.txt'
     });
-    filesToBuffer.push({
-      path: 'dist/robots.txt',
-      content: robotsTxt,
-      postTitle: 'Robots.txt'
-    });
+    // Do not add robots.txt to pending preview queue (system file, not user-previewable)
 
     // Push to GitHub
     let githubResult = { pushed: false };

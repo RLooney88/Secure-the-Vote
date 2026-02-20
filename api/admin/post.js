@@ -72,14 +72,37 @@ module.exports = async function handler(req, res) {
       });
 
     } else if (req.method === 'DELETE') {
-      // Delete post
-      const result = await pool.query(
-        'DELETE FROM posts WHERE id = $1 RETURNING id',
-        [postId]
-      );
-
-      if (result.rows.length === 0) {
+      // Get slug before delete so we can clear pending edits for this post path
+      const pre = await pool.query('SELECT slug FROM posts WHERE id = $1', [postId]);
+      if (pre.rows.length === 0) {
         return res.status(404).json({ error: 'Post not found' });
+      }
+      const slug = pre.rows[0].slug;
+
+      // Delete post
+      await pool.query('DELETE FROM posts WHERE id = $1', [postId]);
+
+      // Best-effort cleanup of pending edits for this slug
+      const siteBuilderDb = (process.env.SITE_BUILDER_DATABASE_URL || process.env.DATABASE_URL || '').trim();
+      if (siteBuilderDb) {
+        const sbPool = new Pool({
+          connectionString: siteBuilderDb,
+          ssl: { rejectUnauthorized: false },
+          max: 1
+        });
+        try {
+          await sbPool.query(
+            `DELETE FROM pending_edits
+             WHERE site_id = 'securethevotemd'
+               AND status = 'pending'
+               AND file_path LIKE $1`,
+            [`dist/%/${slug}/index.html`]
+          );
+        } catch (cleanupErr) {
+          console.warn('Pending edit cleanup warning:', cleanupErr.message);
+        } finally {
+          await sbPool.end().catch(() => {});
+        }
       }
 
       return res.status(200).json({
