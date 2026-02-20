@@ -217,6 +217,23 @@
     element.className = 'success-message';
   }
 
+  // Generic inline form message helper
+  function showMessage(element, message, type = 'success') {
+    if (!element) return;
+    element.textContent = message;
+    element.style.display = 'block';
+    element.className = type === 'error' ? 'error-message' : 'success-message';
+
+    // Auto-hide transient success messages
+    if (type !== 'error') {
+      setTimeout(() => {
+        if (element.textContent === message) {
+          element.style.display = 'none';
+        }
+      }, 3500);
+    }
+  }
+
   function hideError(element = elements.loginError) {
     element.style.display = 'none';
   }
