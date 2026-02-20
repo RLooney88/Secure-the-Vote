@@ -547,25 +547,35 @@
 
     setLoading(true);
     try {
+      let savedPost = null;
       if (state.currentPostId) {
         // Update existing post
-        await api(`admin/post?id=${state.currentPostId}`, {
+        const res = await api(`admin/post?id=${state.currentPostId}`, {
           method: 'PUT',
           body: JSON.stringify(postData)
         });
+        savedPost = res.post || null;
       } else {
         // Create new post
-        await api('admin/posts', {
+        const res = await api('admin/posts', {
           method: 'POST',
           body: JSON.stringify(postData)
         });
+        savedPost = res.post || null;
+        if (savedPost?.id) {
+          state.currentPostId = savedPost.id;
+          elements.postId.value = savedPost.id;
+        }
       }
 
-      if (publish && state.currentPostId) {
+      if (publish) {
+        if (!state.currentPostId) {
+          throw new Error('Post must be saved before publishing');
+        }
         await publishPost(state.currentPostId);
       } else {
         await loadPosts();
-        hidePostEditor();
+        showMessage(elements.postFormMessage, 'Draft saved. You can keep editing or publish now.', 'success');
       }
     } catch (error) {
       alert('Failed to save post: ' + error.message);
@@ -637,7 +647,7 @@
       }, 4000);
 
       await loadPosts();
-      hidePostEditor();
+      showMessage(elements.postFormMessage, 'Post published. You can continue editing before publishing edits to production.', 'success');
     } catch (error) {
       alert('Failed to publish post: ' + error.message);
     } finally {
@@ -2033,11 +2043,8 @@
     elements.cancelPostBtn.addEventListener('click', hidePostEditor);
     elements.savePostBtn.addEventListener('click', () => savePost(false));
     elements.publishPostBtn.addEventListener('click', () => {
-      if (state.currentPostId) {
-        publishPost(state.currentPostId);
-      } else {
-        alert('Please save the post first before publishing.');
-      }
+      // Direct publish: if new post, save first then publish in one click
+      savePost(true);
     });
     elements.previewPostBtn.addEventListener('click', previewPost);
     elements.generateSeoBtn.addEventListener('click', generateSEO);
