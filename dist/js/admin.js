@@ -2063,12 +2063,25 @@
 
     // Featured image upload handler
     const uploadFeaturedImageBtn = document.getElementById('upload-featured-image-btn');
+    const clearFeaturedImageBtn = document.getElementById('clear-featured-image-btn');
     const featuredImageFileInput = document.getElementById('post-featured-image-file');
     
     if (uploadFeaturedImageBtn && featuredImageFileInput) {
       uploadFeaturedImageBtn.addEventListener('click', () => {
         featuredImageFileInput.click();
       });
+
+      if (clearFeaturedImageBtn) {
+        clearFeaturedImageBtn.addEventListener('click', () => {
+          const previousFeatured = elements.postFeaturedImage.value;
+          elements.postFeaturedImage.value = '';
+          // If OG image matched featured image, clear it too to avoid broken previews
+          if (elements.postOgImage && elements.postOgImage.value === previousFeatured) {
+            elements.postOgImage.value = '';
+          }
+          showMessage(elements.postFormMessage, 'Featured image removed. Save/Publish post to apply.', 'success');
+        });
+      }
 
       featuredImageFileInput.addEventListener('change', async (e) => {
         const file = e.target.files[0];

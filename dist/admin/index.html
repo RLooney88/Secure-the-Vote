@@ -553,12 +553,13 @@
 
                   <div class="form-group">
                     <label for="post-featured-image">Featured Image URL</label>
-                    <div style="display: flex; gap: 8px;">
-                      <input type="url" id="post-featured-image" placeholder="/images/blog/..." style="flex: 1;">
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                      <input type="url" id="post-featured-image" placeholder="/images/2026/02/example.png" style="flex: 1;">
                       <input type="file" id="post-featured-image-file" accept="image/*" style="display: none;">
                       <button type="button" id="upload-featured-image-btn" class="btn btn-secondary btn-small">📁 Upload</button>
+                      <button type="button" id="clear-featured-image-btn" class="btn btn-danger btn-small" title="Remove featured image">✕ Remove</button>
                     </div>
-                    <small style="color: #666; margin-top: 4px; display: block;">Upload an image or paste a URL</small>
+                    <small style="color: #666; margin-top: 4px; display: block;">Upload an image, paste a URL, or remove the featured image.</small>
                   </div>
 
                   <div class="seo-section">
