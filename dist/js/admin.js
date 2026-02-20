@@ -2602,6 +2602,10 @@
           'Content-Type': 'application/json'
         }
       });
+      if (!postsRes.ok) {
+        const data = await postsRes.json().catch(() => ({}));
+        throw new Error(data.error || 'Draft post publish failed');
+      }
       
       // Step 3: Publish draft petitions
       const petitionsRes = await fetch('/api/admin/petitions/publish-drafts', {
@@ -2611,10 +2615,15 @@
           'Content-Type': 'application/json'
         }
       });
+      if (!petitionsRes.ok) {
+        const data = await petitionsRes.json().catch(() => ({}));
+        throw new Error(data.error || 'Draft petition publish failed');
+      }
       
-      // API calls done — the modal + Vercel polling will handle the rest
-      // The modal's onReady callback reloads tabs when production deployment is live
-      console.log('Publish API calls complete, waiting for production deployment...');
+      // Refresh pending badge immediately and complete modal without hanging on Vercel polling
+      await updatePendingEditsBadge();
+      console.log('Publish API calls complete. Finalizing UI...');
+      completeDeployment();
       
     } catch (error) {
       console.error('Publish error:', error);
