@@ -452,6 +452,11 @@
     elements.postEditorView.style.display = 'block';
     elements.newPostBtn.style.display = 'none';
 
+    // Ensure editor exists before setting/clearing content
+    if (!state.customEditor) {
+      state.customEditor = new CustomEditor('#post-content-editor');
+    }
+
     if (post) {
       // Edit mode
       state.currentPostId = post.id;
@@ -483,11 +488,6 @@
         state.customEditor.clear();
       }
       document.getElementById('external-url-group').style.display = 'none';
-    }
-
-    // Initialize Custom Editor if not already
-    if (!state.customEditor) {
-      state.customEditor = new CustomEditor('#post-content-editor');
     }
 
     updateCharCounts();
