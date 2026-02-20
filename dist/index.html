@@ -1182,6 +1182,65 @@ fetch('https://site-builder-ai-production.up.railway.app/sites/securethevotemd/t
 });
 </script>
 <!-- TEMPLATE INJECTION END -->
+<script>
+(function () {
+  function esc(s){ return String(s || '').replace(/[&<>"']/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]; }); }
+  function buildUrl(p){
+    if (p.url) return p.url;
+    var d = new Date(p.published_at || Date.now());
+    return '/' + d.getUTCFullYear() + '/' + String(d.getUTCMonth()+1).padStart(2,'0') + '/' + String(d.getUTCDate()).padStart(2,'0') + '/' + p.slug + '/';
+  }
+  function badgeDate(publishedAt){
+    var d = new Date(publishedAt || Date.now());
+    return { day: String(d.getUTCDate()).padStart(2,'0'), mon: d.toLocaleDateString('en-US',{month:'short', timeZone:'UTC'}) };
+  }
+  function cleanExcerpt(x){
+    var t = String(x || '').replace(/<[^>]+>/g,'').trim();
+    return t.length > 140 ? t.slice(0, 140) + '…' : t;
+  }
+
+  async function hydrateLatestPosts(){
+    var mount = document.getElementById('post-items--fa23d05');
+    if (!mount) return;
+    try {
+      var r = await fetch('/api/posts/list?limit=3&offset=0');
+      if (!r.ok) return;
+      var data = await r.json();
+      var posts = (data && data.posts) ? data.posts.slice(0,3) : [];
+      if (!posts.length) return;
+
+      mount.innerHTML = posts.map(function(p){
+        var u = buildUrl(p);
+        var dt = badgeDate(p.published_at);
+        var img = p.featured_image
+          ? '<img decoding="async" src="' + esc(p.featured_image) + '" alt="' + esc(p.title) + '">'
+          : '<div style="height:220px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#9B1E37,#F6BF58);color:#fff;font-weight:700;">STV</div>';
+        return '' +
+          '<div class="col-lg-4 col-md-6">' +
+            '<div class="elementskit-post-image-card">' +
+              '<div class="elementskit-entry-header">' +
+                '<a href="' + esc(u) + '" class="elementskit-entry-thumb">' + img + '</a>' +
+                '<div class="elementskit-meta-lists elementskit-style-tag"><div class="elementskit-single-meta triangle_left"><span class="elementskit-meta-wraper"><strong>' + esc(dt.day) + '</strong>' + esc(dt.mon) + '</span></div></div>' +
+              '</div>' +
+              '<div class="elementskit-post-body ">' +
+                '<div class="post-meta-list"><span class="post-cat"><i aria-hidden="true" class="icon icon-folder"></i><a href="/press-release/" rel="category tag">' + esc((p.category || 'Press Release/News').replace(/-/g,' ')) + '</a></span></div>' +
+                '<h2 class="entry-title"><a href="' + esc(u) + '">' + esc(p.title || '') + '</a></h2>' +
+                '<p>' + esc(cleanExcerpt(p.excerpt || p.title || '')) + '</p>' +
+                '<div class="btn-wraper"><a class="elementskit-btn whitespace--normal" href="' + esc(u) + '">READ MORE <i aria-hidden="true" class="icon icon-arrow-right"></i></a></div>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+      }).join('');
+    } catch (_) {}
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', hydrateLatestPosts);
+  } else {
+    hydrateLatestPosts();
+  }
+})();
+</script>
 <script src="/js/mobile-menu.js"></script>
 </body>
 </html>
