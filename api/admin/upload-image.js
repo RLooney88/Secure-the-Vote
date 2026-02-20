@@ -5,7 +5,7 @@ const { requireAuth } = require('./_auth');
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const OWNER = 'RLooney88';
 const REPO = 'Secure-the-Vote';
-const BRANCH = 'staging';
+const BRANCH = 'main';
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
 const MAX_SIZE = 5 * 1024 * 1024; // 5MB
@@ -91,14 +91,15 @@ module.exports = async (req, res) => {
     }
 
     try {
-      // Generate path: /images/YYYY/MM/filename
+      // Store file in repo under dist/images/... (matches migrated WordPress assets)
       const now = new Date();
       const year = now.getFullYear();
       const month = String(now.getMonth() + 1).padStart(2, '0');
-      const path = `images/${year}/${month}/${filename}`;
+      const repoPath = `dist/images/${year}/${month}/${filename}`;
+      const publicPath = `images/${year}/${month}/${filename}`;
 
       // Upload to GitHub using Contents API
-      const uploadUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}`;
+      const uploadUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${repoPath}`;
       
       const uploadPayload = {
         message: `Upload image: ${filename}`,
@@ -124,16 +125,18 @@ module.exports = async (req, res) => {
         });
       }
 
-      const uploadData = await uploadResponse.json();
+      await uploadResponse.json();
       
-      // Return the path that can be used in the site
-      const imageUrl = `/${path}`;
+      // Return public URL path used by the site
+      const imageUrl = `/${publicPath}`;
       
       res.status(200).json({
         success: true,
         url: imageUrl,
-        path: path,
-        filename: filename
+        path: repoPath,
+        publicPath: publicPath,
+        filename: filename,
+        branch: BRANCH
       });
 
     } catch (error) {
