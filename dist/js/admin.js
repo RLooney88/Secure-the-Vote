@@ -189,6 +189,11 @@
     const data = await response.json();
 
     if (!response.ok) {
+      if (response.status === 401) {
+        // Force logout on expired/invalid token
+        handleLogout();
+        throw new Error('Your session expired. Please log in again.');
+      }
       throw new Error(data.error || 'Request failed');
     }
 
@@ -2119,6 +2124,10 @@
           });
 
           if (!response.ok) {
+            if (response.status === 401) {
+              handleLogout();
+              throw new Error('Your session expired. Please log in again.');
+            }
             throw new Error('Upload failed');
           }
 
@@ -2610,6 +2619,10 @@
         }
       });
       if (!postsRes.ok) {
+        if (postsRes.status === 401) {
+          handleLogout();
+          throw new Error('Your session expired. Please log in again.');
+        }
         const data = await postsRes.json().catch(() => ({}));
         throw new Error(data.error || 'Draft post publish failed');
       }
@@ -2623,6 +2636,10 @@
         }
       });
       if (!petitionsRes.ok) {
+        if (petitionsRes.status === 401) {
+          handleLogout();
+          throw new Error('Your session expired. Please log in again.');
+        }
         const data = await petitionsRes.json().catch(() => ({}));
         throw new Error(data.error || 'Draft petition publish failed');
       }
