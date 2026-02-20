@@ -27,12 +27,22 @@ class CustomEditor {
       <button type="button" data-command="formatBlock" data-value="h3" title="Heading 3">H3</button>
       <button type="button" data-command="formatBlock" data-value="p" title="Paragraph">P</button>
       <span class="separator">|</span>
-      <button type="button" data-command="insertUnorderedList" title="Bullet List" aria-label="Bullet List">•</button>
-      <button type="button" data-command="insertOrderedList" title="Numbered List" aria-label="Numbered List">1.</button>
+      <button type="button" data-command="insertUnorderedList" title="Bullet List" aria-label="Bullet List">
+        <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><circle cx="2" cy="3" r="1.1" fill="currentColor"/><circle cx="2" cy="7" r="1.1" fill="currentColor"/><circle cx="2" cy="11" r="1.1" fill="currentColor"/><line x1="5" y1="3" x2="13" y2="3" stroke="currentColor" stroke-width="1.2"/><line x1="5" y1="7" x2="13" y2="7" stroke="currentColor" stroke-width="1.2"/><line x1="5" y1="11" x2="13" y2="11" stroke="currentColor" stroke-width="1.2"/></svg>
+      </button>
+      <button type="button" data-command="insertOrderedList" title="Numbered List" aria-label="Numbered List">
+        <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><text x="0.8" y="4" font-size="3.5" fill="currentColor">1</text><text x="0.8" y="8" font-size="3.5" fill="currentColor">2</text><text x="0.8" y="12" font-size="3.5" fill="currentColor">3</text><line x1="5" y1="3" x2="13" y2="3" stroke="currentColor" stroke-width="1.2"/><line x1="5" y1="7" x2="13" y2="7" stroke="currentColor" stroke-width="1.2"/><line x1="5" y1="11" x2="13" y2="11" stroke="currentColor" stroke-width="1.2"/></svg>
+      </button>
       <span class="separator">|</span>
-      <button type="button" data-command="justifyLeft" title="Align Left" aria-label="Align Left">☰</button>
-      <button type="button" data-command="justifyCenter" title="Align Center" aria-label="Align Center">☷</button>
-      <button type="button" data-command="justifyRight" title="Align Right" aria-label="Align Right">☵</button>
+      <button type="button" data-command="justifyLeft" title="Align Left" aria-label="Align Left">
+        <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><line x1="1" y1="2.5" x2="13" y2="2.5" stroke="currentColor" stroke-width="1.2"/><line x1="1" y1="5.5" x2="10" y2="5.5" stroke="currentColor" stroke-width="1.2"/><line x1="1" y1="8.5" x2="13" y2="8.5" stroke="currentColor" stroke-width="1.2"/><line x1="1" y1="11.5" x2="9" y2="11.5" stroke="currentColor" stroke-width="1.2"/></svg>
+      </button>
+      <button type="button" data-command="justifyCenter" title="Align Center" aria-label="Align Center">
+        <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><line x1="1" y1="2.5" x2="13" y2="2.5" stroke="currentColor" stroke-width="1.2"/><line x1="2.5" y1="5.5" x2="11.5" y2="5.5" stroke="currentColor" stroke-width="1.2"/><line x1="1" y1="8.5" x2="13" y2="8.5" stroke="currentColor" stroke-width="1.2"/><line x1="3" y1="11.5" x2="11" y2="11.5" stroke="currentColor" stroke-width="1.2"/></svg>
+      </button>
+      <button type="button" data-command="justifyRight" title="Align Right" aria-label="Align Right">
+        <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><line x1="1" y1="2.5" x2="13" y2="2.5" stroke="currentColor" stroke-width="1.2"/><line x1="4" y1="5.5" x2="13" y2="5.5" stroke="currentColor" stroke-width="1.2"/><line x1="1" y1="8.5" x2="13" y2="8.5" stroke="currentColor" stroke-width="1.2"/><line x1="5" y1="11.5" x2="13" y2="11.5" stroke="currentColor" stroke-width="1.2"/></svg>
+      </button>
       <span class="separator">|</span>
       <button type="button" data-command="createLink" title="Insert Link">🔗 Link</button>
       <button type="button" data-command="insertImage" title="Insert Image">🖼️ Image</button>

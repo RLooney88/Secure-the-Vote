@@ -990,6 +990,10 @@ small {
   background: #dee2e6;
 }
 
+.custom-editor-toolbar button svg {
+  display: block;
+}
+
 .custom-editor-toolbar .separator {
   width: 1px;
   background: #dee2e6;
