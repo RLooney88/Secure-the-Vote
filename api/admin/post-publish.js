@@ -12,7 +12,16 @@ function generatePostHTML(post) {
   });
   
   const escapedTitle = (post.title || '').replace(/"/g, '&quot;');
+  const escapedSeoTitle = (post.seo_title || post.title || '').replace(/"/g, '&quot;');
   const escapedDescription = (post.seo_description || post.excerpt || '').replace(/"/g, '&quot;');
+  const year = publishDate.getUTCFullYear();
+  const month = String(publishDate.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(publishDate.getUTCDate()).padStart(2, '0');
+  const canonicalUrl = `https://securethevotemd.com/${year}/${month}/${day}/${post.slug}/`;
+  const ogImageRaw = post.og_image || post.featured_image || '/images/2024/04/LOGOsecurethevote_yellowMD.png';
+  const ogImage = /^https?:\/\//i.test(ogImageRaw)
+    ? ogImageRaw
+    : `https://securethevotemd.com${ogImageRaw.startsWith('/') ? '' : '/'}${ogImageRaw}`;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -22,7 +31,21 @@ function generatePostHTML(post) {
 <link rel="icon" href="/images/2024/04/cropped-favicon-2-192x192.png" sizes="192x192">
 <link rel="apple-touch-icon" href="/images/2024/04/cropped-favicon-2-180x180.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${escapedTitle} - Secure The Vote MD</title>
+  <title>${escapedSeoTitle} - Secure The Vote MD</title>
+  <meta name="description" content="${escapedDescription}">
+  <link rel="canonical" href="${canonicalUrl}">
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="${escapedSeoTitle}" />
+  <meta property="og:description" content="${escapedDescription}" />
+  <meta property="og:url" content="${canonicalUrl}" />
+  <meta property="og:image" content="${ogImage}" />
+  <meta property="og:image:secure_url" content="${ogImage}" />
+  <meta property="og:site_name" content="Secure The Vote Maryland" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="${escapedSeoTitle}" />
+  <meta name="twitter:description" content="${escapedDescription}" />
+  <meta name="twitter:image" content="${ogImage}" />
   <link rel="stylesheet" id="embed-pdf-viewer-css" href="/wp-content/plugins/embed-pdf-viewer/css/embed-pdf-viewer.css?ver=2.4.7" media="screen">
   <link rel="stylesheet" id="elementor-frontend-css" href="/wp-content/plugins/elementor/assets/css/frontend.min.css?ver=3.35.4" media="all">
   <link rel="stylesheet" id="elementor-post-27-css" href="/images/elementor/css/post-27.css?ver=1770997505" media="all">
