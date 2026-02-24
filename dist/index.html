@@ -1188,11 +1188,11 @@ fetch('https://site-builder-ai-production.up.railway.app/sites/securethevotemd/t
   function buildUrl(p){
     if (p.url) return p.url;
     var d = new Date(p.published_at || Date.now());
-    return '/' + d.getUTCFullYear() + '/' + String(d.getUTCMonth()+1).padStart(2,'0') + '/' + String(d.getUTCDate()).padStart(2,'0') + '/' + p.slug + '/';
+    return '/' + d.getFullYear() + '/' + String(d.getMonth()+1).padStart(2,'0') + '/' + String(d.getDate()).padStart(2,'0') + '/' + p.slug + '/';
   }
   function badgeDate(publishedAt){
     var d = new Date(publishedAt || Date.now());
-    return { day: String(d.getUTCDate()).padStart(2,'0'), mon: d.toLocaleDateString('en-US',{month:'short', timeZone:'UTC'}) };
+    return { day: String(d.getDate()).padStart(2,'0'), mon: d.toLocaleDateString('en-US',{month:'short'}) };
   }
   function cleanExcerpt(x){
     var t = String(x || '').replace(/<[^>]+>/g,'').trim();
