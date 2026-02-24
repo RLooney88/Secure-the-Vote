@@ -26,20 +26,28 @@ function generatePostHTML(post) {
     return html.replace(/<[^>]*>/g, '').trim();
   };
 
-  // Generate meta description from first 155 chars of content
-  const metaDescription = stripHtml(post.seo_description || post.excerpt || post.content || '')
-    .substring(0, 155)
+  // Generate better meta description (prefer curated fields, otherwise first sentence)
+  const rawMeta = stripHtml(post.seo_description || post.excerpt || post.content || '')
     .replace(/\n/g, ' ')
-    .replace(/\s+/g, ' ');
+    .replace(/\s+/g, ' ')
+    .trim();
+  const firstSentence = rawMeta.split(/(?<=[.!?])\s+/)[0] || rawMeta;
+  const metaDescription = (firstSentence.length > 158 ? `${firstSentence.substring(0, 157).trim()}…` : firstSentence);
 
-  // Build canonical URL
-  const year = publishDate.getFullYear();
-  const month = String(publishDate.getMonth() + 1).padStart(2, '0');
-  const day = String(publishDate.getDate()).padStart(2, '0');
-  const canonicalUrl = `https://securethevotemd.com/${year}/${month}/${day}/${post.slug}/`;
+  // Build canonical URL (prefer stored canonical url, otherwise UTC path)
+  const year = publishDate.getUTCFullYear();
+  const month = String(publishDate.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(publishDate.getUTCDate()).padStart(2, '0');
+  const canonicalUrl = post.url
+    ? `https://securethevotemd.com${post.url}`
+    : `https://securethevotemd.com/${year}/${month}/${day}/${post.slug}/`;
 
-  // Get OG image (default to site logo)
-  const ogImage = post.og_image || 'https://securethevotemd.com/images/2024/04/LOGOsecurethevote_yellowMD.png';
+  // Get OG image (default to site logo), normalize absolute URL
+  const ogImage = (() => {
+    const img = post.og_image || post.featured_image || 'https://securethevotemd.com/images/2024/04/LOGOsecurethevote_yellowMD.png';
+    if (/^https?:\/\//i.test(img)) return img;
+    return `https://securethevotemd.com${img.startsWith('/') ? '' : '/'}${img}`;
+  })();
 
   // Build JSON-LD Article schema
   const articleSchema = {
@@ -87,6 +95,7 @@ function generatePostHTML(post) {
   <meta property="og:description" content="${escapeHtml(metaDescription)}" />
   <meta property="og:url" content="${canonicalUrl}" />
   <meta property="og:image" content="${escapeHtml(ogImage)}" />
+  <meta property="og:image:secure_url" content="${escapeHtml(ogImage)}" />
   <meta property="og:site_name" content="Secure The Vote Maryland" />
   <meta property="article:published_time" content="${publishDate.toISOString()}" />
   <meta property="article:modified_time" content="${publishDate.toISOString()}" />
