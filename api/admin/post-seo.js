@@ -70,7 +70,7 @@ async function generateAISEO(post) {
         'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: process.env.OPENAI_SEO_MODEL || 'gpt-4.1-mini',
+        model: process.env.OPENAI_SEO_MODEL || 'gpt-4o',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.3,
         max_tokens: 260,
