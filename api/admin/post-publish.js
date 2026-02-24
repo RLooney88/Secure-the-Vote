@@ -65,6 +65,19 @@ img.wp-smiley, img.emoji {
 /* global */
 /* p{margin:0;} REMOVED - breaks paragraph spacing in blog posts */
 
+/* Blog hero title width override: center column 80%, side columns 10% */
+.stv-hero-banner .stv-banner-col-center{
+  flex: 0 0 80% !important;
+  max-width: 80% !important;
+}
+.stv-hero-banner .stv-banner-col-side{
+  flex: 0 0 10% !important;
+  max-width: 10% !important;
+}
+.stv-banner-title{
+  max-width: 100% !important;
+}
+
 .single-post #content, .archive #content{
   max-width: 100%;
   display: flex;
