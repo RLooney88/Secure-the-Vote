@@ -223,12 +223,16 @@ module.exports = async function handler(req, res) {
           console.warn(`Failed to fetch related posts for ${post.id}:`, error.message);
         }
         
-        // Create file path (YYYY/MM/DD/slug/index.html)
+        // Create canonical path (YYYY/MM/DD/slug/index.html) using UTC to avoid timezone 404 mismatches
         const publishDate = new Date(post.published_at || new Date());
-        const year = publishDate.getFullYear();
-        const month = String(publishDate.getMonth() + 1).padStart(2, '0');
-        const day = String(publishDate.getDate()).padStart(2, '0');
-        const filePath = `dist/${year}/${month}/${day}/${post.slug}/index.html`;
+        const year = publishDate.getUTCFullYear();
+        const month = String(publishDate.getUTCMonth() + 1).padStart(2, '0');
+        const day = String(publishDate.getUTCDate()).padStart(2, '0');
+        const url = `/${year}/${month}/${day}/${post.slug}/`;
+        const filePath = `dist${url}index.html`;
+
+        // Keep DB canonical URL in sync with generated file path
+        await pool.query('UPDATE posts SET url = $1 WHERE id = $2', [url, post.id]);
 
         filesToPush.push({
           path: filePath,
