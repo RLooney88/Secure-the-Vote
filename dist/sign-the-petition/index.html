@@ -309,8 +309,25 @@ document.getElementById('petition-form').addEventListener('submit', async functi
       ok.style.display = 'block';
       if (data.signature_count) document.getElementById('signature-count').textContent = data.signature_count.toLocaleString();
       this.reset();
-    } else { err.style.display = 'block'; }
-  } catch(ex) { err.style.display = 'block'; }
+    } else {
+      var errorMsg = 'Something went wrong. Please try again.';
+      try {
+        var errorData = await res.json();
+        if (errorData && errorData.error) {
+          if (res.status === 409 || /already signed/i.test(errorData.error)) {
+            errorMsg = 'This email has already signed this petition.';
+          } else {
+            errorMsg = errorData.error;
+          }
+        }
+      } catch(_) {}
+      err.innerHTML = '<strong>Oops!</strong> ' + errorMsg;
+      err.style.display = 'block';
+    }
+  } catch(ex) {
+    err.innerHTML = '<strong>Oops!</strong> Something went wrong. Please try again.';
+    err.style.display = 'block';
+  }
   btn.disabled = false; btn.textContent = 'Sign the Petition';
 });
 </script>
