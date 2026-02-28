@@ -276,8 +276,19 @@ module.exports = async function handler(req, res) {
         </div>
       `;
 
-      // Send to all target emails
-      const targetEmails = petition.target_emails ? JSON.parse(petition.target_emails) : [];
+      // Send to all target emails (supports JSONB array or legacy JSON string)
+      let targetEmails = [];
+      if (Array.isArray(petition.target_emails)) {
+        targetEmails = petition.target_emails;
+      } else if (typeof petition.target_emails === 'string' && petition.target_emails.trim()) {
+        try {
+          const parsed = JSON.parse(petition.target_emails);
+          if (Array.isArray(parsed)) targetEmails = parsed;
+        } catch (e) {
+          console.error('Invalid target_emails JSON:', e.message);
+          targetEmails = [];
+        }
+      }
       
       if (targetEmails.length > 0) {
         for (const targetEmail of targetEmails) {
