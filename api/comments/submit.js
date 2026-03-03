@@ -191,6 +191,8 @@ module.exports = async function handler(req, res) {
       post_slug: sanitizedSlug,
       author_name: sanitizedName,
       author_email: sanitizedEmail,
+      author_website: sanitizedWebsite,
+      content: sanitizedContent,
       created_at: result.rows[0].created_at
     };
 
