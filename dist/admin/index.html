@@ -2,13 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-<link rel="icon" href="/images/2024/04/cropped-favicon-2-32x32.png" sizes="32x32">
-<link rel="icon" href="/images/2024/04/cropped-favicon-2-192x192.png" sizes="192x192">
-<link rel="apple-touch-icon" href="/images/2024/04/cropped-favicon-2-180x180.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <title>Admin Dashboard - SecureTheVote</title>
-      <link rel="stylesheet" href="/css/admin.css">
+  <link rel="icon" type="image/png" href="/images/2024/04/favicon-2-150x150.png">
+  <link rel="apple-touch-icon" href="/images/2024/04/favicon-2-150x150.png">
+  <link rel="stylesheet" href="/css/admin.css">
   <link rel="stylesheet" href="/css/page-transitions.css">
   <style>
     /* Branding Tab Styles */
@@ -270,6 +269,8 @@
       100% { transform: scale(1); opacity: 1; }
     }
   </style>
+  <!-- Quill Editor -->
+  <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
 </head>
 <body>
   <div id="app">
@@ -407,6 +408,7 @@
         <button class="tab-btn" data-tab="admins">Admin Users</button>
         <button class="tab-btn" data-tab="branding">Branding</button>
         <button class="tab-btn" data-tab="site-editor">Site Editor</button>
+        <button class="tab-btn" data-tab="edit-requests">Edit Requests</button>
       </nav>
 
       <main class="dashboard-main">
@@ -548,18 +550,12 @@
 
                   <div class="form-group">
                     <label>Content</label>
-                    <div id="post-content-editor" class="custom-editor-container"></div>
+                    <div id="post-content-editor"></div>
                   </div>
 
                   <div class="form-group">
                     <label for="post-featured-image">Featured Image URL</label>
-                    <div style="display: flex; gap: 8px; align-items: center;">
-                      <input type="url" id="post-featured-image" placeholder="/images/2026/02/example.png" style="flex: 1;">
-                      <input type="file" id="post-featured-image-file" accept="image/*" style="display: none;">
-                      <button type="button" id="upload-featured-image-btn" class="btn btn-secondary btn-small">📁 Upload</button>
-                      <button type="button" id="clear-featured-image-btn" class="btn btn-danger btn-small" title="Remove featured image">✕ Remove</button>
-                    </div>
-                    <small style="color: #666; margin-top: 4px; display: block;">Upload an image, paste a URL, or remove the featured image.</small>
+                    <input type="url" id="post-featured-image" placeholder="/images/blog/...">
                   </div>
 
                   <div class="seo-section">
@@ -606,7 +602,7 @@
               <form id="banner-form">
                 <div class="form-group">
                   <label for="banner-text">Banner Text *</label>
-                  <textarea id="banner-text" rows="3" placeholder="JOIN US FOR SECURE THE VOTE ACT 2026 LOBBY DAY — WED FEB 4 AT 9AM — CLICK HERE TO REGISTER!" required></textarea>
+                  <textarea id="banner-text" rows="3" placeholder="JOIN US FOR SECURE THE VOTE ACT 2026 LOBBY DAY ΓÇö WED FEB 4 AT 9AM ΓÇö CLICK HERE TO REGISTER!" required></textarea>
                 </div>
 
                 <div class="form-group">
@@ -1216,7 +1212,7 @@
     </div>
   </div>
 
-  <script src="/js/custom-editor.js"></script>
+  <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
   <script src="/js/admin.js"></script>
 </body>
 </html>
