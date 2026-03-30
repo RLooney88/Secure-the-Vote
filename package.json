@@ -1,20 +1,25 @@
 {
   "name": "secure-the-vote-md",
   "version": "1.0.0",
-  "description": "SecureTheVoteMD Static Site - Eleventy",
+  "description": "Secure The Vote MD website built with Eleventy",
+  "type": "commonjs",
   "scripts": {
-    "start": "eleventy --serve",
-    "build": "echo 'Static site already built - no build step needed'",
-    "clean": "rm -rf public"
+    "build": "eleventy",
+    "serve": "eleventy --serve",
+    "dev": "eleventy --serve",
+    "build:css": "tailwindcss -i ./src/assets/styles/main.css -o ./dist/assets/styles/main.css --minify"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   },
   "keywords": [
     "eleventy",
     "static-site",
-    "voting",
+    "secure-the-vote",
     "maryland"
   ],
-  "author": "SecureTheVoteMD",
-  "license": "MIT",
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
     "@11ty/eleventy": "^3.0.0",
     "luxon": "^3.4.4"
@@ -23,6 +28,7 @@
     "bcryptjs": "^2.4.3",
     "busboy": "^1.6.0",
     "jsonwebtoken": "^9.0.2",
+    "@google-cloud/storage": "^7.16.0",
     "markdown-it": "^14.0.0",
     "pg": "^8.18.0",
     "@sendgrid/mail": "^8.1.0"
