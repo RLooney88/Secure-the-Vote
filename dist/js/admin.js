@@ -1720,6 +1720,7 @@
   }
 
   let searchTimeout;
+  let editRequestsLoaded = false;
   function handleSearch() {
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
@@ -1983,6 +1984,93 @@
     });
   }
 
+  function erEl(id) { return document.getElementById(id); }
+
+  async function erApi(url, opts = {}) {
+    const resp = await fetch(url, {
+      ...opts,
+      headers: {
+        'Authorization': `Bearer ${state.token}`,
+        ...(opts.body ? { 'Content-Type': 'application/json' } : {})
+      }
+    });
+    const text = await resp.text();
+    let data;
+    try { data = JSON.parse(text); } catch { data = { raw: text }; }
+    if (!resp.ok) throw new Error(data.error || data.detail || resp.statusText);
+    return data;
+  }
+
+  function renderEditRequestsList(items) {
+    const box = erEl('er-list');
+    if (!box) return;
+    if (!items.length) { box.innerHTML = '<div style="color:#666;">No edit requests yet.</div>'; return; }
+    box.innerHTML = items.map(r => `
+      <div class="petition-item" data-er-id="${r.id}" style="cursor:pointer; margin-bottom:10px;">
+        <div class="petition-header" style="display:flex;justify-content:space-between;gap:8px;">
+          <strong>${r.title}</strong>
+          <span class="status-badge">${r.status || 'open'}</span>
+        </div>
+        <div style="color:#666;font-size:13px;">${r.page || ''}</div>
+      </div>`).join('');
+    box.querySelectorAll('[data-er-id]').forEach(n => n.addEventListener('click', () => loadEditRequestDetail(n.dataset.erId)));
+  }
+
+  function renderEditRequestDetail(r) {
+    const title = erEl('er-detail-title'); const detail = erEl('er-detail');
+    if (!title || !detail) return;
+    title.textContent = r.title;
+    const cb = r.callback_payload || {};
+    detail.innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div><strong>Page</strong><div>${r.page || ''}</div></div>
+        <div><strong>Status</strong><div>${r.status || ''}</div></div>
+      </div>
+      <div style="margin-top:12px;"><strong>Description</strong><pre style="white-space:pre-wrap;background:#fafafa;border:1px solid #eee;padding:10px;border-radius:6px;">${r.description || ''}</pre></div>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+        ${cb.previewLink ? `<a class="btn btn-outline" href="${cb.previewLink}" target="_blank">Preview</a>` : ''}
+        ${cb.deliverableLink ? `<a class="btn btn-outline" href="${cb.deliverableLink}" target="_blank">Deliverable</a>` : ''}
+        ${cb.reviewLink ? `<a class="btn btn-outline" href="${cb.reviewLink}" target="_blank">Review</a>` : ''}
+        <button id="er-close-btn" class="btn btn-outline">Close</button>
+        <button id="er-reopen-btn" class="btn btn-outline">Reopen</button>
+      </div>`;
+    const c=erEl('er-close-btn'); if (c) c.onclick=()=>editRequestAction(r.id,'close');
+    const ro=erEl('er-reopen-btn'); if (ro) ro.onclick=()=>editRequestAction(r.id,'reopen');
+  }
+
+  async function loadEditRequestDetail(id) {
+    try { renderEditRequestDetail(await erApi(`/api/admin/edit-requests/${id}`)); }
+    catch (e) { const d=erEl('er-detail'); if (d) d.innerHTML = `<div style="color:#b00020;">${e.message}</div>`; }
+  }
+
+  async function loadEditRequests() {
+    const filter = erEl('er-status-filter');
+    const q = filter && filter.value ? `?status=${encodeURIComponent(filter.value)}` : '';
+    const items = await erApi(`/api/admin/edit-requests${q}`);
+    renderEditRequestsList(items);
+    const title = erEl('er-detail-title'); const detail = erEl('er-detail');
+    if (title) title.textContent = 'Select a request'; if (detail) detail.innerHTML = '';
+  }
+
+  async function editRequestAction(id, action) {
+    await erApi(`/api/admin/edit-requests/${id}?action=${action}`, { method: 'PUT' });
+    await loadEditRequests();
+  }
+
+  async function createEditRequest() {
+    const title = erEl('er-title').value.trim();
+    const page = erEl('er-page').value.trim();
+    const description = erEl('er-description').value.trim();
+    const email = erEl('er-email').value.trim();
+    const approval = erEl('er-approval').value === 'true';
+    const msg = erEl('er-create-message');
+    if (!title || !description) { if(msg){msg.style.display='block';msg.style.background='#fdecea';msg.textContent='Title and description are required.';} return; }
+    await erApi('/api/admin/edit-requests', { method: 'POST', body: JSON.stringify({ title, page, description, requester_email: email, preview_approval_needed: approval, attachments: [] }) });
+    erEl('er-title').value=''; erEl('er-page').value=''; erEl('er-description').value=''; erEl('er-email').value='';
+    if(msg){msg.style.display='block';msg.style.background='#e8f5e9';msg.textContent='Edit request created.';}
+    await loadEditRequests();
+  }
+
   // Initialize
   function init() {
     if (state.token) {
@@ -2053,6 +2141,10 @@
     elements.tabBtns.forEach(btn => {
       btn.addEventListener('click', () => handleTabSwitch(btn.dataset.tab));
     });
+
+    const erRefresh = erEl('edit-requests-refresh'); if (erRefresh) erRefresh.addEventListener('click', loadEditRequests);
+    const erCreate = erEl('er-create-btn'); if (erCreate) erCreate.addEventListener('click', createEditRequest);
+    const erFilter = erEl('er-status-filter'); if (erFilter) erFilter.addEventListener('change', loadEditRequests);
 
     elements.autoGenerate.addEventListener('change', (e) => {
       elements.adminPassword.disabled = e.target.checked;
