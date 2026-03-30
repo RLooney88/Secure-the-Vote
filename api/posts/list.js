@@ -16,22 +16,41 @@ module.exports = async function handler(req, res) {
   });
 
   try {
-    const { limit = '9', offset = '0' } = req.query;
+    const { limit = '9', offset = '0', category = '' } = req.query;
     const limitNum = Math.min(parseInt(limit, 10) || 9, 50);
     const offsetNum = parseInt(offset, 10) || 0;
+    const categoryFilter = (category || '').trim();
 
-    const result = await pool.query(
-      `SELECT id, title, slug, excerpt, category, featured_image, published_at, url
-       FROM posts
-       WHERE status = 'published'
-       ORDER BY published_at DESC
-       LIMIT $1 OFFSET $2`,
-      [limitNum, offsetNum]
-    );
+    const whereClause = categoryFilter
+      ? `WHERE status = 'published' AND category = $3`
+      : `WHERE status = 'published'`;
 
-    const countResult = await pool.query(
-      `SELECT COUNT(*) as total FROM posts WHERE status = 'published'`
-    );
+    const result = categoryFilter
+      ? await pool.query(
+          `SELECT id, title, slug, excerpt, category, featured_image, published_at, url
+           FROM posts
+           ${whereClause}
+           ORDER BY published_at DESC
+           LIMIT $1 OFFSET $2`,
+          [limitNum, offsetNum, categoryFilter]
+        )
+      : await pool.query(
+          `SELECT id, title, slug, excerpt, category, featured_image, published_at, url
+           FROM posts
+           ${whereClause}
+           ORDER BY published_at DESC
+           LIMIT $1 OFFSET $2`,
+          [limitNum, offsetNum]
+        );
+
+    const countResult = categoryFilter
+      ? await pool.query(
+          `SELECT COUNT(*) as total FROM posts WHERE status = 'published' AND category = $1`,
+          [categoryFilter]
+        )
+      : await pool.query(
+          `SELECT COUNT(*) as total FROM posts WHERE status = 'published'`
+        );
 
     return res.status(200).json({
       posts: result.rows,
