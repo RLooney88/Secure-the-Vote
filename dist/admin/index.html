@@ -1175,38 +1175,34 @@
             <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;">
               <div>
                 <h2 style="margin:0;">Edit Requests</h2>
-                <p style="margin:6px 0 0;color:#666;">Create, review, and track Nova site edit requests.</p>
+                <p style="margin:6px 0 0;color:#666;">Track open requests, review history, and submit new edits.</p>
               </div>
-              <button id="edit-requests-refresh" class="btn btn-outline">Refresh</button>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <button id="edit-requests-refresh" class="btn btn-outline">Refresh</button>
+                <button id="edit-requests-new-btn" class="btn btn-primary">New Request</button>
+              </div>
             </div>
-            <div style="display:grid;grid-template-columns:minmax(320px,420px) 1fr;gap:16px;align-items:start;">
-              <div>
-                <div class="section-card" style="margin-bottom:16px;">
-                  <h3 style="margin-top:0;">New Request</h3>
-                  <div class="form-group"><label for="er-title">Title</label><input id="er-title" class="form-control" /></div>
-                  <div class="form-group"><label for="er-page">Page</label><input id="er-page" class="form-control" placeholder="/page or page name" /></div>
-                  <div class="form-group"><label for="er-description">Description</label><textarea id="er-description" class="form-control" rows="6"></textarea></div>
-                  <div class="form-group"><label for="er-email">Requester Email</label><input id="er-email" class="form-control" type="email" /></div>
-                  <div class="form-group"><label for="er-approval">Preview Approval Needed</label><select id="er-approval" class="form-control"><option value="true">Yes</option><option value="false">No</option></select></div>
-                  <div id="er-create-message" style="display:none;margin:10px 0;padding:10px;border-radius:6px;"></div>
-                  <button id="er-create-btn" class="btn btn-primary">Create Request</button>
-                </div>
-                <div class="section-card">
-                  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;">
-                    <h3 style="margin:0;">Requests</h3>
-                    <select id="er-status-filter" class="form-control" style="max-width:180px;">
-                      <option value="">All statuses</option>
-                      <option value="open">Open</option>
-                      <option value="ready_for_review">Ready for Review</option>
-                      <option value="pending_approval">Pending Approval</option>
-                      <option value="in_progress">In Progress</option>
-                      <option value="completed">Completed</option>
-                      <option value="blocked">Blocked</option>
-                      <option value="closed">Closed</option>
-                    </select>
-                  </div>
-                  <div id="er-list"></div>
-                </div>
+            <div style="display:flex;gap:12px;border-bottom:1px solid #e5e7eb;margin-bottom:16px;">
+              <button id="er-open-tab" class="btn btn-outline active" style="border-bottom-left-radius:0;border-bottom-right-radius:0;">Open Requests</button>
+              <button id="er-closed-tab" class="btn btn-outline" style="border-bottom-left-radius:0;border-bottom-right-radius:0;">Closed / History</button>
+            </div>
+            <div id="er-create-panel" class="section-card" style="display:none;margin-bottom:16px;background:#fafafa;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                <h3 style="margin:0;">New Edit Request</h3>
+                <button id="er-cancel-btn" class="btn btn-outline">Cancel</button>
+              </div>
+              <div class="form-group"><label for="er-page">Page</label><select id="er-page" class="form-control"></select></div>
+              <div class="form-group" id="er-new-page-wrap" style="display:none;"><label for="er-new-page">New Page Name</label><input id="er-new-page" class="form-control" placeholder="New page name" /></div>
+              <div class="form-group"><label for="er-title">Title</label><input id="er-title" class="form-control" /></div>
+              <div class="form-group"><label for="er-description">Description</label><textarea id="er-description" class="form-control" rows="6"></textarea></div>
+              <div class="form-group"><label for="er-email">Requester Email</label><input id="er-email" class="form-control" type="email" readonly /></div>
+              <div class="form-group"><label for="er-approval">Preview Approval Needed</label><select id="er-approval" class="form-control"><option value="true">Yes</option><option value="false">No</option></select></div>
+              <div id="er-create-message" style="display:none;margin:10px 0;padding:10px;border-radius:6px;"></div>
+              <button id="er-create-btn" class="btn btn-primary">Submit Request</button>
+            </div>
+            <div style="display:grid;grid-template-columns:minmax(320px,430px) 1fr;gap:16px;align-items:start;">
+              <div class="section-card">
+                <div id="er-list"></div>
               </div>
               <div class="section-card">
                 <h3 id="er-detail-title" style="margin-top:0;">Select a request</h3>
@@ -1215,7 +1211,7 @@
             </div>
           </div>
         </div>
-      </main>
+</main>
     </div>
 
     <!-- Delete Confirmation Modal -->
