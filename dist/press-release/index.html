@@ -125,7 +125,7 @@
     isLoading = true;
     loadingEl.classList.remove('hidden');
     if (showMoreBtn) showMoreBtn.disabled = true;
-    fetch(API_URL+'?category=press-release&limit='+POSTS_PER_PAGE+'&offset='+currentOffset)
+    fetch(API_URL+'?limit='+POSTS_PER_PAGE+'&offset='+currentOffset)
       .then(function(r){return r.json()})
       .then(function(data){
         totalPosts = data.total;

@@ -70,7 +70,7 @@
   <div style="position:relative;z-index:2;text-align:center;padding:60px 20px;">
     <h1 style="font-family:'Questrial',sans-serif;font-size:60px;color:#fff;font-weight:400;margin:0 0 10px;">Press Releases & News</h1>
     <div style="width:80px;height:5px;background:#fff;margin:0 auto 15px;"></div>
-    <p style="color:rgba(255,255,255,0.9);font-size:1.1rem;">Latest news and media coverage from Secure The Vote MD</p>
+    <p style="color:rgba(255,255,255,0.9);font-size:1.1rem;">Latest updates on Maryland election integrity and security</p>
   </div>
 </section>
 
@@ -125,7 +125,7 @@
     isLoading = true;
     loadingEl.classList.remove('hidden');
     if (showMoreBtn) showMoreBtn.disabled = true;
-    fetch(API_URL+'?category=press-release&limit='+POSTS_PER_PAGE+'&offset='+currentOffset)
+    fetch(API_URL+'?limit='+POSTS_PER_PAGE+'&offset='+currentOffset)
       .then(function(r){return r.json()})
       .then(function(data){
         totalPosts = data.total;
