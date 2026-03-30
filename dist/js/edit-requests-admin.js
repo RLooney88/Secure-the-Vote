@@ -1,5 +1,5 @@
 (function(){
-const token=localStorage.getItem('adminToken');
+const token=localStorage.getItem('admin_token');
 const headers=()=>({Authorization:`Bearer ${token}`,'Content-Type':'application/json'});
 const el=id=>document.getElementById(id);
 let selected=null, requests=[];
