@@ -1721,6 +1721,7 @@
 
   let searchTimeout;
   let editRequestsLoaded = false;
+  let editRequestFiles = [];
   function handleSearch() {
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
@@ -1992,11 +1993,32 @@
   }
 
   function buildPageOptions() {
-    const pages = Array.isArray(validPages) ? [...validPages] : [];
+    const pages = Array.isArray(validPages) ? validPages.filter(p => { const s=String(p||'').toLowerCase(); return s && !s.includes('blog') && !s.includes('post'); }) : [];
     const opts = ['<option value="">Select a page</option>']
-      .concat(pages.sort().map(p => `<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`))
+      .concat(pages.map(p => `<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`))
       .concat(['<option value="__new__">New Page</option>']);
     return opts.join('');
+  }
+
+  function renderAttachmentList() {
+    const box = erEl('er-attachments-list');
+    if (!box) return;
+    if (!editRequestFiles.length) { box.innerHTML = 'No attachments selected.'; return; }
+    box.innerHTML = editRequestFiles.map(f => `<div>${escapeHtml(f.name)} <span style="color:#999">(${Math.round((f.size||0)/1024)} KB)</span></div>`).join('');
+  }
+
+  async function filesToAttachments(files) {
+    const out = [];
+    for (const file of files) {
+      const buffer = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+      out.push({ filename: file.name, contentType: file.type || 'application/octet-stream', size: file.size, kind: (file.type || '').startsWith('image/') ? 'request_image' : 'request_file', buffer });
+    }
+    return out;
   }
 
   function resetEditRequestForm() {
@@ -2007,6 +2029,9 @@
     if (erEl('er-new-page-wrap')) erEl('er-new-page-wrap').style.display = 'none';
     if (erEl('er-title')) erEl('er-title').value = '';
     if (erEl('er-description')) erEl('er-description').value = '';
+    editRequestFiles = [];
+    if (erEl('er-attachments')) erEl('er-attachments').value = '';
+    renderAttachmentList();
     if (erEl('er-email')) erEl('er-email').value = currentAdminEmail();
     if (erEl('er-approval')) erEl('er-approval').value = 'true';
     if (erEl('er-create-message')) erEl('er-create-message').style.display = 'none';
@@ -2107,9 +2132,10 @@
     const description = erEl('er-description').value.trim();
     const email = erEl('er-email').value.trim() || currentAdminEmail();
     const approval = erEl('er-approval').value === 'true';
+    const attachments = await filesToAttachments(editRequestFiles);
     const msg = erEl('er-create-message');
     if (!page || !title || !description) { if(msg){msg.style.display='block';msg.style.background='#fdecea';msg.textContent='Page, title, and description are required.';} return; }
-    await erApi('/api/admin/edit-requests', { method: 'POST', body: JSON.stringify({ title, page, description, requester_email: email, preview_approval_needed: approval, attachments: [] }) });
+    await erApi('/api/admin/edit-requests', { method: 'POST', body: JSON.stringify({ title, page, description, requester_email: email, preview_approval_needed: approval, attachments }) });
     resetEditRequestForm();
     if(msg){msg.style.display='block';msg.style.background='#e8f5e9';msg.textContent='Edit request created.';}
     if (erEl('er-create-panel')) erEl('er-create-panel').style.display = 'none';
@@ -2192,6 +2218,7 @@
     const erNew = erEl('edit-requests-new-btn'); if (erNew) erNew.addEventListener('click', () => { resetEditRequestForm(); erEl('er-create-panel').style.display = 'block'; });
     const erCancel = erEl('er-cancel-btn'); if (erCancel) erCancel.addEventListener('click', () => { erEl('er-create-panel').style.display = 'none'; });
     const erPage = erEl('er-page'); if (erPage) erPage.addEventListener('change', () => { erEl('er-new-page-wrap').style.display = erPage.value === '__new__' ? 'block' : 'none'; });
+    const erAttachments = erEl('er-attachments'); if (erAttachments) erAttachments.addEventListener('change', () => { editRequestFiles = Array.from(erAttachments.files || []); renderAttachmentList(); });
     const erOpen = erEl('er-open-tab'); if (erOpen) erOpen.addEventListener('click', () => setEditRequestTab('open'));
     const erClosed = erEl('er-closed-tab'); if (erClosed) erClosed.addEventListener('click', () => setEditRequestTab('closed'));
 
