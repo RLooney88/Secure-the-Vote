@@ -554,8 +554,15 @@
                   </div>
 
                   <div class="form-group">
-                    <label for="post-featured-image">Featured Image URL</label>
-                    <input type="url" id="post-featured-image" placeholder="/images/blog/...">
+                    <label for="post-featured-image">Featured Image</label>
+                    <div class="media-field-actions">
+                      <button type="button" id="upload-featured-image-btn" class="btn btn-small btn-outline">Upload image</button>
+                      <button type="button" id="choose-featured-image-btn" class="btn btn-small btn-outline">Choose from library</button>
+                      <button type="button" id="clear-featured-image-btn" class="btn btn-small btn-outline">Clear</button>
+                    </div>
+                    <input type="file" id="post-featured-image-file" accept="image/*" hidden>
+                    <input type="url" id="post-featured-image" placeholder="/images/... or choose from library">
+                    <div id="post-featured-image-preview" class="media-preview" style="display: none;"></div>
                   </div>
 
                   <div class="seo-section">
@@ -577,6 +584,27 @@
                   </div>
 
                   <div id="post-form-message" style="display: none;"></div>
+
+                  <div id="media-library-modal" class="media-library-modal" style="display: none;">
+                    <div class="media-library-backdrop" data-close-media-library="true"></div>
+                    <div class="media-library-dialog" role="dialog" aria-modal="true" aria-labelledby="media-library-title">
+                      <div class="media-library-header">
+                        <div>
+                          <h3 id="media-library-title">Media Library</h3>
+                          <p>Upload a new image or choose one already in the site library.</p>
+                        </div>
+                        <button type="button" id="close-media-library-btn" class="btn btn-small btn-outline">Close</button>
+                      </div>
+                      <div class="media-library-toolbar">
+                        <input type="search" id="media-library-search" placeholder="Search filenames or folders">
+                        <button type="button" id="media-library-refresh-btn" class="btn btn-small btn-outline">Refresh</button>
+                        <button type="button" id="media-library-upload-btn" class="btn btn-small btn-secondary">Upload new image</button>
+                        <input type="file" id="media-library-upload-input" accept="image/*" hidden>
+                      </div>
+                      <div id="media-library-status" class="media-library-status" style="display: none;"></div>
+                      <div id="media-library-grid" class="media-library-grid"></div>
+                    </div>
+                  </div>
 
                   <div class="form-actions">
                     <button type="button" id="cancel-post-btn" class="btn btn-outline">Cancel</button>

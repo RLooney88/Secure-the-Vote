@@ -16,6 +16,8 @@
     currentPostId: null,
     currentPetitionId: null,
     customEditor: null,
+    mediaLibraryContext: null,
+    mediaLibraryImages: [],
     pagination: {
       page: 1,
       limit: 50,
@@ -105,6 +107,7 @@
     postExternalUrl: document.getElementById('post-external-url'),
     postExcerpt: document.getElementById('post-excerpt'),
     postFeaturedImage: document.getElementById('post-featured-image'),
+    postFeaturedImagePreview: document.getElementById('post-featured-image-preview'),
     postSeoTitle: document.getElementById('post-seo-title'),
     postSeoDescription: document.getElementById('post-seo-description'),
     postOgImage: document.getElementById('post-og-image'),
@@ -171,7 +174,16 @@
     commentsPageInfo: document.getElementById('comments-page-info'),
     commentsPrevPage: document.getElementById('comments-prev-page'),
     commentsNextPage: document.getElementById('comments-next-page'),
-    commentFilterBtns: document.querySelectorAll('.comment-filter-btn')
+    commentFilterBtns: document.querySelectorAll('.comment-filter-btn'),
+    chooseFeaturedImageBtn: document.getElementById('choose-featured-image-btn'),
+    mediaLibraryModal: document.getElementById('media-library-modal'),
+    closeMediaLibraryBtn: document.getElementById('close-media-library-btn'),
+    mediaLibrarySearch: document.getElementById('media-library-search'),
+    mediaLibraryRefreshBtn: document.getElementById('media-library-refresh-btn'),
+    mediaLibraryUploadBtn: document.getElementById('media-library-upload-btn'),
+    mediaLibraryUploadInput: document.getElementById('media-library-upload-input'),
+    mediaLibraryGrid: document.getElementById('media-library-grid'),
+    mediaLibraryStatus: document.getElementById('media-library-status')
   };
 
   // API helper
@@ -254,6 +266,131 @@
       hour: '2-digit',
       minute: '2-digit'
     });
+  }
+
+  function renderFeaturedImagePreview(url) {
+    if (!elements.postFeaturedImagePreview) return;
+
+    if (!url) {
+      elements.postFeaturedImagePreview.style.display = 'none';
+      elements.postFeaturedImagePreview.innerHTML = '';
+      return;
+    }
+
+    elements.postFeaturedImagePreview.style.display = 'block';
+    elements.postFeaturedImagePreview.innerHTML = `
+      <img src="${escapeHtml(url)}" alt="Featured image preview">
+      <div class="media-preview-url">${escapeHtml(url)}</div>
+    `;
+  }
+
+  async function uploadAdminImage(file) {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const response = await fetch('/api/admin/upload-image', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${state.token}`
+      },
+      body: formData
+    });
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        handleLogout();
+        throw new Error('Your session expired. Please log in again.');
+      }
+
+      let message = 'Upload failed';
+      try {
+        const errorData = await response.json();
+        message = errorData.error || message;
+      } catch (_) {}
+      throw new Error(message);
+    }
+
+    return response.json();
+  }
+
+  function openMediaLibrary(context) {
+    state.mediaLibraryContext = context;
+    elements.mediaLibraryModal.style.display = 'block';
+    loadMediaLibrary();
+  }
+
+  function closeMediaLibrary() {
+    state.mediaLibraryContext = null;
+    elements.mediaLibraryModal.style.display = 'none';
+    elements.mediaLibraryStatus.style.display = 'none';
+  }
+
+  function setMediaLibraryStatus(message, type = 'info') {
+    elements.mediaLibraryStatus.textContent = message;
+    elements.mediaLibraryStatus.style.display = message ? 'block' : 'none';
+    elements.mediaLibraryStatus.className = type === 'error' ? 'error-message media-library-status' : 'media-library-status';
+  }
+
+  function applyMediaSelection(url) {
+    if (!state.mediaLibraryContext || !url) return;
+
+    if (state.mediaLibraryContext.type === 'featured') {
+      elements.postFeaturedImage.value = url;
+      renderFeaturedImagePreview(url);
+      if (elements.postOgImage && !elements.postOgImage.value) {
+        elements.postOgImage.value = url;
+      }
+      showMessage(elements.postFormMessage, 'Featured image selected. Save/Publish post to apply.', 'success');
+    }
+
+    if (state.mediaLibraryContext.type === 'editor' && typeof state.mediaLibraryContext.onSelect === 'function') {
+      state.mediaLibraryContext.onSelect(url, '');
+      showMessage(elements.postFormMessage, 'Image inserted into post body.', 'success');
+    }
+
+    closeMediaLibrary();
+  }
+
+  function renderMediaLibrary(images) {
+    if (!images.length) {
+      elements.mediaLibraryGrid.innerHTML = '<div class="media-library-empty">No images found. Upload one to get started.</div>';
+      return;
+    }
+
+    elements.mediaLibraryGrid.innerHTML = images.map((image) => `
+      <div class="media-library-card">
+        <img src="${escapeHtml(image.url)}" alt="${escapeHtml(image.name)}" loading="lazy">
+        <div class="media-library-card-body">
+          <div class="media-library-card-name">${escapeHtml(image.name)}</div>
+          <div class="media-library-card-path">${escapeHtml(image.url)}</div>
+          <div class="media-library-card-actions">
+            <button type="button" class="btn btn-small btn-primary media-select-btn" data-url="${escapeHtml(image.url)}">Use image</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    elements.mediaLibraryGrid.querySelectorAll('.media-select-btn').forEach((button) => {
+      button.addEventListener('click', () => applyMediaSelection(button.dataset.url));
+    });
+  }
+
+  async function loadMediaLibrary() {
+    setMediaLibraryStatus('Loading media library...');
+    elements.mediaLibraryGrid.innerHTML = '<div class="media-library-empty">Loading images…</div>';
+
+    try {
+      const search = (elements.mediaLibrarySearch.value || '').trim();
+      const query = search ? `?search=${encodeURIComponent(search)}` : '';
+      const data = await api(`admin/media${query}`);
+      state.mediaLibraryImages = data.images || [];
+      renderMediaLibrary(state.mediaLibraryImages);
+      setMediaLibraryStatus(state.mediaLibraryImages.length ? `Showing ${state.mediaLibraryImages.length} image${state.mediaLibraryImages.length === 1 ? '' : 's'}.` : 'No matching images found.');
+    } catch (error) {
+      console.error('Failed to load media library:', error);
+      setMediaLibraryStatus(`Failed to load media library: ${error.message}`, 'error');
+      elements.mediaLibraryGrid.innerHTML = '<div class="media-library-empty">Unable to load images right now.</div>';
+    }
   }
 
   function slugify(text) {
@@ -513,6 +650,9 @@
 
     if (typeof window.CustomEditor === 'function') {
       state.customEditor = new window.CustomEditor('#post-content-editor');
+      if (typeof state.customEditor.setImagePicker === 'function') {
+        state.customEditor.setImagePicker(({ onSelect }) => openMediaLibrary({ type: 'editor', onSelect }));
+      }
       return state.customEditor;
     }
 
@@ -541,6 +681,7 @@
       elements.postExternalUrl.value = post.external_url || '';
       elements.postExcerpt.value = post.excerpt || '';
       elements.postFeaturedImage.value = post.featured_image || '';
+      renderFeaturedImagePreview(post.featured_image || '');
       elements.postSeoTitle.value = post.seo_title || '';
       elements.postSeoDescription.value = post.seo_description || '';
       elements.postOgImage.value = post.og_image || '';
@@ -561,6 +702,7 @@
         state.customEditor.clear();
       }
       document.getElementById('external-url-group').style.display = 'none';
+      renderFeaturedImagePreview('');
     }
 
     updateCharCounts();
@@ -2309,7 +2451,7 @@
         e.target.value === 'external-link' ? 'block' : 'none';
     });
 
-    // Featured image upload handler
+    // Featured image + media library handlers
     const uploadFeaturedImageBtn = document.getElementById('upload-featured-image-btn');
     const clearFeaturedImageBtn = document.getElementById('clear-featured-image-btn');
     const featuredImageFileInput = document.getElementById('post-featured-image-file');
@@ -2319,11 +2461,19 @@
         featuredImageFileInput.click();
       });
 
+      elements.chooseFeaturedImageBtn?.addEventListener('click', () => {
+        openMediaLibrary({ type: 'featured' });
+      });
+
+      elements.postFeaturedImage?.addEventListener('input', (e) => {
+        renderFeaturedImagePreview(e.target.value.trim());
+      });
+
       if (clearFeaturedImageBtn) {
         clearFeaturedImageBtn.addEventListener('click', () => {
           const previousFeatured = elements.postFeaturedImage.value;
           elements.postFeaturedImage.value = '';
-          // If OG image matched featured image, clear it too to avoid broken previews
+          renderFeaturedImagePreview('');
           if (elements.postOgImage && elements.postOgImage.value === previousFeatured) {
             elements.postOgImage.value = '';
           }
@@ -2334,56 +2484,75 @@
       featuredImageFileInput.addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (!file) return;
-
-        // Validate file type
         if (!file.type.startsWith('image/')) {
           alert('Please select an image file');
           return;
         }
 
-        // Show loading state
         uploadFeaturedImageBtn.disabled = true;
         uploadFeaturedImageBtn.textContent = '⏳ Uploading...';
 
         try {
-          // Create FormData
-          const formData = new FormData();
-          formData.append('image', file);
-
-          // Upload to server
-          const response = await fetch('/api/admin/upload-image', {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${state.token}`
-            },
-            body: formData
-          });
-
-          if (!response.ok) {
-            if (response.status === 401) {
-              handleLogout();
-              throw new Error('Your session expired. Please log in again.');
-            }
-            throw new Error('Upload failed');
-          }
-
-          const data = await response.json();
-          
-          // Set the URL in the input field
+          const data = await uploadAdminImage(file);
           elements.postFeaturedImage.value = data.url;
-          
+          renderFeaturedImagePreview(data.url);
+          if (elements.postOgImage && !elements.postOgImage.value) {
+            elements.postOgImage.value = data.url;
+          }
           showMessage(elements.postFormMessage, 'Image uploaded successfully!', 'success');
+          if (elements.mediaLibraryModal?.style.display === 'block') {
+            await loadMediaLibrary();
+          }
         } catch (error) {
           console.error('Upload error:', error);
-          showMessage(elements.postFormMessage, 'Failed to upload image. Please try again.', 'error');
+          showMessage(elements.postFormMessage, `Failed to upload image: ${error.message}`, 'error');
         } finally {
-          // Reset button state
           uploadFeaturedImageBtn.disabled = false;
-          uploadFeaturedImageBtn.textContent = '📁 Upload';
-          featuredImageFileInput.value = ''; // Clear file input
+          uploadFeaturedImageBtn.textContent = 'Upload image';
+          featuredImageFileInput.value = '';
         }
       });
     }
+
+    elements.closeMediaLibraryBtn?.addEventListener('click', closeMediaLibrary);
+    elements.mediaLibraryModal?.addEventListener('click', (e) => {
+      if (e.target.dataset.closeMediaLibrary) {
+        closeMediaLibrary();
+      }
+    });
+    elements.mediaLibraryRefreshBtn?.addEventListener('click', loadMediaLibrary);
+    elements.mediaLibrarySearch?.addEventListener('input', () => {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(loadMediaLibrary, 250);
+    });
+    elements.mediaLibraryUploadBtn?.addEventListener('click', () => {
+      elements.mediaLibraryUploadInput.click();
+    });
+    elements.mediaLibraryUploadInput?.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        setMediaLibraryStatus('Please choose an image file.', 'error');
+        return;
+      }
+
+      elements.mediaLibraryUploadBtn.disabled = true;
+      elements.mediaLibraryUploadBtn.textContent = 'Uploading...';
+      try {
+        const data = await uploadAdminImage(file);
+        setMediaLibraryStatus('Image uploaded. Select it from the library below.');
+        await loadMediaLibrary();
+        if (state.mediaLibraryContext?.type === 'featured') {
+          applyMediaSelection(data.url);
+        }
+      } catch (error) {
+        setMediaLibraryStatus(`Upload failed: ${error.message}`, 'error');
+      } finally {
+        elements.mediaLibraryUploadBtn.disabled = false;
+        elements.mediaLibraryUploadBtn.textContent = 'Upload new image';
+        elements.mediaLibraryUploadInput.value = '';
+      }
+    });
 
     // SEO character counters
     elements.postSeoTitle.addEventListener('input', updateCharCounts);

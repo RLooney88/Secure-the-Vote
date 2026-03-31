@@ -9,6 +9,8 @@ class CustomEditor {
     if (!this.container) {
       throw new Error(`Editor container not found: ${containerSelector}`);
     }
+
+    this.imagePickerHandler = null;
     
     this.init();
   }
@@ -83,9 +85,16 @@ class CustomEditor {
         document.execCommand('createLink', false, url);
       }
     } else if (command === 'insertImage') {
-      const url = prompt('Enter image URL:', '/images/');
-      if (url) {
-        document.execCommand('insertImage', false, url);
+      if (typeof this.imagePickerHandler === 'function') {
+        this.imagePickerHandler({
+          editor: this,
+          onSelect: (url, altText = '') => this.insertImage(url, altText)
+        });
+      } else {
+        const url = prompt('Enter image URL:', '/images/');
+        if (url) {
+          this.insertImage(url);
+        }
       }
     } else if (value) {
       document.execCommand(command, false, value);
@@ -148,6 +157,18 @@ class CustomEditor {
     }
   }
   
+  insertImage(url, altText = '') {
+    if (!url) return;
+
+    const safeAlt = String(altText || '').replace(/"/g, '&quot;');
+    document.execCommand('insertHTML', false, `<img src="${url}" alt="${safeAlt}">`);
+    this.editor.focus();
+  }
+
+  setImagePicker(handler) {
+    this.imagePickerHandler = handler;
+  }
+
   // API methods
   getHTML() {
     let html = this.editor.innerHTML;
