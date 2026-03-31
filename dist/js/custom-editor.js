@@ -205,3 +205,5 @@ class CustomEditor {
     this.editor.focus();
   }
 }
+
+window.CustomEditor = CustomEditor;
