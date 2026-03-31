@@ -133,7 +133,15 @@ module.exports = async (req, res) => {
         return res.status(404).json({ error: 'Uploaded file not found in storage' });
       }
 
-      await file.makePublic();
+      // makePublic() works on Fine-Grained ACL buckets; it throws on Uniform
+      // Bucket-Level Access buckets. In the UBA case the bucket-level IAM
+      // policy (allUsers: objectViewer) is what grants public read, so the
+      // object is already publicly accessible after upload.
+      try {
+        await file.makePublic();
+      } catch (aclErr) {
+        console.warn('makePublic skipped (likely UBA bucket, non-fatal):', aclErr.message);
+      }
       const [metadata] = await file.getMetadata();
       const filename = objectPath.split('/').pop();
       const url = objectPathToPublicUrl(objectPath);

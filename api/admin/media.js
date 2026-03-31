@@ -31,59 +31,55 @@ function toRepoMediaItem(item) {
   };
 }
 
-function toGcsMediaItem(file, metadataMap) {
+function toGcsMediaItem(file, metadata) {
   const relativePath = toRelativeMediaPath(file.name);
-  const metadata = metadataMap.get(file.name) || {};
   return {
     source: 'gcs',
     path: relativePath,
     name: relativePath.split('/').pop(),
     url: objectPathToPublicUrl(file.name),
-    size: Number(metadata.size || 0),
-    updatedAt: metadata.updated || metadata.timeCreated || null
+    size: Number((metadata || {}).size || 0),
+    updatedAt: (metadata || {}).updated || (metadata || {}).timeCreated || null
   };
 }
 
 async function loadRepoImages() {
   if (!GITHUB_TOKEN) return [];
 
-  const url = `https://api.github.com/repos/${OWNER}/${REPO}/git/trees/${BRANCH}?recursive=1`;
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${GITHUB_TOKEN}`,
-      Accept: 'application/vnd.github+json',
-      'User-Agent': 'SecureTheVote-Admin'
+  try {
+    const url = `https://api.github.com/repos/${OWNER}/${REPO}/git/trees/${BRANCH}?recursive=1`;
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${GITHUB_TOKEN}`,
+        Accept: 'application/vnd.github+json',
+        'User-Agent': 'SecureTheVote-Admin'
+      }
+    });
+
+    if (!response.ok) {
+      console.warn('GitHub media tree fetch failed:', response.status);
+      return [];
     }
-  });
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Failed to load repo media: ${errorText}`);
+    const data = await response.json();
+    return (data.tree || [])
+      .filter((item) => item.type === 'blob' && item.path && item.path.startsWith(REPO_IMAGES_PREFIX) && isImagePath(item.path))
+      .map(toRepoMediaItem);
+  } catch (error) {
+    console.warn('loadRepoImages error (non-fatal):', error.message);
+    return [];
   }
-
-  const data = await response.json();
-  return (data.tree || [])
-    .filter((item) => item.type === 'blob' && item.path && item.path.startsWith(REPO_IMAGES_PREFIX) && isImagePath(item.path))
-    .map(toRepoMediaItem);
 }
 
 async function loadGcsImages() {
   try {
     const bucket = getBucket();
+    // getFiles() already populates file.metadata with size, timeCreated, updated,
+    // contentType — no need to call getMetadata() individually per file.
     const [files] = await bucket.getFiles({ prefix: `${MEDIA_PREFIX}/` });
-    const imageFiles = files.filter((file) => isImagePath(file.name));
-    const metadataMap = new Map();
-
-    await Promise.all(imageFiles.map(async (file) => {
-      try {
-        const [metadata] = await file.getMetadata();
-        metadataMap.set(file.name, metadata || {});
-      } catch (_) {
-        metadataMap.set(file.name, {});
-      }
-    }));
-
-    return imageFiles.map((file) => toGcsMediaItem(file, metadataMap));
+    return files
+      .filter((file) => isImagePath(file.name))
+      .map((file) => toGcsMediaItem(file, file.metadata));
   } catch (error) {
     console.warn('GCS media library unavailable:', error.message);
     return [];
@@ -108,11 +104,18 @@ function buildFolderView(images, selectedFolder, search, limit) {
     const remaining = normalizedFolder ? item.path.slice(folderPrefix.length) : item.path;
     const segments = remaining.split('/').filter(Boolean);
     if (segments.length > 1) {
-      const childFolder = normalizedFolder ? `${normalizedFolder}/${segments[0]}` : segments[0];
+      // At root use up to 2-segment folder keys (e.g. "2024/01") so images with
+      // the standard YYYY/MM/filename layout are reachable in a single click.
+      // Inside a subfolder always use 1 segment.
+      const depth = normalizedFolder ? 1 : Math.min(2, segments.length - 1);
+      const childFolderName = segments.slice(0, depth).join('/');
+      const childFolder = normalizedFolder
+        ? `${normalizedFolder}/${childFolderName}`
+        : childFolderName;
       if (!folderMap.has(childFolder)) {
         folderMap.set(childFolder, {
           path: childFolder,
-          name: segments[0],
+          name: childFolderName,
           previewUrl: item.url,
           imageCount: 0
         });
@@ -124,12 +127,15 @@ function buildFolderView(images, selectedFolder, search, limit) {
     imageItems.push(item);
   }
 
-  const folders = Array.from(folderMap.values()).sort((a, b) => a.path.localeCompare(b.path));
+  // Sort newest first (descending path is correct for YYYY/MM names).
+  const folders = Array.from(folderMap.values()).sort((a, b) => b.path.localeCompare(a.path));
   const sortedImages = imageItems
     .sort((a, b) => {
       const aTime = a.updatedAt ? Date.parse(a.updatedAt) : 0;
       const bTime = b.updatedAt ? Date.parse(b.updatedAt) : 0;
-      return bTime - aTime || a.path.localeCompare(b.path);
+      // Descending by time; fall back to descending path so date-named files
+      // (timestamp prefix) also sort newest first.
+      return bTime - aTime || b.path.localeCompare(a.path);
     })
     .slice(0, limit);
 
