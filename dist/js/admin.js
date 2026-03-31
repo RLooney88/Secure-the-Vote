@@ -468,6 +468,59 @@
     });
   }
 
+  function createFallbackPostEditor(containerSelector) {
+    const container = document.querySelector(containerSelector);
+    if (!container) {
+      throw new Error(`Editor container not found: ${containerSelector}`);
+    }
+
+    container.innerHTML = `
+      <div class="custom-editor-toolbar" style="display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid #ddd;border-bottom:none;border-radius:6px 6px 0 0;background:#f8f8f8;color:#666;font-size:0.9rem;">
+        <strong>Editor unavailable</strong>
+        <span>Using safe fallback mode for this session.</span>
+      </div>
+      <div class="custom-editor-content" contenteditable="true" spellcheck="true" style="min-height:320px;padding:16px;border:1px solid #ddd;border-radius:0 0 6px 6px;background:#fff;overflow:auto;"></div>
+    `;
+
+    const editor = container.querySelector('.custom-editor-content');
+
+    return {
+      getHTML() {
+        return editor.innerHTML;
+      },
+      setHTML(html) {
+        editor.innerHTML = html || '';
+      },
+      getText() {
+        return editor.textContent || '';
+      },
+      setText(text) {
+        editor.textContent = text || '';
+      },
+      clear() {
+        editor.innerHTML = '';
+      },
+      focus() {
+        editor.focus();
+      }
+    };
+  }
+
+  function ensurePostEditor() {
+    if (state.customEditor) {
+      return state.customEditor;
+    }
+
+    if (typeof window.CustomEditor === 'function') {
+      state.customEditor = new window.CustomEditor('#post-content-editor');
+      return state.customEditor;
+    }
+
+    console.warn('CustomEditor failed to load; falling back to inline contenteditable editor.');
+    state.customEditor = createFallbackPostEditor('#post-content-editor');
+    return state.customEditor;
+  }
+
   // Show post editor
   function showPostEditor(post = null) {
     elements.postsListView.style.display = 'none';
@@ -475,9 +528,7 @@
     elements.newPostBtn.style.display = 'none';
 
     // Ensure editor exists before setting/clearing content
-    if (!state.customEditor) {
-      state.customEditor = new CustomEditor('#post-content-editor');
-    }
+    ensurePostEditor();
 
     if (post) {
       // Edit mode
