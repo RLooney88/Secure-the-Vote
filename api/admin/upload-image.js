@@ -1,21 +1,41 @@
-// api/admin/upload-image.js
-const busboy = require('busboy');
 const { requireAuth } = require('./_auth');
+const {
+  UPLOAD_MAX_BYTES,
+  ALLOWED_TYPES,
+  getBucket,
+  buildObjectPath,
+  objectPathToPublicUrl,
+  normalizeFolder
+} = require('./_mediaStorage');
 
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const OWNER = 'RLooney88';
-const REPO = 'Secure-the-Vote';
-const BRANCH = 'main';
+let bucketCorsApplied = false;
 
-const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-const MAX_SIZE = 5 * 1024 * 1024; // 5MB
-
-module.exports = async (req, res) => {
-  // Enable CORS
+function setCors(res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Authorization,Content-Type');
+}
+
+async function ensureBucketCors(bucket) {
+  if (bucketCorsApplied) return;
+  try {
+    await bucket.setCorsConfiguration([
+      {
+        origin: ['*'],
+        method: ['PUT', 'OPTIONS'],
+        responseHeader: ['Content-Type', 'x-goog-acl'],
+        maxAgeSeconds: 3600
+      }
+    ]);
+    bucketCorsApplied = true;
+  } catch (error) {
+    console.warn('Unable to update media bucket CORS automatically:', error.message);
+  }
+}
+
+module.exports = async (req, res) => {
+  setCors(res);
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -25,132 +45,114 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Verify authentication
   try {
     requireAuth(req);
   } catch (error) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  // Check for GitHub token
-  if (!GITHUB_TOKEN) {
-    console.error('GITHUB_TOKEN not configured');
-    return res.status(500).json({ error: 'Server configuration error' });
+  let body = req.body;
+  if (typeof body === 'string') {
+    try {
+      body = JSON.parse(body);
+    } catch (_) {
+      body = null;
+    }
   }
 
-  // Parse multipart form data
-  const bb = busboy({ headers: req.headers });
-  let fileData = null;
-  let filename = null;
-  let mimeType = null;
-  let fileSize = 0;
+  if (!body || typeof body !== 'object') {
+    return res.status(400).json({ error: 'Expected JSON body with upload metadata' });
+  }
 
-  bb.on('file', (fieldname, file, info) => {
-    const { filename: originalFilename, mimeType: fileMimeType } = info;
-    
-    // Validate file type
-    if (!ALLOWED_TYPES.includes(fileMimeType)) {
-      file.resume();
-      return res.status(400).json({ 
-        error: 'Invalid file type. Allowed: jpg, png, gif, webp' 
-      });
-    }
+  const action = String(body.action || 'init').toLowerCase();
 
-    mimeType = fileMimeType;
-    const ext = originalFilename.split('.').pop();
-    
-    // Generate unique filename: timestamp + random + extension
-    const timestamp = Date.now();
-    const random = Math.random().toString(36).substring(2, 8);
-    filename = `${timestamp}-${random}.${ext}`;
+  try {
+    const bucket = getBucket();
 
-    const chunks = [];
-    
-    file.on('data', (chunk) => {
-      fileSize += chunk.length;
-      
-      // Check size limit
-      if (fileSize > MAX_SIZE) {
-        file.resume();
-        return res.status(400).json({ 
-          error: 'File too large. Maximum size: 5MB' 
-        });
+    if (action === 'init') {
+      const filename = String(body.filename || '').trim();
+      const mimeType = String(body.mimeType || '').trim().toLowerCase();
+      const size = Number(body.size || 0);
+      const folder = normalizeFolder(body.folder || '');
+
+      if (!filename) {
+        return res.status(400).json({ error: 'Filename is required' });
       }
-      
-      chunks.push(chunk);
-    });
 
-    file.on('end', () => {
-      fileData = Buffer.concat(chunks);
-    });
-  });
+      if (!ALLOWED_TYPES.has(mimeType)) {
+        return res.status(400).json({ error: 'Invalid file type. Allowed: jpg, png, gif, webp, svg' });
+      }
 
-  bb.on('finish', async () => {
-    if (!fileData) {
-      return res.status(400).json({ error: 'No file uploaded' });
-    }
+      if (!Number.isFinite(size) || size <= 0) {
+        return res.status(400).json({ error: 'File size is required' });
+      }
 
-    try {
-      // Store file in repo under dist/images/... (matches migrated WordPress assets)
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const repoPath = `dist/images/${year}/${month}/${filename}`;
-      const publicPath = `images/${year}/${month}/${filename}`;
+      if (size > UPLOAD_MAX_BYTES) {
+        return res.status(400).json({ error: `File too large. Maximum size: ${Math.round(UPLOAD_MAX_BYTES / (1024 * 1024))}MB` });
+      }
 
-      // Upload to GitHub using Contents API
-      const uploadUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${repoPath}`;
-      
-      const uploadPayload = {
-        message: `Upload image: ${filename}`,
-        content: fileData.toString('base64'),
-        branch: BRANCH
-      };
+      await ensureBucketCors(bucket);
 
-      const uploadResponse = await fetch(uploadUrl, {
+      const objectPath = buildObjectPath({ folder, filename, mimeType });
+      const file = bucket.file(objectPath);
+
+      const [uploadUrl] = await file.getSignedUrl({
+        version: 'v4',
+        action: 'write',
+        expires: Date.now() + 15 * 60 * 1000,
+        contentType: mimeType,
+        extensionHeaders: {
+          'x-goog-acl': 'public-read'
+        }
+      });
+
+      return res.status(200).json({
+        success: true,
+        uploadUrl,
         method: 'PUT',
         headers: {
-          'Authorization': `Bearer ${GITHUB_TOKEN}`,
-          'Content-Type': 'application/json',
-          'User-Agent': 'SecureTheVote-Admin'
+          'Content-Type': mimeType,
+          'x-goog-acl': 'public-read'
         },
-        body: JSON.stringify(uploadPayload)
-      });
-
-      if (!uploadResponse.ok) {
-        const errorData = await uploadResponse.json();
-        console.error('GitHub upload error:', errorData);
-        return res.status(500).json({ 
-          error: 'Failed to upload image to repository' 
-        });
-      }
-
-      await uploadResponse.json();
-      
-      // Return public URL path used by the site
-      const imageUrl = `/${publicPath}`;
-      
-      res.status(200).json({
-        success: true,
-        url: imageUrl,
-        path: repoPath,
-        publicPath: publicPath,
-        filename: filename,
-        branch: BRANCH
-      });
-
-    } catch (error) {
-      console.error('Upload error:', error);
-      res.status(500).json({ 
-        error: 'Failed to upload image: ' + error.message 
+        objectPath,
+        folder,
+        maxSize: UPLOAD_MAX_BYTES,
+        publicUrl: objectPathToPublicUrl(objectPath)
       });
     }
-  });
 
-  bb.on('error', (error) => {
-    console.error('Busboy error:', error);
-    res.status(500).json({ error: 'Upload processing error' });
-  });
+    if (action === 'complete') {
+      const objectPath = String(body.objectPath || '').replace(/^\/+/, '');
+      if (!objectPath) {
+        return res.status(400).json({ error: 'objectPath is required' });
+      }
 
-  req.pipe(bb);
+      const file = bucket.file(objectPath);
+      const [exists] = await file.exists();
+      if (!exists) {
+        return res.status(404).json({ error: 'Uploaded file not found in storage' });
+      }
+
+      await file.makePublic();
+      const [metadata] = await file.getMetadata();
+      const filename = objectPath.split('/').pop();
+      const url = objectPathToPublicUrl(objectPath);
+
+      return res.status(200).json({
+        success: true,
+        url,
+        filename,
+        objectPath,
+        folder: objectPath.split('/').slice(0, -1).join('/'),
+        publicUrl: url,
+        size: Number(metadata.size || 0),
+        contentType: metadata.contentType || null
+      });
+    }
+
+    return res.status(400).json({ error: 'Unsupported upload action' });
+  } catch (error) {
+    console.error('Upload image error:', error);
+    return res.status(500).json({ error: `Failed to process upload: ${error.message}` });
+  }
 };

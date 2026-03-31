@@ -442,6 +442,54 @@ body {
   color: var(--text-secondary);
 }
 
+.media-library-breadcrumbs {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.media-folder-link {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--primary-color, #9B1E37);
+  cursor: pointer;
+  font: inherit;
+}
+
+.media-library-folder-card {
+  text-align: left;
+  cursor: pointer;
+}
+
+.media-library-folder-preview {
+  width: 100%;
+  height: 140px;
+  background: #f4f4f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.media-library-folder-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.media-library-folder-icon {
+  font-size: 2rem;
+}
+
+.media-library-card-meta {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
 /* Pagination */
 .pagination {
   display: flex;

@@ -18,6 +18,8 @@
     customEditor: null,
     mediaLibraryContext: null,
     mediaLibraryImages: [],
+    mediaLibraryFolders: [],
+    mediaLibraryCurrentFolder: '',
     pagination: {
       page: 1,
       limit: 50,
@@ -284,43 +286,88 @@
     `;
   }
 
-  async function uploadAdminImage(file) {
-    const formData = new FormData();
-    formData.append('image', file);
-
-    const response = await fetch('/api/admin/upload-image', {
+  async function uploadAdminImage(file, folder = state.mediaLibraryCurrentFolder || '') {
+    const initResponse = await fetch('/api/admin/upload-image', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${state.token}`
+        'Authorization': `Bearer ${state.token}`,
+        'Content-Type': 'application/json'
       },
-      body: formData
+      body: JSON.stringify({
+        action: 'init',
+        filename: file.name,
+        mimeType: file.type,
+        size: file.size,
+        folder
+      })
     });
 
-    if (!response.ok) {
-      if (response.status === 401) {
+    if (!initResponse.ok) {
+      if (initResponse.status === 401) {
         handleLogout();
         throw new Error('Your session expired. Please log in again.');
       }
 
-      let message = 'Upload failed';
+      let message = 'Upload initialization failed';
       try {
-        const errorData = await response.json();
+        const errorData = await initResponse.json();
         message = errorData.error || message;
       } catch (_) {}
       throw new Error(message);
     }
 
-    return response.json();
+    const initData = await initResponse.json();
+
+    const uploadResponse = await fetch(initData.uploadUrl, {
+      method: initData.method || 'PUT',
+      headers: initData.headers || { 'Content-Type': file.type },
+      body: file
+    });
+
+    if (!uploadResponse.ok) {
+      const uploadText = await uploadResponse.text().catch(() => '');
+      throw new Error(uploadText || 'Direct upload to storage failed');
+    }
+
+    const completeResponse = await fetch('/api/admin/upload-image', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${state.token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        action: 'complete',
+        objectPath: initData.objectPath
+      })
+    });
+
+    if (!completeResponse.ok) {
+      if (completeResponse.status === 401) {
+        handleLogout();
+        throw new Error('Your session expired. Please log in again.');
+      }
+
+      let message = 'Upload finalization failed';
+      try {
+        const errorData = await completeResponse.json();
+        message = errorData.error || message;
+      } catch (_) {}
+      throw new Error(message);
+    }
+
+    return completeResponse.json();
   }
 
   function openMediaLibrary(context) {
     state.mediaLibraryContext = context;
+    state.mediaLibraryCurrentFolder = '';
     elements.mediaLibraryModal.style.display = 'block';
     loadMediaLibrary();
   }
 
   function closeMediaLibrary() {
     state.mediaLibraryContext = null;
+    state.mediaLibraryCurrentFolder = '';
     elements.mediaLibraryModal.style.display = 'none';
     elements.mediaLibraryStatus.style.display = 'none';
   }
@@ -351,18 +398,39 @@
     closeMediaLibrary();
   }
 
-  function renderMediaLibrary(images) {
-    if (!images.length) {
-      elements.mediaLibraryGrid.innerHTML = '<div class="media-library-empty">No images found. Upload one to get started.</div>';
+  function renderMediaLibrary(folders, images, breadcrumbs = []) {
+    const hasFolders = folders.length > 0;
+    const hasImages = images.length > 0;
+
+    if (!hasFolders && !hasImages) {
+      elements.mediaLibraryGrid.innerHTML = '<div class="media-library-empty">No images found here yet. Upload one to get started.</div>';
       return;
     }
 
-    elements.mediaLibraryGrid.innerHTML = images.map((image) => `
+    const breadcrumbHtml = `
+      <div class="media-library-breadcrumbs">
+        <button type="button" class="media-folder-link" data-folder="">All media</button>
+        ${breadcrumbs.map((crumb) => `<span>/</span><button type="button" class="media-folder-link" data-folder="${escapeHtml(crumb.path)}">${escapeHtml(crumb.name)}</button>`).join('')}
+      </div>
+    `;
+
+    const folderCards = folders.map((folder) => `
+      <button type="button" class="media-library-card media-library-folder-card media-folder-link" data-folder="${escapeHtml(folder.path)}">
+        <div class="media-library-folder-preview">${folder.previewUrl ? `<img src="${escapeHtml(folder.previewUrl)}" alt="${escapeHtml(folder.name)}" loading="lazy">` : '<div class="media-library-folder-icon">📁</div>'}</div>
+        <div class="media-library-card-body">
+          <div class="media-library-card-name">${escapeHtml(folder.name)}</div>
+          <div class="media-library-card-path">${escapeHtml(folder.path)}</div>
+          <div class="media-library-card-meta">${folder.imageCount} image${folder.imageCount === 1 ? '' : 's'}</div>
+        </div>
+      </button>
+    `).join('');
+
+    const imageCards = images.map((image) => `
       <div class="media-library-card">
         <img src="${escapeHtml(image.url)}" alt="${escapeHtml(image.name)}" loading="lazy">
         <div class="media-library-card-body">
           <div class="media-library-card-name">${escapeHtml(image.name)}</div>
-          <div class="media-library-card-path">${escapeHtml(image.url)}</div>
+          <div class="media-library-card-path">${escapeHtml(image.path)}</div>
           <div class="media-library-card-actions">
             <button type="button" class="btn btn-small btn-primary media-select-btn" data-url="${escapeHtml(image.url)}">Use image</button>
           </div>
@@ -370,22 +438,40 @@
       </div>
     `).join('');
 
+    elements.mediaLibraryGrid.innerHTML = `${breadcrumbHtml}${folderCards}${imageCards}`;
+
     elements.mediaLibraryGrid.querySelectorAll('.media-select-btn').forEach((button) => {
       button.addEventListener('click', () => applyMediaSelection(button.dataset.url));
+    });
+
+    elements.mediaLibraryGrid.querySelectorAll('.media-folder-link').forEach((button) => {
+      button.addEventListener('click', () => {
+        state.mediaLibraryCurrentFolder = button.dataset.folder || '';
+        loadMediaLibrary();
+      });
     });
   }
 
   async function loadMediaLibrary() {
     setMediaLibraryStatus('Loading media library...');
-    elements.mediaLibraryGrid.innerHTML = '<div class="media-library-empty">Loading images…</div>';
+    elements.mediaLibraryGrid.innerHTML = '<div class="media-library-empty">Loading media…</div>';
 
     try {
+      const params = new URLSearchParams();
       const search = (elements.mediaLibrarySearch.value || '').trim();
-      const query = search ? `?search=${encodeURIComponent(search)}` : '';
+      if (search) params.set('search', search);
+      if (state.mediaLibraryCurrentFolder) params.set('folder', state.mediaLibraryCurrentFolder);
+      const query = params.toString() ? `?${params.toString()}` : '';
       const data = await api(`admin/media${query}`);
       state.mediaLibraryImages = data.images || [];
-      renderMediaLibrary(state.mediaLibraryImages);
-      setMediaLibraryStatus(state.mediaLibraryImages.length ? `Showing ${state.mediaLibraryImages.length} image${state.mediaLibraryImages.length === 1 ? '' : 's'}.` : 'No matching images found.');
+      state.mediaLibraryFolders = data.folders || [];
+      state.mediaLibraryCurrentFolder = data.currentFolder || '';
+      renderMediaLibrary(state.mediaLibraryFolders, state.mediaLibraryImages, data.breadcrumbs || []);
+      if (state.mediaLibraryFolders.length || state.mediaLibraryImages.length) {
+        setMediaLibraryStatus(`Showing ${state.mediaLibraryFolders.length} folder${state.mediaLibraryFolders.length === 1 ? '' : 's'} and ${state.mediaLibraryImages.length} image${state.mediaLibraryImages.length === 1 ? '' : 's'}${state.mediaLibraryCurrentFolder ? ` in ${state.mediaLibraryCurrentFolder}` : ''}.`);
+      } else {
+        setMediaLibraryStatus('No matching media found.');
+      }
     } catch (error) {
       console.error('Failed to load media library:', error);
       setMediaLibraryStatus(`Failed to load media library: ${error.message}`, 'error');
