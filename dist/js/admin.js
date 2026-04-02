@@ -2271,10 +2271,85 @@
     return current?.email || '';
   }
 
+  const STATIC_SITE_REQUEST_PAGES = [
+    '/',
+    '/about/',
+    '/citizen-action/',
+    '/contact-us/',
+    '/sign-the-petition/',
+    '/be-an-election-judge/',
+    '/news/',
+    '/our-team/',
+    '/voter-resources/'
+  ];
+  let siteRequestPages = [];
+
+  function normalizeRequestPagePath(input) {
+    const raw = String(input || '').trim();
+    if (!raw) return '';
+    let path = raw;
+    try {
+      const url = raw.startsWith('http://') || raw.startsWith('https://') ? new URL(raw) : new URL(raw, window.location.origin);
+      if (url.origin !== window.location.origin) return '';
+      path = url.pathname || '/';
+    } catch {
+      path = raw;
+    }
+    path = path.replace(/\\/g, '/').trim();
+    if (!path.startsWith('/')) path = `/${path}`;
+    if (path !== '/' && !path.endsWith('/')) path += '/';
+    path = path.replace(/\/+/g, '/');
+    const lower = path.toLowerCase();
+    if (!lower || lower === '/admin/' || lower.startsWith('/wp-') || lower.startsWith('/api/')) return '';
+    if (/\/\d{4}\/\d{2}\/\d{2}\//.test(lower)) return '';
+    if (lower.includes('/category/') || lower.includes('/tag/')) return '';
+    if (lower.includes('blog') && lower !== '/news/' && lower !== '/blog/') return '';
+    if (lower.includes('/post') || lower.endsWith('/post/')) return '';
+    return path;
+  }
+
+  function humanizeRequestPagePath(path) {
+    if (path === '/') return 'Home';
+    const cleaned = String(path || '').replace(/^\/+|\/+$/g, '');
+    if (!cleaned) return 'Home';
+    return cleaned
+      .split('/')
+      .filter(Boolean)
+      .map(part => part.replace(/[-_]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase()))
+      .join(' / ');
+  }
+
+  async function discoverSiteRequestPages() {
+    const merged = new Map();
+    const addPage = (input) => {
+      const normalized = normalizeRequestPagePath(input);
+      if (!normalized) return;
+      merged.set(normalized, humanizeRequestPagePath(normalized));
+    };
+
+    STATIC_SITE_REQUEST_PAGES.forEach(addPage);
+    if (Array.isArray(validPages)) validPages.forEach(addPage);
+
+    try {
+      const resp = await fetch('/', { cache: 'no-store' });
+      const html = await resp.text();
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      doc.querySelectorAll('a[href]').forEach(a => addPage(a.getAttribute('href')));
+    } catch (error) {
+      console.warn('Failed to auto-discover site request pages:', error);
+    }
+
+    siteRequestPages = Array.from(merged.entries())
+      .sort((a, b) => a[1].localeCompare(b[1]))
+      .map(([value, label]) => ({ value, label }));
+  }
+
   function buildPageOptions() {
-    const pages = Array.isArray(validPages) ? validPages.filter(p => { const s=String(p||'').toLowerCase(); return s && !s.includes('blog') && !s.includes('post'); }) : [];
+    const pages = siteRequestPages.length
+      ? siteRequestPages
+      : STATIC_SITE_REQUEST_PAGES.map(path => ({ value: path, label: humanizeRequestPagePath(path) }));
     const opts = ['<option value="">Select a page</option>']
-      .concat(pages.map(p => `<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`))
+      .concat(pages.map(({ value, label }) => `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`))
       .concat(['<option value="__new__">New Page</option>']);
     return opts.join('');
   }
@@ -2300,7 +2375,8 @@
     return out;
   }
 
-  function resetEditRequestForm() {
+  async function resetEditRequestForm() {
+    await discoverSiteRequestPages();
     const pageSel = erEl('er-page');
     if (pageSel) pageSel.innerHTML = buildPageOptions();
     if (pageSel) pageSel.value = '';
@@ -2415,7 +2491,7 @@
     const msg = erEl('er-create-message');
     if (!page || !title || !description) { if(msg){msg.style.display='block';msg.style.background='#fdecea';msg.textContent='Page, title, and description are required.';} return; }
     await erApi('/api/admin/edit-requests', { method: 'POST', body: JSON.stringify({ title, page, description, requester_email: email, preview_approval_needed: approval, attachments }) });
-    resetEditRequestForm();
+    await resetEditRequestForm();
     if(msg){msg.style.display='block';msg.style.background='#e8f5e9';msg.textContent='Edit request created.';}
     if (erEl('er-create-panel')) erEl('er-create-panel').style.display = 'none';
     setEditRequestTab('open');
@@ -2494,7 +2570,7 @@
 
     const erRefresh = erEl('edit-requests-refresh'); if (erRefresh) erRefresh.addEventListener('click', loadEditRequests);
     const erCreate = erEl('er-create-btn'); if (erCreate) erCreate.addEventListener('click', createEditRequest);
-    const erNew = erEl('edit-requests-new-btn'); if (erNew) erNew.addEventListener('click', () => { resetEditRequestForm(); erEl('er-create-panel').style.display = 'block'; });
+    const erNew = erEl('edit-requests-new-btn'); if (erNew) erNew.addEventListener('click', async () => { await resetEditRequestForm(); erEl('er-create-panel').style.display = 'block'; });
     const erCancel = erEl('er-cancel-btn'); if (erCancel) erCancel.addEventListener('click', () => { erEl('er-create-panel').style.display = 'none'; });
     const erPage = erEl('er-page'); if (erPage) erPage.addEventListener('change', () => { erEl('er-new-page-wrap').style.display = erPage.value === '__new__' ? 'block' : 'none'; });
     const erAttachments = erEl('er-attachments'); if (erAttachments) erAttachments.addEventListener('change', () => { editRequestFiles = Array.from(erAttachments.files || []); renderAttachmentList(); });
