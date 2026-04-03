@@ -131,7 +131,20 @@ async function handleDirectMultipartUpload(req, res, bucket) {
     }
   });
 
-  const [metadata] = await file.getMetadata();
+  try {
+    await file.makePublic();
+  } catch (aclErr) {
+    console.warn('Direct upload makePublic skipped/non-fatal:', aclErr.message);
+  }
+
+  let metadata = null;
+  try {
+    const [fmeta] = await file.getMetadata();
+    metadata = fmeta;
+  } catch (metaErr) {
+    console.warn('Direct upload metadata lookup skipped/non-fatal:', metaErr.message);
+  }
+
   const url = objectPathToPublicUrl(objectPath);
 
   return res.status(200).json({
@@ -142,8 +155,8 @@ async function handleDirectMultipartUpload(req, res, bucket) {
     objectPath,
     folder,
     publicUrl: url,
-    size: Number(metadata.size || upload.size || 0),
-    contentType: metadata.contentType || upload.mimeType
+    size: Number((metadata && metadata.size) || upload.size || 0),
+    contentType: (metadata && metadata.contentType) || upload.mimeType
   });
 }
 
