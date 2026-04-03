@@ -1,5 +1,11 @@
 const Busboy = require('busboy');
 const { requireAuth } = require('./_auth');
+
+module.exports.config = {
+  api: {
+    bodyParser: false
+  }
+};
 const {
   UPLOAD_MAX_BYTES,
   ALLOWED_TYPES,
