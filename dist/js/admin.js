@@ -647,11 +647,18 @@
     try {
       const data = await api('admin/petitions');
       state.petitionsList = data.petitions || [];
+      const previousValue = elements.petitionFilter.value;
       
       elements.petitionFilter.innerHTML = `
         <option value="">All Petitions</option>
         ${state.petitionsList.map(p => `<option value="${escapeHtml(p.name)}">${escapeHtml(p.title || p.name)}</option>`).join('')}
       `;
+
+      if (previousValue && state.petitionsList.some(p => p.name === previousValue)) {
+        elements.petitionFilter.value = previousValue;
+      } else if (state.petitionsList.length === 1) {
+        elements.petitionFilter.value = state.petitionsList[0].name;
+      }
     } catch (error) {
       console.error('Failed to load petitions:', error);
     }
@@ -1908,7 +1915,12 @@
 
   // Export handler (Fix 3: Require petition selection)
   function handleExport() {
-    const selectedPetition = elements.petitionFilter.value;
+    let selectedPetition = elements.petitionFilter.value;
+
+    if (!selectedPetition && state.petitionsList.length === 1) {
+      selectedPetition = state.petitionsList[0].name;
+      elements.petitionFilter.value = selectedPetition;
+    }
     
     if (!selectedPetition) {
       alert('Please select a specific petition to export signatures.');
