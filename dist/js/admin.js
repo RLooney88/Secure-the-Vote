@@ -2545,11 +2545,16 @@
       elements.loginView.style.display = 'none';
       elements.dashboardView.style.display = 'block';
       
-      loadSignatures().catch(() => {
-        state.token = null;
-        localStorage.removeItem('admin_token');
-        elements.loginView.style.display = 'flex';
-        elements.dashboardView.style.display = 'none';
+      Promise.allSettled([
+        loadSignatures(),
+        loadPetitionsFilter()
+      ]).then((results) => {
+        if (results[0].status === 'rejected') {
+          state.token = null;
+          localStorage.removeItem('admin_token');
+          elements.loginView.style.display = 'flex';
+          elements.dashboardView.style.display = 'none';
+        }
       });
       
       // Sync staging on page load/refresh (resets to production baseline)
