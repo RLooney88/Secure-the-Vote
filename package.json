@@ -32,5 +32,8 @@
     "markdown-it": "^14.0.0",
     "pg": "^8.18.0",
     "@sendgrid/mail": "^8.1.0"
+  },
+  "overrides": {
+    "axios": "1.14.0"
   }
 }
