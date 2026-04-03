@@ -2302,7 +2302,15 @@
   }
 
   const STATIC_SITE_REQUEST_PAGES = [
-    { value: '/', label: 'Home' }
+    '/',
+    '/about/',
+    '/citizen-action/',
+    '/contact-us/',
+    '/sign-the-petition/',
+    '/be-an-election-judge/',
+    '/news/',
+    '/our-team/',
+    '/voter-resources/'
   ];
   let siteRequestPages = [];
 
@@ -2342,30 +2350,34 @@
   }
 
   async function discoverSiteRequestPages() {
-    try {
-      const response = await erApi('/api/admin/navigation');
-      const rows = Array.isArray(response?.items) ? response.items : [];
-      siteRequestPages = rows
-        .filter(item => item.is_active !== false && item.include_in_site_requests !== false)
-        .map(item => ({
-          value: normalizeRequestPagePath(item.path),
-          label: item.label || humanizeRequestPagePath(item.path),
-          sort_order: item.sort_order || 0
-        }))
-        .filter(item => item.value)
-        .sort((a, b) => (a.sort_order - b.sort_order) || a.label.localeCompare(b.label));
+    const merged = new Map();
+    const addPage = (input) => {
+      const normalized = normalizeRequestPagePath(input);
+      if (!normalized) return;
+      merged.set(normalized, humanizeRequestPagePath(normalized));
+    };
 
-      if (!siteRequestPages.length) throw new Error('No navigation items available');
+    STATIC_SITE_REQUEST_PAGES.forEach(addPage);
+    if (Array.isArray(validPages)) validPages.forEach(addPage);
+
+    try {
+      const resp = await fetch('/', { cache: 'no-store' });
+      const html = await resp.text();
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      doc.querySelectorAll('a[href]').forEach(a => addPage(a.getAttribute('href')));
     } catch (error) {
-      console.warn('Failed to load navigation-backed site request pages:', error);
-      siteRequestPages = STATIC_SITE_REQUEST_PAGES.slice();
+      console.warn('Failed to auto-discover site request pages:', error);
     }
+
+    siteRequestPages = Array.from(merged.entries())
+      .sort((a, b) => a[1].localeCompare(b[1]))
+      .map(([value, label]) => ({ value, label }));
   }
 
   function buildPageOptions() {
     const pages = siteRequestPages.length
       ? siteRequestPages
-      : STATIC_SITE_REQUEST_PAGES.map(item => ({ value: item.value, label: item.label }));
+      : STATIC_SITE_REQUEST_PAGES.map(path => ({ value: path, label: humanizeRequestPagePath(path) }));
     const opts = ['<option value="">Select a page</option>']
       .concat(pages.map(({ value, label }) => `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`))
       .concat(['<option value="__new__">New Page</option>']);

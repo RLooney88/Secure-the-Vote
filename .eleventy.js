@@ -1,5 +1,4 @@
 const { DateTime } = require("luxon");
-const { buildNavigation } = require("./lib/navigation");
 
 module.exports = function(eleventyConfig) {
 
@@ -24,11 +23,6 @@ module.exports = function(eleventyConfig) {
     return pages.sort((a, b) => {
       return (a.data.order || 999) - (b.data.order || 999);
     });
-  });
-
-  eleventyConfig.addFilter("navigationForPage", (navigation, currentUrl) => {
-    const rows = Array.isArray(navigation?.items) ? navigation.items : [];
-    return buildNavigation(rows, currentUrl || '/');
   });
 
   // Collections for posts
