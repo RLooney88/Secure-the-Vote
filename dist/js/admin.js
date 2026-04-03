@@ -287,75 +287,33 @@
   }
 
   async function uploadAdminImage(file, folder = state.mediaLibraryCurrentFolder || '') {
-    const initResponse = await fetch('/api/admin/upload-image', {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+    formData.append('folder', folder || '');
+
+    const response = await fetch('/api/admin/upload-image', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${state.token}`,
-        'Content-Type': 'application/json'
+        'Authorization': `Bearer ${state.token}`
       },
-      body: JSON.stringify({
-        action: 'init',
-        filename: file.name,
-        mimeType: file.type,
-        size: file.size,
-        folder
-      })
+      body: formData
     });
 
-    if (!initResponse.ok) {
-      if (initResponse.status === 401) {
+    if (!response.ok) {
+      if (response.status === 401) {
         handleLogout();
         throw new Error('Your session expired. Please log in again.');
       }
 
-      let message = 'Upload initialization failed';
+      let message = 'Upload failed';
       try {
-        const errorData = await initResponse.json();
+        const errorData = await response.json();
         message = errorData.error || message;
       } catch (_) {}
       throw new Error(message);
     }
 
-    const initData = await initResponse.json();
-
-    const uploadResponse = await fetch(initData.uploadUrl, {
-      method: initData.method || 'PUT',
-      headers: initData.headers || { 'Content-Type': file.type },
-      body: file
-    });
-
-    if (!uploadResponse.ok) {
-      const uploadText = await uploadResponse.text().catch(() => '');
-      throw new Error(uploadText || 'Direct upload to storage failed');
-    }
-
-    const completeResponse = await fetch('/api/admin/upload-image', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${state.token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        action: 'complete',
-        objectPath: initData.objectPath
-      })
-    });
-
-    if (!completeResponse.ok) {
-      if (completeResponse.status === 401) {
-        handleLogout();
-        throw new Error('Your session expired. Please log in again.');
-      }
-
-      let message = 'Upload finalization failed';
-      try {
-        const errorData = await completeResponse.json();
-        message = errorData.error || message;
-      } catch (_) {}
-      throw new Error(message);
-    }
-
-    return completeResponse.json();
+    return response.json();
   }
 
   function openMediaLibrary(context) {
@@ -401,9 +359,30 @@
   function renderMediaLibrary(folders, images, breadcrumbs = []) {
     const hasFolders = folders.length > 0;
     const hasImages = images.length > 0;
+    const currentLabel = breadcrumbs.length ? breadcrumbs[breadcrumbs.length - 1].name : 'All media';
 
     if (!hasFolders && !hasImages) {
-      elements.mediaLibraryGrid.innerHTML = '<div class="media-library-empty">No images found here yet. Upload one to get started.</div>';
+      elements.mediaLibraryGrid.innerHTML = `
+        <div class="media-library-shell">
+          <aside class="media-library-sidebar">
+            <div class="media-library-sidebar-title">Folders</div>
+            <div class="media-library-empty media-library-empty-sidebar">No folders match this view.</div>
+          </aside>
+          <section class="media-library-main">
+            <div class="media-library-breadcrumbs">
+              <button type="button" class="media-folder-link" data-folder="">All media</button>
+            </div>
+            <div class="media-library-empty">No images found here yet. Upload one to get started.</div>
+          </section>
+        </div>
+      `;
+
+      elements.mediaLibraryGrid.querySelectorAll('.media-folder-link').forEach((button) => {
+        button.addEventListener('click', () => {
+          state.mediaLibraryCurrentFolder = button.dataset.folder || '';
+          loadMediaLibrary();
+        });
+      });
       return;
     }
 
@@ -414,31 +393,81 @@
       </div>
     `;
 
-    const folderCards = folders.map((folder) => `
-      <button type="button" class="media-library-card media-library-folder-card media-folder-link" data-folder="${escapeHtml(folder.path)}">
-        <div class="media-library-folder-preview">${folder.previewUrl ? `<img src="${escapeHtml(folder.previewUrl)}" alt="${escapeHtml(folder.name)}" loading="lazy">` : '<div class="media-library-folder-icon">📁</div>'}</div>
-        <div class="media-library-card-body">
-          <div class="media-library-card-name">${escapeHtml(folder.name)}</div>
-          <div class="media-library-card-path">${escapeHtml(folder.path)}</div>
-          <div class="media-library-card-meta">${folder.imageCount} image${folder.imageCount === 1 ? '' : 's'}</div>
-        </div>
-      </button>
-    `).join('');
+    const folderList = folders.length
+      ? folders.map((folder) => `
+          <button type="button" class="media-folder-nav media-folder-link" data-folder="${escapeHtml(folder.path)}">
+            <span class="media-folder-nav-icon">📁</span>
+            <span class="media-folder-nav-body">
+              <span class="media-folder-nav-name">${escapeHtml(folder.name)}</span>
+              <span class="media-folder-nav-meta">${folder.imageCount} image${folder.imageCount === 1 ? '' : 's'}</span>
+            </span>
+          </button>
+        `).join('')
+      : '<div class="media-library-empty media-library-empty-sidebar">No child folders.</div>';
 
-    const imageCards = images.map((image) => `
-      <div class="media-library-card">
-        <img src="${escapeHtml(image.url)}" alt="${escapeHtml(image.name)}" loading="lazy">
-        <div class="media-library-card-body">
-          <div class="media-library-card-name">${escapeHtml(image.name)}</div>
-          <div class="media-library-card-path">${escapeHtml(image.path)}</div>
-          <div class="media-library-card-actions">
-            <button type="button" class="btn btn-small btn-primary media-select-btn" data-url="${escapeHtml(image.url)}">Use image</button>
+    const folderCards = folders.length
+      ? `
+        <section class="media-library-section">
+          <div class="media-library-section-header">
+            <h4>Folders in ${escapeHtml(currentLabel)}</h4>
+            <span>${folders.length}</span>
           </div>
-        </div>
-      </div>
-    `).join('');
+          <div class="media-library-folder-grid">
+            ${folders.map((folder) => `
+              <button type="button" class="media-library-card media-library-folder-card media-folder-link" data-folder="${escapeHtml(folder.path)}">
+                <div class="media-library-folder-preview">${folder.previewUrl ? `<img src="${escapeHtml(folder.previewUrl)}" alt="${escapeHtml(folder.name)}" loading="lazy">` : '<div class="media-library-folder-icon">📁</div>'}</div>
+                <div class="media-library-card-body">
+                  <div class="media-library-card-name">${escapeHtml(folder.name)}</div>
+                  <div class="media-library-card-path">${escapeHtml(folder.path)}</div>
+                  <div class="media-library-card-meta">${folder.imageCount} image${folder.imageCount === 1 ? '' : 's'}</div>
+                </div>
+              </button>
+            `).join('')}
+          </div>
+        </section>
+      `
+      : '';
 
-    elements.mediaLibraryGrid.innerHTML = `${breadcrumbHtml}${folderCards}${imageCards}`;
+    const imageCards = images.length
+      ? `
+        <section class="media-library-section">
+          <div class="media-library-section-header">
+            <h4>Images in ${escapeHtml(currentLabel)}</h4>
+            <span>${images.length}</span>
+          </div>
+          <div class="media-library-image-grid">
+            ${images.map((image) => `
+              <div class="media-library-card media-library-image-card">
+                <img src="${escapeHtml(image.url)}" alt="${escapeHtml(image.name)}" loading="lazy">
+                <div class="media-library-card-body">
+                  <div class="media-library-card-name">${escapeHtml(image.name)}</div>
+                  <div class="media-library-card-path">${escapeHtml(image.path)}</div>
+                  <div class="media-library-card-meta">${image.size ? `${Math.max(1, Math.round(image.size / 1024))} KB` : 'Image file'}${image.updatedAt ? ` • ${escapeHtml(formatDate(image.updatedAt))}` : ''}</div>
+                  <div class="media-library-card-actions">
+                    <button type="button" class="btn btn-small btn-primary media-select-btn" data-url="${escapeHtml(image.url)}">Use image</button>
+                    <a class="btn btn-small btn-outline" href="${escapeHtml(image.url)}" target="_blank" rel="noopener noreferrer">Open</a>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </section>
+      `
+      : '<div class="media-library-empty">No images in this folder yet.</div>';
+
+    elements.mediaLibraryGrid.innerHTML = `
+      <div class="media-library-shell">
+        <aside class="media-library-sidebar">
+          <div class="media-library-sidebar-title">Folders</div>
+          ${folderList}
+        </aside>
+        <section class="media-library-main">
+          ${breadcrumbHtml}
+          ${folderCards}
+          ${imageCards}
+        </section>
+      </div>
+    `;
 
     elements.mediaLibraryGrid.querySelectorAll('.media-select-btn').forEach((button) => {
       button.addEventListener('click', () => applyMediaSelection(button.dataset.url));
@@ -468,7 +497,8 @@
       state.mediaLibraryCurrentFolder = data.currentFolder || '';
       renderMediaLibrary(state.mediaLibraryFolders, state.mediaLibraryImages, data.breadcrumbs || []);
       if (state.mediaLibraryFolders.length || state.mediaLibraryImages.length) {
-        setMediaLibraryStatus(`Showing ${state.mediaLibraryFolders.length} folder${state.mediaLibraryFolders.length === 1 ? '' : 's'} and ${state.mediaLibraryImages.length} image${state.mediaLibraryImages.length === 1 ? '' : 's'}${state.mediaLibraryCurrentFolder ? ` in ${state.mediaLibraryCurrentFolder}` : ''}.`);
+        const scopeLabel = state.mediaLibraryCurrentFolder || 'all media';
+        setMediaLibraryStatus(`Browsing ${scopeLabel}: ${state.mediaLibraryFolders.length} folder${state.mediaLibraryFolders.length === 1 ? '' : 's'}, ${state.mediaLibraryImages.length} image${state.mediaLibraryImages.length === 1 ? '' : 's'}. Use search to narrow results.`);
       } else {
         setMediaLibraryStatus('No matching media found.');
       }
