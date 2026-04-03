@@ -9,14 +9,47 @@ const GCS_SERVICE_ACCOUNT_JSON = process.env.GCS_SERVICE_ACCOUNT_JSON || process
 const UPLOAD_MAX_BYTES = parseInt(process.env.MEDIA_UPLOAD_MAX_BYTES || `${25 * 1024 * 1024}`, 10);
 const ALLOWED_TYPES = new Set(['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml']);
 
-function getStorage() {
-  if (!GCS_SERVICE_ACCOUNT_JSON) {
+function parseServiceAccountJson(value) {
+  if (!value) {
     throw new Error('Missing GCS service account configuration');
   }
 
-  const creds = typeof GCS_SERVICE_ACCOUNT_JSON === 'string'
-    ? JSON.parse(GCS_SERVICE_ACCOUNT_JSON)
-    : GCS_SERVICE_ACCOUNT_JSON;
+  if (typeof value === 'object') {
+    return value;
+  }
+
+  const raw = String(value).trim();
+  const candidates = [];
+
+  candidates.push(raw);
+
+  if ((raw.startsWith('"') && raw.endsWith('"')) || (raw.startsWith("'") && raw.endsWith("'"))) {
+    candidates.push(raw.slice(1, -1));
+  }
+
+  for (const candidate of [...candidates]) {
+    candidates.push(candidate.replace(/\\n/g, '\n'));
+    candidates.push(candidate.replace(/\r\n/g, '\n'));
+  }
+
+  for (const candidate of candidates) {
+    try {
+      return JSON.parse(candidate);
+    } catch (_) {}
+  }
+
+  try {
+    const decoded = Buffer.from(raw, 'base64').toString('utf8').trim();
+    if (decoded && decoded !== raw) {
+      return JSON.parse(decoded);
+    }
+  } catch (_) {}
+
+  throw new Error('Invalid GCS service account configuration format');
+}
+
+function getStorage() {
+  const creds = parseServiceAccountJson(GCS_SERVICE_ACCOUNT_JSON);
 
   return new Storage({
     projectId: creds.project_id,
