@@ -1914,7 +1914,7 @@
   }
 
   // Export handler (Fix 3: Require petition selection)
-  function handleExport() {
+  async function handleExport() {
     let selectedPetition = elements.petitionFilter.value;
 
     if (!selectedPetition && state.petitionsList.length === 1) {
@@ -1927,14 +1927,32 @@
       return;
     }
 
-    const url = `/api/admin/export?petition=${encodeURIComponent(selectedPetition)}`;
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('Authorization', `Bearer ${state.token}`);
-    link.download = `signatures-${selectedPetition}.csv`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    try {
+      const url = `/api/admin/export?petition=${encodeURIComponent(selectedPetition)}`;
+      const response = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${state.token}`
+        }
+      });
+
+      if (!response.ok) {
+        const message = await response.text().catch(() => '');
+        throw new Error(message || 'Failed to export signatures');
+      }
+
+      const blob = await response.blob();
+      const downloadUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = `signatures-${selectedPetition}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(downloadUrl);
+    } catch (error) {
+      console.error('Export failed:', error);
+      alert('Failed to export signatures. Please try again.');
+    }
   }
 
   // Add admin handler
