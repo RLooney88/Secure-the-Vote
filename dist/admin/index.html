@@ -1214,10 +1214,13 @@
               <button id="er-open-tab" class="btn btn-outline active" style="border-bottom-left-radius:0;border-bottom-right-radius:0;">Open Requests</button>
               <button id="er-closed-tab" class="btn btn-outline" style="border-bottom-left-radius:0;border-bottom-right-radius:0;">Closed / History</button>
             </div>
-            <div id="er-create-panel" class="section-card" style="display:none;margin-bottom:16px;background:#fafafa;">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-                <h3 style="margin:0;">New Edit Request</h3>
-                <button id="er-cancel-btn" class="btn btn-outline">Cancel</button>
+            <div id="er-create-panel" class="section-card" style="display:none;margin-bottom:16px;background:#fafafa;max-width:980px;margin-left:auto;margin-right:auto;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:12px;">
+                <div>
+                  <h3 style="margin:0;">New Edit Request</h3>
+                  <p style="margin:6px 0 0;color:#666;">Submit a new request here. After submission, you’ll return to your open requests.</p>
+                </div>
+                <button id="er-cancel-btn" class="btn btn-outline">Back to Requests</button>
               </div>
               <div class="form-group"><label for="er-page">Page</label><select id="er-page" class="form-control"></select></div>
               <div class="form-group" id="er-new-page-wrap" style="display:none;"><label for="er-new-page">New Page Name</label><input id="er-new-page" class="form-control" placeholder="New page name" /></div>
@@ -1226,9 +1229,11 @@
               <div class="form-group"><label for="er-attachments">Attachments</label><input id="er-attachments" class="form-control" type="file" multiple /><div id="er-attachments-list" style="margin-top:8px;color:#666;font-size:13px;"></div></div>
               <div class="form-group"><label for="er-approval">Preview Approval Needed</label><select id="er-approval" class="form-control"><option value="true">Yes</option><option value="false">No</option></select></div>
               <div id="er-create-message" style="display:none;margin:10px 0;padding:10px;border-radius:6px;"></div>
-              <button id="er-create-btn" class="btn btn-primary">Submit Request</button>
+              <div style="display:flex;justify-content:flex-end;gap:10px;">
+                <button id="er-create-btn" class="btn btn-primary">Submit Request</button>
+              </div>
             </div>
-            <div style="display:grid;grid-template-columns:minmax(320px,400px) minmax(0,1fr);gap:20px;align-items:start;">
+            <div id="er-management-panel" style="display:grid;grid-template-columns:minmax(320px,400px) minmax(0,1fr);gap:20px;align-items:start;">
               <div class="section-card" style="position:sticky;top:16px;">
                 <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;">
                   <h3 style="margin:0;font-size:18px;">Request list</h3>

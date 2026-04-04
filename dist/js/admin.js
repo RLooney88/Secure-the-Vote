@@ -2598,12 +2598,26 @@
     loadEditRequests();
   }
 
+  function showEditRequestCreateView() {
+    const createPanel = erEl('er-create-panel');
+    const managementPanel = erEl('er-management-panel');
+    if (createPanel) createPanel.style.display = 'block';
+    if (managementPanel) managementPanel.style.display = 'none';
+  }
+
+  function showEditRequestManagementView() {
+    const createPanel = erEl('er-create-panel');
+    const managementPanel = erEl('er-management-panel');
+    if (createPanel) createPanel.style.display = 'none';
+    if (managementPanel) managementPanel.style.display = 'grid';
+  }
+
   async function createEditRequest() {
     const selectedPage = erEl('er-page').value;
     const page = selectedPage === '__new__' ? erEl('er-new-page').value.trim() : selectedPage;
     const title = erEl('er-title').value.trim();
     const description = erEl('er-description').value.trim();
-    const email = erEl('er-email').value.trim() || currentAdminEmail();
+    const email = currentAdminEmail();
     const approval = erEl('er-approval').value === 'true';
     const attachments = await filesToAttachments(editRequestFiles);
     const msg = erEl('er-create-message');
@@ -2611,7 +2625,7 @@
     await erApi('/api/admin/edit-requests', { method: 'POST', body: JSON.stringify({ title, page, description, requester_email: email, preview_approval_needed: approval, attachments }) });
     await resetEditRequestForm();
     if(msg){msg.style.display='block';msg.style.background='#e8f5e9';msg.textContent='Edit request created.';}
-    if (erEl('er-create-panel')) erEl('er-create-panel').style.display = 'none';
+    showEditRequestManagementView();
     setEditRequestTab('open');
   }
 
@@ -2693,8 +2707,8 @@
 
     const erRefresh = erEl('edit-requests-refresh'); if (erRefresh) erRefresh.addEventListener('click', loadEditRequests);
     const erCreate = erEl('er-create-btn'); if (erCreate) erCreate.addEventListener('click', createEditRequest);
-    const erNew = erEl('edit-requests-new-btn'); if (erNew) erNew.addEventListener('click', async () => { await resetEditRequestForm(); erEl('er-create-panel').style.display = 'block'; });
-    const erCancel = erEl('er-cancel-btn'); if (erCancel) erCancel.addEventListener('click', () => { erEl('er-create-panel').style.display = 'none'; });
+    const erNew = erEl('edit-requests-new-btn'); if (erNew) erNew.addEventListener('click', async () => { await resetEditRequestForm(); showEditRequestCreateView(); });
+    const erCancel = erEl('er-cancel-btn'); if (erCancel) erCancel.addEventListener('click', () => { showEditRequestManagementView(); });
     const erPage = erEl('er-page'); if (erPage) erPage.addEventListener('change', () => { erEl('er-new-page-wrap').style.display = erPage.value === '__new__' ? 'block' : 'none'; });
     const erAttachments = erEl('er-attachments'); if (erAttachments) erAttachments.addEventListener('change', () => { editRequestFiles = Array.from(erAttachments.files || []); renderAttachmentList(); });
     const erOpen = erEl('er-open-tab'); if (erOpen) erOpen.addEventListener('click', () => setEditRequestTab('open'));
