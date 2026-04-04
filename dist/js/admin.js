@@ -2505,6 +2505,9 @@
     if (!title || !detail) return;
     title.textContent = r.title;
     const cb = r.callback_payload || {};
+    const apiResp = r.api_response || {};
+    const pageValue = r.page || cb.pageRequested || cb.page || apiResp.pageRequested || apiResp.page || '—';
+    const requesterValue = r.requester_email || (cb.submitter && (cb.submitter.email || cb.submitter.name)) || (apiResp.submitter && (apiResp.submitter.email || apiResp.submitter.name)) || '—';
     const created = r.created_at ? new Date(r.created_at).toLocaleString() : '';
     const updated = r.updated_at ? new Date(r.updated_at).toLocaleString() : '';
     detail.innerHTML = `
@@ -2516,8 +2519,8 @@
         <span class="status-badge">${escapeHtml(r.status || '')}</span>
       </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
-        <div style="padding:12px;border:1px solid #ececec;border-radius:10px;background:#fff;"><strong style="display:block;margin-bottom:4px;">Page</strong><div>${escapeHtml(r.page || '')}</div></div>
-        <div style="padding:12px;border:1px solid #ececec;border-radius:10px;background:#fff;"><strong style="display:block;margin-bottom:4px;">Requester</strong><div>${escapeHtml(r.requester_email || '')}</div></div>
+        <div style="padding:12px;border:1px solid #ececec;border-radius:10px;background:#fff;"><strong style="display:block;margin-bottom:4px;">Page</strong><div>${escapeHtml(pageValue)}</div></div>
+        <div style="padding:12px;border:1px solid #ececec;border-radius:10px;background:#fff;"><strong style="display:block;margin-bottom:4px;">Requester</strong><div>${escapeHtml(requesterValue)}</div></div>
       </div>
       <div style="margin-top:14px;">
         <strong style="display:block;margin-bottom:6px;">Description</strong>
