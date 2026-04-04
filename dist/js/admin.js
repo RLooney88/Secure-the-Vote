@@ -2467,23 +2467,35 @@
     return data;
   }
 
+  let currentEditRequestId = null;
+
   function requestCard(r) {
+    const isActive = currentEditRequestId === r.id;
+    const created = r.created_at ? new Date(r.created_at).toLocaleString() : '';
     return `
-      <div class="petition-item" data-er-id="${r.id}" style="cursor:pointer; margin-bottom:10px;">
+      <button type="button" class="petition-item" data-er-id="${r.id}" style="cursor:pointer; margin-bottom:10px; width:100%; text-align:left; border:${isActive ? '2px solid #9B1E37' : '1px solid #e5e7eb'}; background:${isActive ? '#fff7f8' : '#fff'}; border-radius:10px; padding:14px; box-shadow:${isActive ? '0 6px 18px rgba(155,30,55,0.12)' : 'none'};">
         <div class="petition-header" style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start;">
-          <div>
-            <strong>${escapeHtml(r.title || '')}</strong>
+          <div style="min-width:0;">
+            <strong style="display:block; line-height:1.4; color:#111;">${escapeHtml(r.title || '')}</strong>
             <div style="color:#666;font-size:13px;margin-top:4px;">${escapeHtml(r.page || '')}</div>
+            <div style="color:#888;font-size:12px;margin-top:8px;">${escapeHtml(created)}</div>
           </div>
           <span class="status-badge">${escapeHtml(r.status || 'open')}</span>
         </div>
-      </div>`;
+      </button>`;
+  }
+
+  function renderEditRequestEmptyState(status) {
+    const title = erEl('er-detail-title');
+    const detail = erEl('er-detail');
+    if (title) title.textContent = status === 'closed' ? 'No closed requests yet' : 'No open requests yet';
+    if (detail) detail.innerHTML = `<div style="border:1px dashed #d6d6d6; border-radius:12px; padding:24px; color:#666; background:#fafafa;">${status === 'closed' ? 'Closed requests and request history will appear here.' : 'When a request is selected, its details and actions will appear here.'}</div>`;
   }
 
   function renderEditRequestsList(items) {
     const box = erEl('er-list');
     if (!box) return;
-    if (!items.length) { box.innerHTML = '<div style="color:#666;">No requests here yet.</div>'; return; }
+    if (!items.length) { box.innerHTML = '<div style="color:#666;padding:8px 4px;">No requests here yet.</div>'; return; }
     box.innerHTML = items.map(requestCard).join('');
     box.querySelectorAll('[data-er-id]').forEach(n => n.addEventListener('click', () => loadEditRequestDetail(n.dataset.erId)));
   }
@@ -2493,27 +2505,54 @@
     if (!title || !detail) return;
     title.textContent = r.title;
     const cb = r.callback_payload || {};
+    const created = r.created_at ? new Date(r.created_at).toLocaleString() : '';
+    const updated = r.updated_at ? new Date(r.updated_at).toLocaleString() : '';
     detail.innerHTML = `
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-        <div><strong>Page</strong><div>${escapeHtml(r.page || '')}</div></div>
-        <div><strong>Status</strong><div>${escapeHtml(r.status || '')}</div></div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:14px;">
+        <div>
+          <div style="font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#777;font-weight:700;">Request details</div>
+          <div style="font-size:13px;color:#666;margin-top:6px;">Created ${escapeHtml(created)}${updated ? ` · Updated ${escapeHtml(updated)}` : ''}</div>
+        </div>
+        <span class="status-badge">${escapeHtml(r.status || '')}</span>
       </div>
-      <div style="margin-top:12px;"><strong>Requester</strong><div>${escapeHtml(r.requester_email || '')}</div></div>
-      <div style="margin-top:12px;"><strong>Description</strong><pre style="white-space:pre-wrap;background:#fafafa;border:1px solid #eee;padding:10px;border-radius:6px;">${escapeHtml(r.description || '')}</pre></div>
-      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
-        ${cb.previewLink ? `<a class="btn btn-outline" href="${cb.previewLink}" target="_blank">Preview</a>` : ''}
-        ${cb.deliverableLink ? `<a class="btn btn-outline" href="${cb.deliverableLink}" target="_blank">Deliverable</a>` : ''}
-        ${cb.reviewLink ? `<a class="btn btn-outline" href="${cb.reviewLink}" target="_blank">Review</a>` : ''}
-        ${r.status !== 'closed' ? '<button id="er-close-btn" class="btn btn-outline">Close</button>' : ''}
-        ${r.status === 'closed' ? '<button id="er-reopen-btn" class="btn btn-outline">Reopen</button>' : ''}
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
+        <div style="padding:12px;border:1px solid #ececec;border-radius:10px;background:#fff;"><strong style="display:block;margin-bottom:4px;">Page</strong><div>${escapeHtml(r.page || '')}</div></div>
+        <div style="padding:12px;border:1px solid #ececec;border-radius:10px;background:#fff;"><strong style="display:block;margin-bottom:4px;">Requester</strong><div>${escapeHtml(r.requester_email || '')}</div></div>
+      </div>
+      <div style="margin-top:14px;">
+        <strong style="display:block;margin-bottom:6px;">Description</strong>
+        <pre style="white-space:pre-wrap;background:#fafafa;border:1px solid #eee;padding:12px;border-radius:10px;font-family:inherit;line-height:1.6;">${escapeHtml(r.description || '')}</pre>
+      </div>
+      <div style="margin-top:14px;padding:12px;border:1px solid #eee;border-radius:10px;background:#fff;">
+        <div style="font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#777;font-weight:700;margin-bottom:10px;">Links</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          ${cb.previewLink ? `<a class="btn btn-outline" href="${cb.previewLink}" target="_blank">Preview</a>` : ''}
+          ${cb.deliverableLink ? `<a class="btn btn-outline" href="${cb.deliverableLink}" target="_blank">Deliverable</a>` : ''}
+          ${cb.reviewLink ? `<a class="btn btn-outline" href="${cb.reviewLink}" target="_blank">Review</a>` : ''}
+          ${!cb.previewLink && !cb.deliverableLink && !cb.reviewLink ? '<span style="color:#777;">No links available yet.</span>' : ''}
+        </div>
+      </div>
+      <div style="margin-top:14px;padding:12px;border:1px solid #f3d3d8;border-radius:10px;background:#fff7f8;">
+        <div style="font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#8b1a1a;font-weight:700;margin-bottom:10px;">Request status actions</div>
+        <div style="font-size:13px;color:#6b4b4f;margin-bottom:10px;">These buttons change the request status. They do not just hide this panel.</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          ${r.status !== 'closed' ? '<button id="er-close-btn" class="btn btn-outline" style="border-color:#d99aa5;color:#8b1a1a;">Mark Closed</button>' : ''}
+          ${r.status === 'closed' ? '<button id="er-reopen-btn" class="btn btn-outline">Reopen Request</button>' : ''}
+        </div>
       </div>`;
     const c=erEl('er-close-btn'); if (c) c.onclick=()=>editRequestAction(r.id,'close');
     const ro=erEl('er-reopen-btn'); if (ro) ro.onclick=()=>editRequestAction(r.id,'reopen');
   }
 
   async function loadEditRequestDetail(id) {
-    try { renderEditRequestDetail(await erApi(`/api/admin/edit-requests/${id}`)); }
-    catch (e) { const d=erEl('er-detail'); if (d) d.innerHTML = `<div style="color:#b00020;">${escapeHtml(e.message)}</div>`; }
+    currentEditRequestId = id;
+    try {
+      renderEditRequestsList(window.__lastEditRequestItems || []);
+      renderEditRequestDetail(await erApi(`/api/admin/edit-requests/${id}`));
+    }
+    catch (e) {
+      const d=erEl('er-detail'); if (d) d.innerHTML = `<div style="color:#b00020;">${escapeHtml(e.message)}</div>`;
+    }
   }
 
   function currentEditRequestStatusFilter() {
@@ -2523,12 +2562,27 @@
   async function loadEditRequests() {
     const status = currentEditRequestStatusFilter();
     const items = await erApi(`/api/admin/edit-requests?status=${encodeURIComponent(status)}`);
+    window.__lastEditRequestItems = items;
+    if (!items.length) {
+      currentEditRequestId = null;
+      renderEditRequestsList(items);
+      renderEditRequestEmptyState(status);
+      return;
+    }
+
+    if (!currentEditRequestId || !items.some(i => i.id === currentEditRequestId)) {
+      currentEditRequestId = items[0].id;
+    }
+
     renderEditRequestsList(items);
-    const title = erEl('er-detail-title'); const detail = erEl('er-detail');
-    if (title) title.textContent = 'Select a request'; if (detail) detail.innerHTML = '';
+    await loadEditRequestDetail(currentEditRequestId);
   }
 
   async function editRequestAction(id, action) {
+    const ok = window.confirm(action === 'close'
+      ? 'This will mark the request closed. It will not just hide the panel. Continue?'
+      : 'Reopen this request?');
+    if (!ok) return;
     await erApi(`/api/admin/edit-requests/${id}?action=${action}`, { method: 'PUT' });
     await loadEditRequests();
   }
@@ -2537,6 +2591,7 @@
     const openBtn = erEl('er-open-tab'); const closedBtn = erEl('er-closed-tab');
     if (openBtn) openBtn.classList.toggle('active', which === 'open');
     if (closedBtn) closedBtn.classList.toggle('active', which === 'closed');
+    currentEditRequestId = null;
     loadEditRequests();
   }
 
