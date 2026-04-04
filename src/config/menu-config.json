@@ -1,0 +1,54 @@
+{
+  "items": [
+    { "label": "Home", "href": "/" },
+    {
+      "label": "Accountability",
+      "children": [
+        { "label": "Trump EO", "href": "/trump-executive-order/" },
+        { "label": "List Maintenance", "href": "/list-maintenance/" },
+        { "label": "Board Compliance", "href": "/board-compliance/" }
+      ]
+    },
+    {
+      "label": "Legislation",
+      "children": [
+        { "label": "Voter ID", "href": "/voter-id/" },
+        { "label": "Signature Verification", "href": "/signature-verification/" }
+      ]
+    },
+    {
+      "label": "Citizen Action",
+      "href": "/citizen-action/",
+      "children": [
+        { "label": "Sign the Petition", "href": "/sign-the-petition/" },
+        { "label": "Poll Watcher's Toolkit", "href": "/2024/05/01/poll-watchers-toolkit/" },
+        { "label": "Testify at MGA", "href": "/2024/04/19/how-to-testify-at-the-mga/" }
+      ]
+    },
+    {
+      "label": "Resources",
+      "href": "/resources/",
+      "children": [
+        { "label": "Check Voter Registration", "href": "/check-voter-registration/" },
+        { "label": "Be an Election Judge", "href": "/be-an-election-judge/" },
+        { "label": "Find Your Representatives", "href": "https://maryland.maps.arcgis.com/apps/webappviewer/index.html?id=177afa87a67746a4ac5496b2d0897fb7", "external": true },
+        { "label": "Maryland NVRA Violations", "href": "/maryland-nvra-violations/" },
+        { "label": "Voter Registration Inflation", "href": "/voter-registration-inflation/" },
+        { "label": "Litigation Documents", "href": "/lawsuit-document/" }
+      ]
+    },
+    {
+      "label": "News",
+      "children": [
+        { "label": "Press Release / News", "href": "/press-release/" },
+        { "label": "In the News", "href": "/in-the-news/" }
+      ]
+    },
+    { "label": "Contact Us", "href": "/contact-us/" }
+  ],
+  "donate": {
+    "label": "DONATE NOW",
+    "href": "https://donorbox.org/united-sovereign-americans-maryland-donation",
+    "external": true
+  }
+}

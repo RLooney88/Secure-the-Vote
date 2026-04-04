@@ -1,0 +1,14 @@
+{
+  "email": "info@securethevotemd.com",
+  "links": [
+    { "label": "Twitter/X", "href": "https://twitter.com/securethevotemd", "icon": "x-twitter" },
+    { "label": "Instagram", "href": "https://www.instagram.com/securethevotemd/", "icon": "instagram" },
+    { "label": "Facebook", "href": "https://www.facebook.com/profile.php?id=61558958704794", "icon": "facebook-f" },
+    { "label": "TikTok", "href": "https://www.tiktok.com/@securethevotemd?lang=en", "icon": "tiktok" },
+    { "label": "Rumble", "href": "https://rumble.com/account/", "icon": "r-project" },
+    { "label": "Truth Social", "href": "https://truthsocial.com/@securethevotemd", "icon": "tumblr" },
+    { "label": "GETTR", "href": "https://gettr.com/user/securethevotemd", "icon": "gripfire" },
+    { "label": "Telegram", "href": "https://web.telegram.org/a/#6827045334", "icon": "telegram" },
+    { "label": "YouTube", "href": "https://www.youtube.com/@SecuretheVoteMD", "icon": "youtube" }
+  ]
+}
