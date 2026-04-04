@@ -48,6 +48,12 @@
     .blog-card-link { display: inline-flex; align-items: center; gap: 8px; color: var(--maroon); text-decoration: none; font-weight: 500; }
     .blog-card-link:hover { color: var(--gold); }
     .loading, .empty-state { text-align: center; padding: 60px 20px; }
+    .search-wrap { display:flex; justify-content:center; margin: 0 0 32px; }
+    .search-box { width:100%; max-width:760px; position:relative; }
+    .search-input { width:100%; padding:16px 52px 16px 18px; border:1px solid #d9d9d9; border-radius:999px; font-size:1rem; font-family:var(--font-primary); color:var(--gray-dark); background:#fff; box-shadow:0 4px 18px rgba(0,0,0,0.06); transition:border-color .2s ease, box-shadow .2s ease; }
+    .search-input:focus { outline:none; border-color: var(--maroon); box-shadow:0 6px 24px rgba(155,30,55,0.18); }
+    .search-icon { position:absolute; right:18px; top:50%; transform:translateY(-50%); color:var(--maroon); font-size:1rem; pointer-events:none; }
+    .search-status { text-align:center; color:var(--gray-medium); margin: -12px 0 24px; font-size:0.95rem; min-height:1.5em; }
     .show-more-container { text-align: center; padding: 20px 0 40px; }
     .show-more-btn { background: var(--maroon); color: var(--white); border: none; padding: 15px 40px; font-size: 1rem; font-weight: 600; border-radius: 6px; cursor: pointer; font-family: var(--font-primary); }
     .show-more-btn:hover { background: #7a1828; }
@@ -76,9 +82,16 @@
 
 <section class="blog-section">
   <div class="container">
+    <div class="search-wrap">
+      <div class="search-box">
+        <input id="post-search" class="search-input" type="search" placeholder="Search press releases and news..." aria-label="Search press releases and news">
+        <span class="search-icon"><i class="fas fa-search"></i></span>
+      </div>
+    </div>
+    <div id="search-status" class="search-status"></div>
     <div id="blog-grid" class="blog-grid"></div>
     <div id="loading" class="loading hidden"><p>Loading posts...</p></div>
-    <div id="empty-state" class="empty-state hidden"><h2>No Posts Found</h2><p>Check back soon for updates!</p></div>
+    <div id="empty-state" class="empty-state hidden"><h2>No Posts Found</h2><p>Try a different search term or check back soon for updates.</p></div>
     <div id="show-more-container" class="show-more-container hidden">
       <button id="show-more-btn" class="show-more-btn">Show More</button>
     </div>
@@ -93,12 +106,17 @@
   var currentOffset = 0;
   var totalPosts = 0;
   var isLoading = false;
+  var allPosts = [];
+  var allPostsLoaded = false;
+  var searchQuery = '';
 
   var blogGrid = document.getElementById('blog-grid');
   var loadingEl = document.getElementById('loading');
   var emptyState = document.getElementById('empty-state');
   var showMoreContainer = document.getElementById('show-more-container');
   var showMoreBtn = document.getElementById('show-more-btn');
+  var searchInput = document.getElementById('post-search');
+  var searchStatus = document.getElementById('search-status');
 
   function formatDate(ds) {
     return new Date(ds).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
@@ -120,8 +138,71 @@
     return '<article class="blog-card"><a href="'+url+'" class="blog-card-image">'+img+'</a><div class="blog-card-content"><div class="blog-card-meta"><span class="blog-card-category">'+cat+'</span><span>'+formatDate(p.published_at)+'</span></div><h2><a href="'+url+'" style="color:inherit;text-decoration:none;">'+p.title+'</a></h2><p class="blog-card-excerpt">'+exc+'</p><a href="'+url+'" class="blog-card-link">Read More &#8594;</a></div></article>';
   }
 
+  function renderPosts(posts) {
+    if (!posts.length) {
+      blogGrid.innerHTML = '';
+      emptyState.classList.remove('hidden');
+      return;
+    }
+    emptyState.classList.add('hidden');
+    blogGrid.innerHTML = posts.map(card).join('');
+  }
+
+  function updateSearchStatus(count, query) {
+    if (!searchStatus) return;
+    if (!query) {
+      searchStatus.textContent = '';
+      return;
+    }
+    searchStatus.textContent = count === 1
+      ? '1 result for "' + query + '"'
+      : count + ' results for "' + query + '"';
+  }
+
+  function matchesQuery(post, query) {
+    var haystack = [post.title, post.excerpt, post.category].filter(Boolean).join(' ').toLowerCase();
+    return haystack.indexOf(query) !== -1;
+  }
+
+  function fetchAllPosts() {
+    if (allPostsLoaded) return Promise.resolve(allPosts);
+    loadingEl.classList.remove('hidden');
+    return fetch(API_URL + '?limit=500&offset=0')
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        allPosts = data.posts || [];
+        allPostsLoaded = true;
+        return allPosts;
+      })
+      .finally(function(){ loadingEl.classList.add('hidden'); });
+  }
+
+  function applySearch(query) {
+    searchQuery = (query || '').trim().toLowerCase();
+    if (!searchQuery) {
+      updateSearchStatus(0, '');
+      if (currentOffset === 0) loadPosts(false);
+      else {
+        renderPosts(allPosts.length ? allPosts.slice(0, currentOffset) : []);
+        if (currentOffset < totalPosts) showMoreContainer.classList.remove('hidden');
+      }
+      return;
+    }
+
+    showMoreContainer.classList.add('hidden');
+    fetchAllPosts()
+      .then(function(posts){
+        var filtered = posts.filter(function(post){ return matchesQuery(post, searchQuery); });
+        renderPosts(filtered);
+        updateSearchStatus(filtered.length, query.trim());
+      })
+      .catch(function(){
+        blogGrid.innerHTML = '<div style="text-align:center;padding:40px;grid-column:1/-1"><p>Unable to search posts right now. Please try again later.</p></div>';
+      });
+  }
+
   function loadPosts(append) {
-    if (isLoading) return;
+    if (isLoading || searchQuery) return;
     isLoading = true;
     loadingEl.classList.remove('hidden');
     if (showMoreBtn) showMoreBtn.disabled = true;
@@ -129,14 +210,14 @@
       .then(function(r){return r.json()})
       .then(function(data){
         totalPosts = data.total;
+        if (append) allPosts = allPosts.concat(data.posts || []);
+        else allPosts = data.posts ? data.posts.slice() : [];
+
         if (!data.posts.length && !currentOffset) {
           emptyState.classList.remove('hidden');
           showMoreContainer.classList.add('hidden');
         } else {
-          emptyState.classList.add('hidden');
-          var html = data.posts.map(card).join('');
-          if (append) blogGrid.insertAdjacentHTML('beforeend', html);
-          else blogGrid.innerHTML = html;
+          renderPosts(allPosts);
           currentOffset += data.posts.length;
           if (currentOffset < totalPosts) { showMoreContainer.classList.remove('hidden'); showMoreBtn.disabled = false; }
           else showMoreContainer.classList.add('hidden');
@@ -148,8 +229,11 @@
       .finally(function(){ isLoading = false; loadingEl.classList.add('hidden'); });
   }
 
+  if (searchInput) {
+    searchInput.addEventListener('input', function(e){ applySearch(e.target.value); });
+  }
   showMoreBtn.addEventListener('click', function(){ loadPosts(true); });
-  loadPosts();
+  loadPosts(false);
 </script>
 
 <script>
