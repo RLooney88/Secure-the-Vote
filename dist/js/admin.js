@@ -2093,7 +2093,9 @@
     } else if (tabName === 'branding' && validPages.length === 0) {
       loadBrandGuide();
     } else if (tabName === 'site-editor') {
-      // No longer syncing here — sync only happens on login
+      alert('The Site Editor is temporarily unavailable.');
+      handleTabSwitch('signatures');
+      return;
     }
   }
 
