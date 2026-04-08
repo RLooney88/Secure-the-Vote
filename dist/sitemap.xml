@@ -2,61 +2,67 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://securethevotemd.com/</loc>
-    <lastmod>2026-03-31</lastmod>
+    <lastmod>2026-04-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1</priority>
   </url>
   <url>
     <loc>https://securethevotemd.com/about/</loc>
-    <lastmod>2026-03-31</lastmod>
+    <lastmod>2026-04-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://securethevotemd.com/citizen-action/</loc>
-    <lastmod>2026-03-31</lastmod>
+    <lastmod>2026-04-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://securethevotemd.com/contact-us/</loc>
-    <lastmod>2026-03-31</lastmod>
+    <lastmod>2026-04-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://securethevotemd.com/sign-the-petition/</loc>
-    <lastmod>2026-03-31</lastmod>
+    <lastmod>2026-04-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://securethevotemd.com/be-an-election-judge/</loc>
-    <lastmod>2026-03-31</lastmod>
+    <lastmod>2026-04-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://securethevotemd.com/news/</loc>
-    <lastmod>2026-03-31</lastmod>
+    <lastmod>2026-04-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://securethevotemd.com/our-team/</loc>
-    <lastmod>2026-03-31</lastmod>
+    <lastmod>2026-04-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://securethevotemd.com/voter-resources/</loc>
-    <lastmod>2026-03-31</lastmod>
+    <lastmod>2026-04-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://securethevotemd.com/2026/03/31/test-of-blog-system/</loc>
-    <lastmod>2026-03-31</lastmod>
+    <loc>https://securethevotemd.com/2026/04/08/public-record-stvmd-raises-election-integrity-concerns-state-response-lwv-letter-and-our-rebuttal/</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://securethevotemd.com/2026/04/03/talbot-county-exceeds-100-voter-registration-questions-mount/</loc>
+    <lastmod>2026-04-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -121,13 +127,13 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://securethevotemd.com/2026/02/01/scammers-scambut-not-always-for-money/</loc>
+    <loc>https://securethevotemd.com/2026/02/01/from-closed-doors-to-public-records-restoring-transparency-and-accountability-in-marylands-local-boards-of-elections/</loc>
     <lastmod>2026-02-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://securethevotemd.com/2026/02/01/from-closed-doors-to-public-records-restoring-transparency-and-accountability-in-marylands-local-boards-of-elections/</loc>
+    <loc>https://securethevotemd.com/2026/02/01/scammers-scambut-not-always-for-money/</loc>
     <lastmod>2026-02-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -223,13 +229,13 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://securethevotemd.com/2025/10/02/doj-investigation-into-marylands-voter-rolls-sparks-controversy-and-mistrust/</loc>
+    <loc>https://securethevotemd.com/2025/10/02/marylands-voter-rolls-show-signs-of-inflation-far-above-national-average/</loc>
     <lastmod>2026-02-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://securethevotemd.com/2025/10/02/marylands-voter-rolls-show-signs-of-inflation-far-above-national-average/</loc>
+    <loc>https://securethevotemd.com/2025/10/02/doj-investigation-into-marylands-voter-rolls-sparks-controversy-and-mistrust/</loc>
     <lastmod>2026-02-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -271,13 +277,13 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://securethevotemd.com/2025/08/26/from-opportunity-to-omission-marylands-incomplete-response-to-the-doj/</loc>
+    <loc>https://securethevotemd.com/2025/08/26/marylands-missed-opportunity-transparency-and-accountability-in-voter-roll-maintenance/</loc>
     <lastmod>2026-02-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://securethevotemd.com/2025/08/26/marylands-missed-opportunity-transparency-and-accountability-in-voter-roll-maintenance/</loc>
+    <loc>https://securethevotemd.com/2025/08/26/from-opportunity-to-omission-marylands-incomplete-response-to-the-doj/</loc>
     <lastmod>2026-02-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -349,19 +355,13 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://securethevotemd.com/2025/03/31/response-to-the-maryland-state-board-of-elections-statement-on-president-trumps-executive-order/</loc>
-    <lastmod>2026-02-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://securethevotemd.com/2025/03/31/restoring-faith-in-american-elections-president-trumps-bold-move/</loc>
     <lastmod>2026-02-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://securethevotemd.com/2025/03/18/victory-for-election-integrity-maryland-court-rules-against-state-overreach-in-landmark-voter-rights-case/</loc>
+    <loc>https://securethevotemd.com/2025/03/31/response-to-the-maryland-state-board-of-elections-statement-on-president-trumps-executive-order/</loc>
     <lastmod>2026-02-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -373,13 +373,19 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://securethevotemd.com/2025/03/11/maryland-election-board-compliance-ensuring-accountability-and-transparency-by-dale-livingston/</loc>
+    <loc>https://securethevotemd.com/2025/03/18/victory-for-election-integrity-maryland-court-rules-against-state-overreach-in-landmark-voter-rights-case/</loc>
     <lastmod>2026-02-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://securethevotemd.com/2025/03/11/why-ranked-choice-voting-fails-to-deliver-free-fair-and-transparent-elections-by-steve-brown/</loc>
+    <lastmod>2026-02-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://securethevotemd.com/2025/03/11/maryland-election-board-compliance-ensuring-accountability-and-transparency-by-dale-livingston/</loc>
     <lastmod>2026-02-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -415,13 +421,19 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://securethevotemd.com/2025/01/28/2024-election-poll-worker-report-observations-issues-and-key-takeaways-by-kate-sullivan/</loc>
+    <lastmod>2026-02-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://securethevotemd.com/2025/01/28/eric-org-can-no-longer-be-trusted-to-ensure-election-integrity-by-jean-benhoff/</loc>
     <lastmod>2026-02-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://securethevotemd.com/2025/01/28/2024-election-poll-worker-report-observations-issues-and-key-takeaways-by-kate-sullivan/</loc>
+    <loc>https://securethevotemd.com/2025/01/24/join-us-for-the-election-accuracy-day-of-action/</loc>
     <lastmod>2026-02-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -434,12 +446,6 @@
   </url>
   <url>
     <loc>https://securethevotemd.com/2025/01/24/proposed-maryland-voter-id-bill-for-2025-general-assembly/</loc>
-    <lastmod>2026-02-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://securethevotemd.com/2025/01/24/join-us-for-the-election-accuracy-day-of-action/</loc>
     <lastmod>2026-02-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -505,25 +511,25 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://securethevotemd.com/2024/09/04/bank-your-vote-vote-early-request-a-mail-in-ballot-what-does-all-this-mean/</loc>
-    <lastmod>2026-02-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://securethevotemd.com/2024/09/04/whats-going-on-with-marylands-election-integrity-asks-mike-lindell/</loc>
     <lastmod>2026-02-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://securethevotemd.com/2024/08/29/reply-brief-of-appellants/</loc>
+    <loc>https://securethevotemd.com/2024/09/04/bank-your-vote-vote-early-request-a-mail-in-ballot-what-does-all-this-mean/</loc>
     <lastmod>2026-02-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://securethevotemd.com/2024/08/29/maryland-election-integrity-llc-and-united-sovereign-americans-file-a-reply-brief-in-the-case-against-the-maryland-state-board-of-elections-and-brennan-center-for-justice-at-new-york-university-school/</loc>
+    <lastmod>2026-02-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://securethevotemd.com/2024/08/29/reply-brief-of-appellants/</loc>
     <lastmod>2026-02-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -547,13 +553,13 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://securethevotemd.com/2024/07/09/united-states-court-of-appeals/</loc>
+    <loc>https://securethevotemd.com/2024/07/09/maryland-election-integrity-llc-and-united-sovereign-americans-file-appellate-brief-in-the-u-s-court-of-appeals-for-the-fourth-circuit/</loc>
     <lastmod>2026-02-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://securethevotemd.com/2024/07/09/maryland-election-integrity-llc-and-united-sovereign-americans-file-appellate-brief-in-the-u-s-court-of-appeals-for-the-fourth-circuit/</loc>
+    <loc>https://securethevotemd.com/2024/07/09/united-states-court-of-appeals/</loc>
     <lastmod>2026-02-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -595,19 +601,19 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://securethevotemd.com/2024/04/19/maryland-2022-general-election-validity-scorecard/</loc>
-    <lastmod>2026-02-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://securethevotemd.com/2024/04/19/rite-puts-maryland-on-alert-for-voter-registration-act-violations/</loc>
-    <lastmod>2026-02-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://securethevotemd.com/2024/04/19/amended-complaint-for-declaratory-and-injunctive-relief/</loc>
+    <lastmod>2026-02-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://securethevotemd.com/2024/04/19/complaint-for-declaratory-and-injunctive-relief-2/</loc>
+    <lastmod>2026-02-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://securethevotemd.com/2024/04/19/maryland-2022-general-election-validity-scorecard/</loc>
     <lastmod>2026-02-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -625,7 +631,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://securethevotemd.com/2024/04/19/complaint-for-declaratory-and-injunctive-relief-2/</loc>
+    <loc>https://securethevotemd.com/2024/04/19/rite-puts-maryland-on-alert-for-voter-registration-act-violations/</loc>
     <lastmod>2026-02-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
