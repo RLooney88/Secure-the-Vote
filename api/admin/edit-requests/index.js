@@ -39,6 +39,12 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   } catch (error) {
     console.error('edit-requests error', error);
-    return res.status(error.message === 'Unauthorized' ? 401 : 500).json({ error: error.message || 'Request failed' });
+    const status = error.message === 'Unauthorized' ? 401 : 500;
+    return res.status(status).json({
+      error: error.message || 'Request failed',
+      where: 'api/admin/edit-requests',
+      name: error.name || 'Error',
+      stack: process.env.NODE_ENV !== 'production' ? (error.stack || null) : null
+    });
   } finally { await pool.end().catch(() => {}); }
 };
