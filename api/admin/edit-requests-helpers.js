@@ -7,7 +7,7 @@ const SITE_KEY = process.env.EDIT_REQUEST_SITE_KEY || SITE_ID;
 const EDIT_REQUEST_API_URL = process.env.EDIT_REQUEST_API_URL || 'https://nova-site-editor-production.up.railway.app/api/site-edit-request';
 const EDIT_REQUEST_CALLBACK_AUTH = process.env.EDIT_REQUEST_CALLBACK_AUTH || '';
 const PUBLIC_SITE_URL = process.env.PUBLIC_SITE_URL || 'https://www.securethevotemd.com';
-const SITE_EDIT_GCS_BUCKET = process.env.SITE_EDIT_GCS_BUCKET || 'site-edit-assets';
+const SITE_EDIT_GCS_BUCKET = process.env.MEDIA_GCS_BUCKET || process.env.SITE_EDIT_GCS_BUCKET || 'site-edit-assets';
 const GCS_SERVICE_ACCOUNT_JSON = process.env.GCS_SERVICE_ACCOUNT_JSON || process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON || '';
 
 function getPool() {
