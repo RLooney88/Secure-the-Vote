@@ -70,9 +70,33 @@ function splitAssets(attachments) {
   return { images, files };
 }
 
+function parseServiceAccountJson(value) {
+  if (!value) throw new Error('Missing GCS service account configuration');
+  if (typeof value === 'object') return value;
+
+  const raw = String(value).trim();
+  const candidates = [raw];
+  if ((raw.startsWith('"') && raw.endsWith('"')) || (raw.startsWith("'") && raw.endsWith("'"))) {
+    candidates.push(raw.slice(1, -1));
+  }
+  for (const candidate of [...candidates]) {
+    candidates.push(candidate.replace(/\\n/g, '\n'));
+    candidates.push(candidate.replace(/\r\n/g, '\n'));
+  }
+  for (const candidate of candidates) {
+    try {
+      return JSON.parse(candidate);
+    } catch (_) {}
+  }
+  try {
+    const decoded = Buffer.from(raw, 'base64').toString('utf8').trim();
+    if (decoded && decoded !== raw) return JSON.parse(decoded);
+  } catch (_) {}
+  throw new Error('Invalid GCS service account configuration format');
+}
+
 function getStorage() {
-  if (!GCS_SERVICE_ACCOUNT_JSON) throw new Error('Missing GCS_SERVICE_ACCOUNT_JSON');
-  const creds = typeof GCS_SERVICE_ACCOUNT_JSON === 'string' ? JSON.parse(GCS_SERVICE_ACCOUNT_JSON) : GCS_SERVICE_ACCOUNT_JSON;
+  const creds = parseServiceAccountJson(GCS_SERVICE_ACCOUNT_JSON);
   return new Storage({ projectId: creds.project_id, credentials: creds });
 }
 
@@ -94,7 +118,11 @@ async function uploadAttachmentsToGcs(clientRequestId, attachments) {
     const buf = Buffer.from(m[2], 'base64');
     const objectPath = `${SITE_ID}/${clientRequestId}/${safeName(a.filename)}`;
     const file = bucket.file(objectPath);
-    await file.save(buf, { contentType, resumable: false, metadata: { cacheControl: 'private, max-age=0, no-transform' } });
+    try {
+      await file.save(buf, { contentType, resumable: false, metadata: { cacheControl: 'private, max-age=0, no-transform' } });
+    } catch (error) {
+      throw new Error(`GCS upload failed for ${a.filename || 'file'}: ${error.message}`);
+    }
     out.push({
       filename: a.filename,
       kind: a.kind || (contentType.startsWith('image/') ? 'request_image' : 'request_file'),
