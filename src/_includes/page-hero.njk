@@ -1,0 +1,14 @@
+{% set heroImage = pageHeroImage or '/images/slider-2.jpg' %}
+{% set heroOverlay = pageHeroOverlay or 'rgba(155, 30, 55, 0.72)' %}
+{% set heroEyebrow = pageHeroEyebrow or '' %}
+<section class="page-hero" style="--page-hero-overlay: {{ heroOverlay }}; --page-hero-image: url('{{ heroImage }}');">
+  <div class="page-hero__overlay"></div>
+  <div class="container page-hero__inner">
+    <div class="page-hero__content">
+      {% if heroEyebrow %}
+      <p class="page-hero__eyebrow">{{ heroEyebrow }}</p>
+      {% endif %}
+      <h1 class="page-hero__title">{{ pageHeroTitle or title }}</h1>
+    </div>
+  </div>
+</section>

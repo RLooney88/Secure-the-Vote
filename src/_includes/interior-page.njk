@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% include "head.njk" %}
+</head>
+<body class="site-shell site-shell--interior{% if pageClass %} {{ pageClass }}{% endif %}">
+  {% include "header.njk" %}
+
+  <main class="main-content" id="main-content">
+    {% include "page-hero.njk" %}
+    <section class="page-content-section">
+      <div class="container page-content-shell{% if contentWidth == 'wide' %} page-content-shell--wide{% endif %}{% if contentWidth == 'full' %} page-content-shell--full{% endif %}">
+        {{ content | safe }}
+      </div>
+    </section>
+  </main>
+
+  {% include "footer.njk" %}
+
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script src="/js/header.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

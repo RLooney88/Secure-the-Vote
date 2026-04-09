@@ -1,0 +1,105 @@
+/* Reusable interior page system */
+
+.page-hero {
+  position: relative;
+  isolation: isolate;
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  background-color: #6b1428;
+  background-image: var(--page-hero-image);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.page-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--page-hero-overlay, rgba(155, 30, 55, 0.72));
+}
+
+.page-hero__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding-top: 72px;
+  padding-bottom: 72px;
+}
+
+.page-hero__content {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.page-hero__eyebrow {
+  margin: 0 0 14px;
+  color: #f6bf58;
+  font-family: 'Questrial', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.page-hero__title {
+  margin: 0;
+  color: #fff;
+  font-family: 'Questrial', sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 500;
+  line-height: 1.08;
+  text-transform: capitalize;
+}
+
+.page-content-section {
+  padding: 56px 0 80px;
+  background: #fff;
+}
+
+.page-content-shell {
+  width: min(100%, 900px);
+  margin: 0 auto;
+}
+
+.page-content-shell--wide {
+  width: min(100%, 1100px);
+}
+
+.page-content-shell--full {
+  width: 100%;
+  max-width: 1200px;
+}
+
+.site-shell--interior .page-content-shell > *:first-child {
+  margin-top: 0;
+}
+
+.site-shell--interior .page-content-shell h2,
+.site-shell--interior .page-content-shell h3,
+.site-shell--interior .page-content-shell h4,
+.site-shell--interior .page-content-shell h5,
+.site-shell--interior .page-content-shell h6 {
+  text-transform: none;
+}
+
+.site-shell--interior .page-content-shell img {
+  max-width: 100%;
+  height: auto;
+}
+
+@media (max-width: 768px) {
+  .page-hero {
+    min-height: 240px;
+  }
+
+  .page-hero__inner {
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+
+  .page-content-section {
+    padding: 40px 0 56px;
+  }
+}
