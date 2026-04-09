@@ -47,6 +47,53 @@ module.exports = function(eleventyConfig) {
     return posts.filter(post => post.category === 'lawsuit-documents');
   });
 
+  eleventyConfig.addFilter("extractFirstImage", (html) => {
+    if (!html) return null;
+    const match = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+    return match ? match[1] : null;
+  });
+
+  eleventyConfig.addFilter("stripParagraphArtifacts", (text) => {
+    if (!text) return "";
+    return String(text)
+      .replace(/�/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+  });
+
+  eleventyConfig.addFilter("dateDay", (dateObj) => {
+    return DateTime.fromJSDate(new Date(dateObj), {zone: 'utc'}).toFormat('dd');
+  });
+
+  eleventyConfig.addFilter("dateMonthShort", (dateObj) => {
+    return DateTime.fromJSDate(new Date(dateObj), {zone: 'utc'}).toFormat('LLL');
+  });
+
+  eleventyConfig.addFilter("postsByCategory", (posts, category) => {
+    if (!Array.isArray(posts)) return [];
+    return posts.filter(post => post && post.category === category);
+  });
+
+  eleventyConfig.addFilter("fallbackTitle", (post) => {
+    if (!post) return "Untitled Post";
+    if (post.title && String(post.title).trim()) return post.title;
+    if (post.slug) {
+      return String(post.slug)
+        .split('-')
+        .filter(Boolean)
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+    }
+    return "Untitled Post";
+  });
+
+  eleventyConfig.addFilter("fallbackExcerpt", (post) => {
+    if (!post) return "Read the latest update.";
+    if (post.excerpt && String(post.excerpt).trim()) return String(post.excerpt).trim();
+    if (post.categoryLabel && post.date) return `Latest ${post.categoryLabel} update from ${post.date}.`;
+    return "Read the latest update.";
+  });
+
   return {
     dir: {
       input: "src",

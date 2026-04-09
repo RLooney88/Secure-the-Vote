@@ -1,0 +1,40 @@
+{% if posts and posts | length %}
+<section class="article-preview-section">
+  <div class="article-preview-header">
+    {% if eyebrow %}<p class="article-preview-eyebrow">{{ eyebrow }}</p>{% endif %}
+    {% if heading %}<h2 class="article-preview-title">{{ heading }}</h2>{% endif %}
+    {% if intro %}<p class="article-preview-intro">{{ intro }}</p>{% endif %}
+  </div>
+
+  <div class="article-preview-grid">
+    {% for post in posts %}
+    {% if not limit or loop.index <= limit %}
+    <article class="article-card">
+      <a href="{{ post.link }}" class="article-card__link">
+        <div class="article-card__media">
+          {% set cardImage = post.content | extractFirstImage %}
+          {% if cardImage %}
+          <img src="{{ cardImage }}" alt="{{ post | fallbackTitle }}" class="article-card__image">
+          {% else %}
+          <div class="article-card__image article-card__image--placeholder"></div>
+          {% endif %}
+          <div class="article-card__date-badge">
+            <span class="article-card__date-day">{{ post.date | dateDay }}</span>
+            <span class="article-card__date-month">{{ post.date | dateMonthShort }}</span>
+          </div>
+        </div>
+        <div class="article-card__body">
+          <div class="article-card__meta">
+            <span class="article-card__category">{{ post.categoryLabel }}</span>
+          </div>
+          <h3 class="article-card__title">{{ post | fallbackTitle }}</h3>
+          <p class="article-card__excerpt">{{ post | fallbackExcerpt | stripParagraphArtifacts }}</p>
+          <span class="article-card__cta">READ MORE <span aria-hidden="true">&rarr;</span></span>
+        </div>
+      </a>
+    </article>
+    {% endif %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
