@@ -1,46 +1,139 @@
-# PHASE 1 CHECKPOINT - Homepage/Header Shell Transplant
+# SECURE THE VOTE PROJECT CHECKPOINT
 
-## Status
+## Current Status
 
-Phase 1 implementation is complete on `homepage-header-stage1` and has been pushed to `staging`.
+This is the active project checkpoint for the Secure the Vote homepage/header/footer migration work.
 
-Phase 1 is currently **awaiting manual oversight/review by Roddy** before any decision to proceed into phase 2.
+Current working staging foundation is on commit **`ba16aa1`** and later footer/header polish has continued beyond that. The project now has a stable enough homepage/header/footer foundation to preserve, but it is **not yet in final sitewide rollout state**.
 
-## What Phase 1 Now Covers
+## Project Goal
 
-- STV-New-style shell header remains the active transplant direction.
-- Real Secure the Vote navigation has been mapped into that shell.
-- Current Secure the Vote social links are preserved in the shell header and footer.
-- Existing homepage content, slider/scroller content, homepage sections, and footer background image remain preserved.
-- Header dropdown behavior now matches the transplanted shell markup (`.dropdown` wiring is aligned with the existing injection script).
-- Source and artifact templates are aligned across:
-  - `src/templates/header.html`
-  - `src/templates/footer.html`
-  - `public/templates/header.html`
-  - `public/templates/footer.html`
-  - `dist/templates/header.html`
-  - `dist/templates/footer.html`
-- Dist shell CSS was updated to support the preserved social set and the corrected dropdown structure.
-- The completed phase-1 work was pushed to the remote `staging` branch.
-- Manual visual review is still pending because Roddy was away from the computer at the time of completion.
+The goal is to move Secure the Vote away from brittle WordPress-derived template fragments and toward a cleaner **front-end-owned** implementation for shared site chrome.
 
-## Review Gate
+That means:
+- new homepage/header/footer structure
+- cleaner code borrowed from the donor repo where appropriate
+- preserving Secure the Vote’s existing real content, branding, links, and assets
+- eventually applying the new shared chrome to all normal public-facing pages
+- excluding admin/login surfaces from that shared template rollout
 
-Before phase 2 begins, Roddy should manually review the staging result for visual/layout issues, spacing, responsive behavior, and general fit against the intended homepage/header transplant.
+## Key Repos / Roles
 
-## Intentionally Deferred to Later Phases
+### 1. Secure-the-Vote
+Primary implementation repo for the site being migrated.
 
-- Making the homepage hero/admin slider backend-editable.
-- Broader cleanup of WordPress-export residue in the homepage HTML.
-- Any full source-of-truth rebuild beyond the current shell transplant.
-- Any sitewide redesign outside the homepage/header/footer shell scope.
+### 2. STV-New
+Donor repo for cleaner homepage/footer/header structure and front-end patterns.
 
-## Validation Standard for Phase 1
+This repo was created specifically to provide cleaner building blocks for homepage content and shared site sections.
 
-Phase 1 should be considered complete if the homepage can keep its existing body content while loading:
+## Major Direction / Decisions
 
-1. the transplanted shell header,
-2. the preserved footer image/footer shell,
-3. the mapped real navigation links,
-4. the preserved social links,
-5. working mobile menu + dropdown behavior for the transplanted shell.
+### Header direction
+- The homepage header is being treated as a **front-end implementation target**.
+- Visible homepage header fixes were most reliable when applied to the actual rendered homepage source.
+- The new header should become part of the reusable site chrome for all non-admin pages.
+
+### Footer direction
+- The footer should **not** continue to rely on the old legacy WordPress-derived/footer-template system.
+- The correct direction is to **replace** the old footer system with a **front-end-owned footer**.
+- The footer should be rebuilt using the cleaner structure from **STV-New**, while preserving Secure the Vote’s actual links, logo, social links, contact information, and overall visual identity.
+
+### Template rollout rule
+The new header/footer are intended to become the default shared templates for:
+- homepage
+- issue/content pages
+- resources
+- news/blog pages
+- campaign/action pages
+
+Do **not** apply them to:
+- `/wp-admin/`
+- login/admin-auth pages
+- internal editor/admin screens
+
+## What Is Working Now
+
+### Homepage / header foundation
+- Top utility bar uses brand yellow
+- Email + social row is present
+- Email hover changed to red
+- Homepage nav shell is in place
+- Broken chevron boxes were replaced with visible rendered chevrons in the homepage nav
+- Scrolling marquee/text bar was moved above the hero image
+- The homepage/header shell can now be treated as a stable working base for continued refinement
+
+### Footer foundation
+- Footer has been rebuilt as a front-end-owned block in the homepage implementation path
+- Footer uses the real flag background asset:
+  - `/images/2024/04/usa-flag-background-.jpg`
+- Footer overlay color is tuned to:
+  - `#9D233B`
+- Overlay becomes largely solid by mid-page while still showing the flag toward the left side
+- Footer quick-link sections were collapsed into hover flyouts to reduce height
+- Footer bottom strip includes copyright + social icons + admin link
+- Footer center card has a rise/overlap animation foundation in place
+
+## Important Lessons / Constraints
+
+### 1. Surgical changes only
+Roddy explicitly wants changes to be **surgical**.
+
+Rule:
+- never change more than the requested scope
+- never let a small fix spill into unrelated layout/content
+
+### 2. There are multiple render paths
+A major source of implementation confusion has been that different parts of the site have been rendered from different layers at different times.
+
+This caused repeated mismatches between:
+- repo template files
+- rendered homepage markup
+- legacy injected/template paths
+- older WordPress-derived fragments
+
+### 3. Front-end source of truth is the goal
+For the parts being actively modernized, the right direction is:
+- use the front-end implementation as source of truth
+- stop patching dead copies or legacy cache/template systems when the goal is replacement
+
+### 4. Footer work was initially approached the wrong way
+A key correction in project understanding:
+- the footer task is **not** “patch the old footer”
+- the footer task is **rebuild the footer using the new repo’s code as the base**
+
+## Current Foundation To Preserve
+
+These pieces are the current foundation worth preserving:
+- front-end homepage header shell
+- top utility bar + social/email treatment
+- rendered homepage nav chevrons
+- marquee above hero
+- front-end footer rebuilt from a cleaner structure
+- flag-based footer background + tuned overlay
+- reduced footer quick-link sprawl via hover flyouts
+
+## Remaining Work
+
+The project is not finished.
+
+### Remaining implementation work includes:
+- continue refining homepage/header/footer visuals from the current stable foundation
+- make footer/header match current Secure the Vote look exactly where still off
+- unify the shared header/footer rollout across public-facing pages
+- remove or bypass residual dependence on older WordPress-derived shared chrome systems where replacement is intended
+- finish converting the working homepage/header/footer into the reusable public-site template layer
+
+## Operator Notes
+
+For future work on this project:
+- use the current homepage/header/footer foundation as the basis
+- prefer the real active front-end render path when making visible UI changes
+- do not create competing checkpoint documents
+- update this checkpoint instead of fragmenting project state into multiple docs
+
+## Checkpoint Summary
+
+This project now has a working modernized **homepage/header/footer foundation** and a clarified architectural direction:
+
+> Replace legacy shared chrome with front-end-owned implementations, using STV-New as the clean donor structure and Secure the Vote as the content/branding source of truth.
