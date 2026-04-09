@@ -741,21 +741,18 @@ button:focus-visible {
 .site-header-shell{position:sticky;top:0;z-index:1000;background:#fff;box-shadow:0 6px 20px rgba(0,0,0,.08)}
 .shell-topbar{background:#6f0d16;color:#fff;font-size:13px}
 .shell-topbar-inner{max-width:1280px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
-.shell-topbar-email{color:#fff;text-decoration:none;font-weight:600}
-.shell-topbar-email:hover{color:#f6bf58}
-.shell-socials{display:flex;align-items:center;justify-content:flex-end;gap:14px;flex-wrap:wrap}
-.shell-socials a{color:#fff;text-decoration:none;font-size:15px;display:inline-flex;align-items:center;justify-content:center;min-width:18px}
-.shell-socials .icon-text{font-size:11px;letter-spacing:.04em}
+.shell-socials{display:flex;align-items:center;gap:14px}
+.shell-socials a{color:#fff;text-decoration:none;font-size:15px}
 .shell-header-main{background:#fff}
 .shell-header-inner{max-width:1280px;margin:0 auto;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:24px}
 .shell-brand img{height:58px;width:auto;display:block}
 .shell-nav > ul{list-style:none;display:flex;align-items:center;gap:26px;margin:0;padding:0}
 .shell-nav a{color:#1f2937;text-decoration:none;font-weight:600;font-size:15px}
 .shell-nav .has-dropdown{position:relative}
-.shell-nav .dropdown{display:none;position:absolute;top:100%;left:0;background:#fff;box-shadow:0 14px 30px rgba(0,0,0,.12);min-width:240px;padding:12px 0;border-radius:12px;list-style:none;margin:14px 0 0;z-index:1001}
-.shell-nav .dropdown li{padding:0;margin:0}
-.shell-nav .dropdown a{display:block;padding:10px 18px;font-weight:500}
-.shell-nav .has-dropdown:hover .dropdown{display:block}
+.shell-nav .dropdown-menu{display:none;position:absolute;top:100%;left:0;background:#fff;box-shadow:0 14px 30px rgba(0,0,0,.12);min-width:240px;padding:12px 0;border-radius:12px;list-style:none;margin:14px 0 0;z-index:1001}
+.shell-nav .dropdown-menu li{padding:0;margin:0}
+.shell-nav .dropdown-menu a{display:block;padding:10px 18px;font-weight:500}
+.shell-nav .has-dropdown:hover .dropdown-menu{display:block}
 .shell-donate{background:#8b1a1a;color:#fff !important;padding:12px 18px;border-radius:999px}
 .shell-mobile-toggle{display:none;background:none;border:0;padding:0;cursor:pointer}
 .shell-mobile-toggle span{display:block;width:24px;height:2px;background:#111;margin:5px 0}
@@ -779,9 +776,8 @@ button:focus-visible {
   .shell-nav{width:100%}
   .shell-nav > ul{display:none;flex-direction:column;align-items:flex-start;gap:0;padding-top:12px}
   .shell-nav.active > ul{display:flex}
-  .shell-topbar-inner{align-items:flex-start}
-  .shell-nav .dropdown{display:block;position:static;box-shadow:none;padding:8px 0 0 18px;margin:0}
-  .shell-nav .has-dropdown:hover .dropdown{display:block}
+  .shell-nav .dropdown-menu{display:block;position:static;box-shadow:none;padding:8px 0 0 18px;margin:0}
+  .shell-nav .has-dropdown:hover .dropdown-menu{display:block}
   .homepage-stage1-hero{border-radius:0;margin:0 0 36px}
   .homepage-stage1-hero img{height:560px}
   .homepage-stage1-hero-content{padding:28px 20px 34px}
