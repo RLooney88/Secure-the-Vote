@@ -55,14 +55,14 @@
       </div>
 
       <nav class="main-navigation">
-        <button class="mobile-menu-toggle" aria-label="Toggle menu">
+        <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="primary-menu" type="button">
           <span></span>
           <span></span>
           <span></span>
         </button>
 
-        <ul class="menu">
-          <li><a href="/">Home</a></li>
+        <ul class="menu" id="primary-menu">
+          <li><a href="/"{% if page.url == '/' %} aria-current="page"{% endif %}>Home</a></li>
           <li class="menu-item-has-children">
             <a href="#">Accountability <i class="fas fa-chevron-down"></i></a>
             <ul class="sub-menu">
@@ -78,7 +78,7 @@
             </ul>
           </li>
           <li class="menu-item-has-children">
-            <a href="/pages/citizen-action/">Citizen Action <i class="fas fa-chevron-down"></i></a>
+            <a href="/pages/citizen-action/"{% if page.url == '/pages/citizen-action/' %} aria-current="page"{% endif %}>Citizen Action <i class="fas fa-chevron-down"></i></a>
             <ul class="sub-menu">
               <li><a href="/pages/be-an-election-judge/">Be an Election Judge</a></li>
               <li><a href="/pages/poll-watchers-toolkit/">Poll Watchers Toolkit</a></li>
@@ -86,7 +86,7 @@
             </ul>
           </li>
           <li class="menu-item-has-children">
-            <a href="/pages/resources/">Resources <i class="fas fa-chevron-down"></i></a>
+            <a href="/pages/resources/"{% if page.url == '/pages/resources/' %} aria-current="page"{% endif %}>Resources <i class="fas fa-chevron-down"></i></a>
             <ul class="sub-menu">
               <li><a href="/pages/in-the-news/">In The News</a></li>
               <li><a href="/pages/whats-happening/">What's Happening</a></li>
@@ -101,7 +101,7 @@
               <li><a href="/news/score-card/">Score Card</a></li>
             </ul>
           </li>
-          <li><a href="/pages/contact-us/">Contact Us</a></li>
+          <li><a href="/pages/contact-us/"{% if page.url == '/pages/contact-us/' %} aria-current="page"{% endif %}>Contact Us</a></li>
         </ul>
       </nav>
 

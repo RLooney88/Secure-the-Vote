@@ -1,0 +1,58 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% if title %}{{ title }} - {% endif %}{{ site.name }}</title>
+<meta name="description" content="{{ description or excerpt or site.description }}">
+
+{% if keywords %}
+<meta name="keywords" content="{{ keywords }}">
+{% endif %}
+
+<!-- Open Graph / Social Meta Tags -->
+<meta property="og:type" content="{{ ogType or 'website' }}">
+<meta property="og:title" content="{% if title %}{{ title }} - {% endif %}{{ site.name }}">
+<meta property="og:description" content="{{ description or excerpt or site.description }}">
+<meta property="og:url" content="{{ site.url }}{{ page.url }}">
+<meta property="og:site_name" content="{{ site.name }}">
+{% if image %}
+<meta property="og:image" content="{{ site.url }}{{ image }}">
+{% endif %}
+{% if date %}
+<meta property="article:published_time" content="{{ date }}">
+{% endif %}
+{% if categoryLabel %}
+<meta property="article:section" content="{{ categoryLabel }}">
+{% endif %}
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{% if title %}{{ title }} - {% endif %}{{ site.name }}">
+<meta name="twitter:description" content="{{ description or excerpt or site.description }}">
+{% if image %}
+<meta name="twitter:image" content="{{ site.url }}{{ image }}">
+{% endif %}
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
+<!-- Styles -->
+<link rel="stylesheet" href="/css/elementor-homepage.css">
+<link rel="stylesheet" href="/css/header.css">
+<link rel="stylesheet" href="/css/page-transitions.css">
+<link rel="stylesheet" href="/css/layout-fixes.css">
+<link rel="stylesheet" href="/css/style.css">
+{% if extraStyles %}
+  {% for stylesheet in extraStyles %}
+<link rel="stylesheet" href="{{ stylesheet }}">
+  {% endfor %}
+{% endif %}
+
+<!-- HighLevel Form Script -->
+<script src="https://link.msgsndr.com/js/form_embed.js" defer></script>

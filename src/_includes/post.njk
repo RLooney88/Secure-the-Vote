@@ -1,66 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ title }} - {{ site.name }}</title>
-  <meta name="description" content="{{ excerpt }}">
-  
-  <!-- Open Graph / Social Meta Tags -->
-  <meta property="og:type" content="article">
-  <meta property="og:title" content="{{ title }}">
-  <meta property="og:description" content="{{ excerpt }}">
-  <meta property="og:url" content="{{ site.url }}{{ page.url }}">
-  <meta property="og:site_name" content="{{ site.name }}">
-  <meta property="article:published_time" content="{{ date }}">
-  <meta property="article:section" content="{{ categoryLabel }}">
-  
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="{{ title }}">
-  <meta name="twitter:description" content="{{ excerpt }}">
-  
-  <!-- Schema.org Article structured data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": "{{ title }}",
-    "datePublished": "{{ date }}",
-    "articleSection": "{{ categoryLabel }}",
-    "description": "{{ excerpt }}",
-    "author": {
-      "@type": "Organization",
-      "name": "{{ site.author }}"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "{{ site.name }}",
-      "url": "{{ site.url }}"
-    },
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": "{{ site.url }}{{ page.url }}"
-    }
-  }
-  </script>
-  
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
-  
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- Styles -->
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/posts.css">
-  
-  <!-- HighLevel Form Script -->
-  <script src="https://link.msgsndr.com/js/form_embed.js" defer></script>
+  {% set ogType = 'article' %}
+  {% set extraStyles = ['/css/posts.css'] %}
+  {% include "head.njk" %}
 </head>
-<body>
+<body class="site-shell site-shell--post">
   {% include "header.njk" %}
   
   <main class="main-content">
@@ -89,6 +34,8 @@
   
   {% include "footer.njk" %}
   
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script src="/js/header.js"></script>
   <script src="/js/main.js"></script>
 </body>
 </html>
