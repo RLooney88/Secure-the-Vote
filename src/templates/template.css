@@ -324,6 +324,7 @@ html, body {
   color: var(--color-white);
   font-family: var(--font-secondary);
   width: 100%;
+  display: block;
 }
 
 /* Main Footer Section */
@@ -408,8 +409,11 @@ html, body {
   color: var(--color-gold);
 }
 
-.footer-column .fa-caret-down {
-  font-size: 14px;
+.footer-chevron {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 16px;
+  line-height: 1;
 }
 
 .footer-column .contact-list i {
@@ -512,6 +516,8 @@ html, body {
   display: flex;
   gap: 10px;
   list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .footer-social a {
@@ -525,6 +531,14 @@ html, body {
   color: var(--color-gold);
   font-size: 14px;
   transition: all 0.3s;
+}
+
+.footer-social .icon-svg {
+  display: block;
+  width: 14px;
+  height: 14px;
+  color: currentColor;
+  fill: currentColor;
 }
 
 .footer-social a:hover {
