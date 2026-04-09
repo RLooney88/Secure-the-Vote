@@ -122,6 +122,13 @@
   max-width: 46rem;
 }
 
+.article-preview-loading,
+.article-preview-empty {
+  margin: 0 0 1rem;
+  color: #4b5563;
+  font-size: 0.98rem;
+}
+
 .article-preview-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

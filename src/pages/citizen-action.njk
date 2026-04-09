@@ -164,11 +164,13 @@ pageClass: "page-citizen-action"
     <div class="container column-gap-default">
       <div class="column elementor-top-column element elementor-element-cb7c6b5" data-id="cb7c6b5" data-element_type="column" data-e-type="column">
         <div class="widget-wrap element-populated">
-          {% set posts = citizenActionPosts %}
           {% set eyebrow = "Citizen Action" %}
           {% set heading = "Latest Citizen Action Updates" %}
           {% set intro = "Stay current on petitions, advocacy efforts, and ways to get involved." %}
           {% set limit = 3 %}
+          {% set clientFetch = true %}
+          {% set postsCategory = "citizen-action" %}
+          {% set postsEndpoint = "/api/posts/list" %}
           {% include "article-preview-grid.njk" %}
         </div>
       </div>

@@ -1,11 +1,15 @@
-{% if posts and posts | length %}
-<section class="article-preview-section">
+<section class="article-preview-section{% if previewClass %} {{ previewClass }}{% endif %}"{% if clientFetch %} data-article-preview-feed data-posts-endpoint="{{ postsEndpoint or '/api/posts/list' }}" data-posts-category="{{ postsCategory or '' }}" data-posts-limit="{{ limit or 3 }}"{% endif %}>
   <div class="article-preview-header">
     {% if eyebrow %}<p class="article-preview-eyebrow">{{ eyebrow }}</p>{% endif %}
     {% if heading %}<h2 class="article-preview-title">{{ heading }}</h2>{% endif %}
     {% if intro %}<p class="article-preview-intro">{{ intro }}</p>{% endif %}
   </div>
 
+  {% if clientFetch %}
+  <div class="article-preview-loading" data-posts-loading>Loading latest updates...</div>
+  <div class="article-preview-grid" data-posts-grid></div>
+  <p class="article-preview-empty" data-posts-empty hidden>No posts found right now.</p>
+  {% elif posts and posts | length %}
   <div class="article-preview-grid">
     {% for post in posts %}
     {% if not limit or loop.index <= limit %}
@@ -36,5 +40,5 @@
     {% endif %}
     {% endfor %}
   </div>
+  {% endif %}
 </section>
-{% endif %}
