@@ -826,7 +826,7 @@ button:focus-visible {
 }
 
 .site-footer .footer-content {
-  padding: 28px 20px 18px !important;
+  padding: 0 20px 10px !important;
   margin-top: 0 !important;
   margin-bottom: 0 !important;
   align-items: start !important;
@@ -843,7 +843,7 @@ button:focus-visible {
 .site-footer .footer-logo-box {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
-  padding: 22px 22px 18px !important;
+  padding: 18px 20px 14px !important;
 }
 
 .site-footer .footer-bottom {
@@ -852,9 +852,9 @@ button:focus-visible {
 }
 
 .site-footer .footer-bottom-content {
-  min-height: 32px !important;
-  padding-top: 4px !important;
-  padding-bottom: 4px !important;
+  min-height: 22px !important;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
   line-height: 1 !important;
 }
 
