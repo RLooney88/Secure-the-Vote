@@ -10,6 +10,11 @@ image: "/images/og-homepage.jpg"
 ogType: "website"
 ---
 
+<!-- Frontend-owned homepage source of truth.
+  Eleventy emits public/index.html from this file through src/_includes/base.njk.
+  Shared shell changes for the live homepage should be debugged here and in the include/CSS files, not in src/index.html.
+-->
+
 <!-- Elementor Page Wrapper -->
 <div data-elementor-type="wp-page" data-elementor-id="9" class="elementor elementor-9" data-elementor-post-type="page">
 
