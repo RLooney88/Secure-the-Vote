@@ -815,15 +815,18 @@ button:focus-visible {
   .shell-topbar-inner,.shell-header-inner{padding-left:20px;padding-right:20px}
   .shell-brand img{height:36px}
 }
-/* Surgical footer overrides: force only the two visible footer bands */
+/* Surgical footer overrides: keep full footer content, remove dead spacer feel, and tighten the copyright strip */
+.site-footer {
+  margin-top: 0 !important;
+}
+
 .site-footer .footer-main {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
 }
 
 .site-footer .footer-content {
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
+  padding: 28px 20px 18px !important;
   margin-top: 0 !important;
   margin-bottom: 0 !important;
   align-items: start !important;
@@ -840,6 +843,7 @@ button:focus-visible {
 .site-footer .footer-logo-box {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
+  padding: 22px 22px 18px !important;
 }
 
 .site-footer .footer-bottom {
@@ -848,9 +852,9 @@ button:focus-visible {
 }
 
 .site-footer .footer-bottom-content {
-  min-height: 18px !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
+  min-height: 32px !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
   line-height: 1 !important;
 }
 
