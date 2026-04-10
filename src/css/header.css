@@ -815,3 +815,50 @@ button:focus-visible {
   .shell-topbar-inner,.shell-header-inner{padding-left:20px;padding-right:20px}
   .shell-brand img{height:36px}
 }
+/* Surgical footer overrides: force only the two visible footer bands */
+.site-footer .footer-main {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.site-footer .footer-content {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  align-items: start !important;
+}
+
+.site-footer .footer-links,
+.site-footer .footer-contact,
+.site-footer .footer-mission {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  align-self: start !important;
+}
+
+.site-footer .footer-logo-box {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.site-footer .footer-bottom {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.site-footer .footer-bottom-content {
+  min-height: 18px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  line-height: 1 !important;
+}
+
+.site-footer .copyright p {
+  margin: 0 !important;
+  line-height: 1 !important;
+}
+
+.site-footer .footer-social ul {
+  margin: 0 !important;
+}
