@@ -1,100 +1,80 @@
-<!-- Top Bar -->
-<div class="top-bar">
-  <div class="container top-bar-inner">
-    <a href="mailto:info@securethevotemd.com" class="top-bar-email" aria-label="Email Secure The Vote Maryland">
-      <i class="fas fa-envelope"></i>
-      <span>info@securethevotemd.com</span>
-    </a>
-
-    <div class="top-bar-social" aria-label="Social media links">
-      <a href="https://twitter.com/securethevotemd" target="_blank" rel="noopener" aria-label="X / Twitter">
-        <i class="fab fa-x-twitter"></i>
-      </a>
-      <a href="https://www.instagram.com/securethevotemd/" target="_blank" rel="noopener" aria-label="Instagram">
-        <i class="fab fa-instagram"></i>
-      </a>
-      <a href="https://www.facebook.com/profile.php?id=61558958704794" target="_blank" rel="noopener" aria-label="Facebook">
-        <i class="fab fa-facebook-f"></i>
-      </a>
-      <a href="https://www.tiktok.com/@securethevotemd?lang=en" target="_blank" rel="noopener" aria-label="TikTok">
-        <i class="fab fa-tiktok"></i>
-      </a>
-      <a href="https://truthsocial.com/@securethevotemd" target="_blank" rel="noopener" aria-label="Truth Social">
-        <i class="fas fa-comment-dots"></i>
-      </a>
-      <a href="https://web.telegram.org/a/#6827045334" target="_blank" rel="noopener" aria-label="Telegram">
-        <i class="fab fa-telegram"></i>
-      </a>
-      <a href="https://www.youtube.com/@SecuretheVoteMD" target="_blank" rel="noopener" aria-label="YouTube">
-        <i class="fab fa-youtube"></i>
-      </a>
+<header class="site-header-shell">
+  <div class="shell-topbar">
+    <div class="shell-topbar-inner">
+      <a class="shell-topbar-email" href="mailto:info@securethevotemd.com">info@securethevotemd.com</a>
+      <div class="shell-socials" aria-label="Social links">
+        <a href="https://twitter.com/securethevotemd" target="_blank" rel="noopener" aria-label="X / Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://www.instagram.com/securethevotemd/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://www.facebook.com/profile.php?id=61558958704794" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="https://www.tiktok.com/@securethevotemd?lang=en" target="_blank" rel="noopener" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+        <a href="https://rumble.com/c/c-7751503" target="_blank" rel="noopener" aria-label="Rumble"><i class="fa-solid fa-play-circle"></i></a>
+        <a href="https://truthsocial.com/@securethevotemd" target="_blank" rel="noopener" aria-label="Truth Social"><span class="icon-text">TS</span></a>
+        <a href="https://gettr.com/user/securethevotemd" target="_blank" rel="noopener" aria-label="GETTR"><i class="fa-brands fa-gripfire"></i></a>
+        <a href="https://web.telegram.org/a/#6827045334" target="_blank" rel="noopener" aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>
+        <a href="https://www.youtube.com/@SecuretheVoteMD" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        <a href="https://bsky.app/profile/securethevotemd.bsky.social" target="_blank" rel="noopener" aria-label="Bluesky"><span class="icon-text">B</span></a>
+      </div>
     </div>
   </div>
-</div>
 
-<header class="site-header">
-  <div class="container header-wrapper">
-    <div class="site-logo">
-      <a href="/" aria-label="Secure The Vote Maryland home">
-        <img src="/images/logo.png" alt="Secure The Vote Maryland" />
+  <div class="shell-header-main">
+    <div class="shell-header-inner">
+      <a class="shell-brand" href="/" aria-label="Secure the Vote Maryland home">
+        <img src="/images/2024/04/LOGOsecurethevote_yellowMD.png" alt="Secure the Vote Maryland" />
       </a>
-    </div>
 
-    <nav class="main-navigation" aria-label="Primary navigation">
-      <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="primary-menu" type="button">
-        <span></span>
-        <span></span>
-        <span></span>
+      <button class="shell-mobile-toggle hamburger-menu" type="button" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
       </button>
 
-      <ul class="menu" id="primary-menu">
-        <li><a href="/"{% if page.url == '/' %} aria-current="page"{% endif %}>Home</a></li>
-        <li class="menu-item-has-children">
-          <a href="#">Accountability <i class="fas fa-chevron-down"></i></a>
-          <ul class="sub-menu">
-            <li><a href="/pages/trump-executive-order/">Trump Executive Order</a></li>
-            <li><a href="/pages/board-compliance/">Board Compliance</a></li>
-          </ul>
-        </li>
-        <li class="menu-item-has-children">
-          <a href="#">Legislation <i class="fas fa-chevron-down"></i></a>
-          <ul class="sub-menu">
-            <li><a href="/pages/voter-id/">Voter ID</a></li>
-            <li><a href="/pages/signature-verification/">Signature Verification</a></li>
-          </ul>
-        </li>
-        <li class="menu-item-has-children">
-          <a href="/citizen-action/"{% if page.url == '/citizen-action/' %} aria-current="page"{% endif %}>Citizen Action <i class="fas fa-chevron-down"></i></a>
-          <ul class="sub-menu">
-            <li><a href="/pages/be-an-election-judge/">Be an Election Judge</a></li>
-            <li><a href="/pages/poll-watchers-toolkit/">Poll Watchers Toolkit</a></li>
-            <li><a href="/pages/sign-the-petition/">Sign the Petition</a></li>
-          </ul>
-        </li>
-        <li class="menu-item-has-children">
-          <a href="/pages/resources/"{% if page.url == '/pages/resources/' %} aria-current="page"{% endif %}>Resources <i class="fas fa-chevron-down"></i></a>
-          <ul class="sub-menu">
-            <li><a href="/pages/in-the-news/">In The News</a></li>
-            <li><a href="/pages/whats-happening/">What's Happening</a></li>
-          </ul>
-        </li>
-        <li class="menu-item-has-children">
-          <a href="#">News <i class="fas fa-chevron-down"></i></a>
-          <ul class="sub-menu">
-            <li><a href="/news/">All News</a></li>
-            <li><a href="/news/citizen-action/">Citizen Action</a></li>
-            <li><a href="/news/lawsuit-documents/">Lawsuit Documents</a></li>
-            <li><a href="/news/score-card/">Score Card</a></li>
-          </ul>
-        </li>
-        <li><a href="/pages/contact-us/"{% if page.url == '/pages/contact-us/' %} aria-current="page"{% endif %}>Contact Us</a></li>
-      </ul>
-    </nav>
-
-    <div class="header-donate">
-      <a href="https://donorbox.org/united-sovereign-americans-maryland-donation" target="_blank" rel="noopener" class="donate-button">
-        Donate Now
-      </a>
+      <nav class="shell-nav primary-nav" aria-label="Primary navigation">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li class="has-dropdown">
+            <a href="#" aria-haspopup="true">Accountability <span class="nav-chevron" aria-hidden="true">⌄</span></a>
+            <ul class="dropdown">
+              <li><a href="/trump-executive-order/">Trump EO</a></li>
+              <li><a href="/list-maintenance/">List Maintenance</a></li>
+              <li><a href="/board-compliance/">Board Compliance</a></li>
+            </ul>
+          </li>
+          <li class="has-dropdown">
+            <a href="#" aria-haspopup="true">Legislation <span class="nav-chevron" aria-hidden="true">⌄</span></a>
+            <ul class="dropdown">
+              <li><a href="/voter-id/">Voter ID</a></li>
+              <li><a href="/signature-verification/">Signature Verification</a></li>
+            </ul>
+          </li>
+          <li class="has-dropdown">
+            <a href="/citizen-action/" aria-haspopup="true">Citizen Action <span class="nav-chevron" aria-hidden="true">⌄</span></a>
+            <ul class="dropdown">
+              <li><a href="/sign-the-petition/">Sign the Petition</a></li>
+              <li><a href="/2024/05/01/poll-watchers-toolkit/">Poll Watcher's Toolkit</a></li>
+              <li><a href="/2024/04/19/how-to-testify-at-the-mga/">Testify at MGA</a></li>
+            </ul>
+          </li>
+          <li class="has-dropdown">
+            <a href="/resources/" aria-haspopup="true">Resources <span class="nav-chevron" aria-hidden="true">⌄</span></a>
+            <ul class="dropdown">
+              <li><a href="/check-voter-registration/">Check Voter Registration</a></li>
+              <li><a href="/be-an-election-judge/">Be an Election Judge</a></li>
+              <li><a href="https://maryland.maps.arcgis.com/apps/webappviewer/index.html?id=177afa87a67746a4ac5496b2d0897fb7" target="_blank" rel="noopener">Find Your Representatives</a></li>
+              <li><a href="/maryland-nvra-violations/">Maryland NVRA Violations</a></li>
+              <li><a href="/voter-registration-inflation/">Voter Registration Inflation</a></li>
+              <li><a href="/lawsuit-document/">Litigation Documents</a></li>
+            </ul>
+          </li>
+          <li class="has-dropdown">
+            <a href="#" aria-haspopup="true">News <span class="nav-chevron" aria-hidden="true">⌄</span></a>
+            <ul class="dropdown">
+              <li><a href="/press-release/">Press Release / News</a></li>
+              <li><a href="/in-the-news/">In the News</a></li>
+            </ul>
+          </li>
+          <li><a href="/contact-us/">Contact Us</a></li>
+          <li><a href="https://donorbox.org/united-sovereign-americans-maryland-donation" target="_blank" rel="noopener" class="shell-donate">Donate</a></li>
+        </ul>
+      </nav>
     </div>
   </div>
 </header>
