@@ -1,5 +1,8 @@
 node_modules
-src
 wordpress-crawl
 *.md
+!src/**
+!.eleventy.js
+!package.json
+!package-lock.json
 !public/**
