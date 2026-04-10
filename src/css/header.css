@@ -763,8 +763,8 @@ button:focus-visible {
 .shell-socials a{color:#fff;text-decoration:none;font-size:15px;display:inline-flex;align-items:center;justify-content:center;min-width:18px}
 .shell-socials .icon-svg{display:block;width:16px;height:16px;color:#fff;fill:currentColor}
 .shell-socials .icon-asset{display:block;width:16px;height:16px;object-fit:contain}
-.shell-socials .truth-social-icon{width:15px;height:15px}
-.shell-socials .bluesky-icon{width:18px;height:18px}
+.shell-socials .truth-social-icon{width:17px;height:17px}
+.shell-socials .bluesky-icon{width:16px;height:16px}
 .shell-header-main{background:#fff}
 .shell-header-inner{max-width:1280px;margin:0 auto;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:24px}
 .shell-brand img{height:58px;width:auto;display:block}
