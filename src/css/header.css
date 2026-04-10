@@ -503,20 +503,22 @@ html, body {
 .footer-bottom-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 6px 20px;
+  padding: 2px 20px;
+  min-height: 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .copyright p {
-  font-size: 14px;
+  font-size: 12px;
+  line-height: 1.1;
   color: var(--color-gold);
 }
 
 .footer-social ul {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -526,19 +528,19 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   background: transparent;
   color: var(--color-gold);
-  font-size: 14px;
+  font-size: 12px;
   transition: all 0.3s;
 }
 
 .footer-social .icon-svg {
   display: block;
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   color: currentColor;
   fill: currentColor;
 }
