@@ -334,7 +334,7 @@ html, body {
   background-position: center left;
   background-repeat: no-repeat;
   position: relative;
-  padding: 0 0 2em 0;
+  padding: 0;
 }
 
 .footer-overlay {
@@ -350,7 +350,7 @@ html, body {
 .footer-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 18px 20px 0;
   display: grid;
   grid-template-columns: 40% 28% 32%;
   position: relative;
@@ -368,11 +368,11 @@ html, body {
 }
 
 .footer-links {
-  padding: 60px 10px 0 10px;
+  padding: 18px 10px 0 10px;
 }
 
 .footer-contact {
-  padding: 60px 20px 0 40px;
+  padding: 18px 20px 0 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -459,7 +459,7 @@ html, body {
 
 .footer-logo-box {
   background-color: #FFE3AF;
-  margin: -50px auto 10px auto;
+  margin: 0 auto;
   padding: 2em;
   text-align: center;
   color: #1a1a1a;
@@ -467,13 +467,13 @@ html, body {
   user-select: none;
   position: relative;
   z-index: 2;
-  transform: translateY(40px);
-  opacity: 0;
-  transition: transform 0.8s ease-out, opacity 0.8s ease-out;
+  transform: none;
+  opacity: 1;
+  transition: none;
 }
 
 .footer-logo-box.visible {
-  transform: translateY(0);
+  transform: none;
   opacity: 1;
 }
 
@@ -495,7 +495,7 @@ html, body {
 .footer-bottom {
   background: var(--color-maroon);
   border-top: 1px solid rgba(245,245,245,0.61);
-  padding: 0.5em 0;
+  padding: 0;
 }
 
 .footer-bottom-content {
@@ -755,7 +755,7 @@ button:focus-visible {
 .site-header-shell{position:sticky;top:0;z-index:1000;background:#fff;box-shadow:0 6px 20px rgba(0,0,0,.08)}
 .shell-topbar{background:#f6bf58;color:#fff;font-size:11px;line-height:1}
 .shell-topbar-inner{max-width:1280px;margin:0 auto;padding:4px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:24px}
-.shell-topbar-email{color:#fff;text-decoration:none;font-weight:500;font-size:11px;line-height:1}
+.shell-topbar-email{color:#fff;text-decoration:none;font-weight:500;font-size:12px;line-height:1}
 .shell-topbar-email:hover{color:#8b1a1a}
 .shell-socials{display:flex;align-items:center;justify-content:flex-end}
 .shell-socials ul{display:flex;align-items:center;gap:14px;list-style:none;margin:0;padding:0;flex-wrap:wrap}
